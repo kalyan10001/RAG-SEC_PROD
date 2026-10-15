@@ -1,0 +1,17 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class Settings:
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+    QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+    QDRANT_CLUSTER_ENDPOINT = os.getenv("QDRANT_CLUSTER_ENDPOINT")
+    QDRANT_COLLECTION = "Prod-Rag"
+
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+    GROQ_MODEL = "groq/llama-3.1-8b-instant"
+    
+    
+
+settings = Settings()

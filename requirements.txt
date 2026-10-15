@@ -1,0 +1,23 @@
+
+fastapi                     # High-performance web framework for the API
+uvicorn[standard]           # ASGI server to run the FastAPI app
+python-dotenv               # For loading configuration from .env files
+requests                    # HTTP library for internal/external API calls
+numpy                       # Numerical processing
+
+google-generativeai
+langchain-google-genai
+sentence-transformers
+
+qdrant-client               # Vector Database for semantic search
+
+
+unstructured                # Base library for DOCX/PPTX partitioning
+python-pptx                 # Parser for PowerPoint files
+python-docx                 # Parser for Word documents
+pypdf                       # Local PDF text extraction (replaces Document AI)
+beautifulsoup4              # High-speed HTML text extraction
+pdfplumber                  # Fallback PDF parser for scanned/complex layouts
+
+logfire[fastapi,requests]   # Pydantic Logfire — FastAPI + requests instrumentation
+loguru                      # Enhanced logging for Python
