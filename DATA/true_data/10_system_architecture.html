@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — System Architecture</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-system-architecture" id="toc-compute-match-system-architecture">Compute Match — System
+Architecture</a>
+<ul>
+<li><a href="#runtime-components" id="toc-runtime-components">Runtime
+components</a></li>
+<li><a href="#backend-architecture-ddd-hexagonal" id="toc-backend-architecture-ddd-hexagonal">Backend architecture (DDD +
+hexagonal)</a></li>
+<li><a href="#division-of-labour-between-backend-and-worker" id="toc-division-of-labour-between-backend-and-worker">Division of
+labour between backend and worker</a></li>
+<li><a href="#data-stores" id="toc-data-stores">Data stores</a></li>
+<li><a href="#frontend-architecture" id="toc-frontend-architecture">Frontend architecture</a></li>
+<li><a href="#cloud-platform" id="toc-cloud-platform">Cloud
+platform</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-system-architecture">Compute Match — System
+Architecture</h1>
+<h2 id="runtime-components">Runtime components</h2>
+<pre class="text"><code>Customer / NCP / Admin browser
+          │
+   Regional Gateway (GCP load balancer + Cloud Armor)
+     ├── Frontend (Next.js)  ──▶ Backend API, Keycloak
+     ├── Backend API (FastAPI) ──▶ Cloud SQL PostgreSQL, Memorystore Redis, Temporal Cloud, Keycloak, Salesforce, email
+     ├── Keycloak (identity, Starfleet SSO broker) ──▶ PostgreSQL
+     └── Superset (analytics) ──▶ PostgreSQL (analytics schema)
+Workflow worker (Temporal) ──▶ Backend System APIs, PostgreSQL, Temporal</code></pre>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Source folder</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend</td>
+<td><code>backend/</code></td>
+<td>REST API, domain logic, migrations, email, persistence,
+integrations</td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td><code>frontend/</code></td>
+<td>Browser application and authentication client</td>
+</tr>
+<tr>
+<td>Shared workflows</td>
+<td><code>shared/workflows/</code></td>
+<td>Temporal workflow and activity definitions</td>
+</tr>
+<tr>
+<td>Workflow worker</td>
+<td><code>workflow_worker/</code></td>
+<td>Runs Temporal workflows, activities and schedules</td>
+</tr>
+<tr>
+<td>Keycloak</td>
+<td><code>keycloak/</code>, <code>keycloak-extensions/</code></td>
+<td>Identity provider, themes, realm config, custom Java extensions</td>
+</tr>
+<tr>
+<td>Superset</td>
+<td><code>superset/</code></td>
+<td>Dashboards and reports</td>
+</tr>
+<tr>
+<td>E2E tests</td>
+<td><code>e2e_playwright/</code></td>
+<td>Playwright + Cucumber browser tests</td>
+</tr>
+<tr>
+<td>Local setup</td>
+<td><code>local-setup/</code></td>
+<td>Docker Compose development stack</td>
+</tr>
+<tr>
+<td>Infrastructure</td>
+<td><code>infrastructure/</code></td>
+<td>Terraform, Helm charts, environment values</td>
+</tr>
+<tr>
+<td>Tools</td>
+<td><code>tools/</code></td>
+<td>Maintenance and developer helpers</td>
+</tr>
+<tr>
+<td>Python SDK</td>
+<td><code>backend-sdk-python/</code></td>
+<td>Generated OpenAPI client used by the worker</td>
+</tr>
+</tbody>
+</table>
+<h2 id="backend-architecture-ddd-hexagonal">Backend architecture (DDD +
+hexagonal)</h2>
+<ul>
+<li><code>backend/core/</code> — the domain. Bounded contexts:
+<code>gpu_offering</code>, <code>reservation_request</code>,
+<code>hosting_provider</code>, <code>geographical_region</code>,
+<code>gpu_model</code>, <code>organization</code>, <code>user</code>,
+<code>allocation</code>, <code>access_request</code>,
+<code>provider_onboarding</code>, <code>feedback</code>,
+<code>audit</code>, <code>authorization</code>,
+<code>partner_domain</code>, <code>salesforce</code>. Ports (interfaces)
+and domain services live here; <code>kernels/</code> holds shared ids,
+enums and errors.</li>
+<li><code>backend/infrastructure/driving/http/</code> — the driving
+adapter: FastAPI app factory (<code>main.py</code>), routers, auth
+middleware, request schemas, rate limiting.</li>
+<li><code>backend/infrastructure/driven/</code> — driven adapters:
+SQLAlchemy database models and repositories with Alembic migrations,
+email, Keycloak admin, Temporal clients, Salesforce, feedback.</li>
+<li>The domain never imports infrastructure; adapters implement the core
+ports.</li>
+</ul>
+<h2 id="division-of-labour-between-backend-and-worker">Division of
+labour between backend and worker</h2>
+<ul>
+<li>The <strong>backend owns all domain changes</strong> (status
+transitions, imports, emails rendering).</li>
+<li>The <strong>worker owns time</strong>: timers, schedules, retries,
+fan-out. Its activities call back into backend System APIs using a
+Keycloak service account (<code>workflow-worker</code> client) with
+scopes <code>notification:send</code>, <code>capacity:sync</code>,
+<code>reservation-request:write</code>.</li>
+</ul>
+<h2 id="data-stores">Data stores</h2>
+<ul>
+<li><strong>PostgreSQL</strong> (Cloud SQL in GCP) — application data,
+Keycloak data, analytics views (<code>analytics</code> schema for
+Superset), audit log (purged after about 13 months).</li>
+<li><strong>Redis</strong> (Memorystore) — rate limiting buckets
+(default, mutate, auth, import, availability, feedback), optional cache,
+role-sync budgets.</li>
+<li><strong>Temporal</strong> — workflow state (Temporal Cloud in shared
+environments, local Temporal in Docker for development).</li>
+</ul>
+<h2 id="frontend-architecture">Frontend architecture</h2>
+<ul>
+<li>Next.js 15 App Router (<code>frontend/src/app/**/page.tsx</code>),
+React 19, Ant Design 6, Tailwind CSS 4, Roboto font.</li>
+<li>Authentication with NextAuth 5 + Keycloak; middleware
+(<code>frontend/src/middleware.ts</code>,
+<code>frontend/src/services/auth/config.ts</code>) protects
+<code>/customer</code> and <code>/provider</code> routes and enforces
+status gates and scopes.</li>
+<li>State: Zustand stores (marketplace, inventory, What’s New) and SWR
+for server data; Axios for backend calls
+(<code>frontend/src/services/backend/*.ts</code>).</li>
+<li>Maps and charts with D3 and topojson; react-markdown for the in-app
+User Manual (<code>frontend/src/content/USER_MANUAL.md</code>).</li>
+<li>What’s New content lives in
+<code>frontend/src/content/whats-new.json</code>.</li>
+<li>UI rules: <code>frontend/UI_STANDARDS.md</code> (page headers,
+filters, chips, Title Case buttons, WCAG 2.2 AA).</li>
+</ul>
+<h2 id="cloud-platform">Cloud platform</h2>
+<p>Private <strong>GKE Autopilot</strong> clusters on Google Cloud,
+Cloud SQL PostgreSQL, Memorystore Redis, Secret Manager, regional
+Gateway load balancing, Cloud Armor, network policies. Temporal Cloud
+for orchestration. Terraform owns cloud resources; Helm owns workloads;
+GitLab CI builds and promotes immutable images.</p>
+</body>
+</html>

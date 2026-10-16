@@ -7,6 +7,7 @@ class Settings:
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
     QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
     QDRANT_CLUSTER_ENDPOINT = os.getenv("QDRANT_CLUSTER_ENDPOINT")
+    QDRANT_URL = os.getenv("QDRANT_URL") or os.getenv("QDRANT_CLUSTER_ENDPOINT")
     QDRANT_COLLECTION = "Prod-Rag"
 
     GROQ_API_KEY = os.getenv("GROQ_API_KEY")

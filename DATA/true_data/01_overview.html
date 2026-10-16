@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Product Overview</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-product-overview" id="toc-compute-match-product-overview">Compute Match — Product
+Overview</a>
+<ul>
+<li><a href="#what-is-compute-match" id="toc-what-is-compute-match">What
+is Compute Match?</a></li>
+<li><a href="#who-uses-compute-match" id="toc-who-uses-compute-match">Who uses Compute Match?</a></li>
+<li><a href="#the-core-idea-in-five-steps" id="toc-the-core-idea-in-five-steps">The core idea in five
+steps</a></li>
+<li><a href="#key-business-objects" id="toc-key-business-objects">Key
+business objects</a></li>
+<li><a href="#important-timers-defaults" id="toc-important-timers-defaults">Important timers (defaults)</a></li>
+<li><a href="#technology-at-a-glance" id="toc-technology-at-a-glance">Technology at a glance</a></li>
+<li><a href="#where-to-get-help" id="toc-where-to-get-help">Where to get
+help</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-product-overview">Compute Match — Product
+Overview</h1>
+<h2 id="what-is-compute-match">What is Compute Match?</h2>
+<p>Compute Match, also called the <strong>Compute MatchMake
+System</strong> (internal project key <strong>NCPMS</strong>, code name
+<strong>Clustruffle</strong>), is an NVIDIA web platform that connects
+<strong>customers</strong> who need GPU compute capacity with
+<strong>NVIDIA Cloud Providers (NCPs)</strong> who own and operate GPU
+infrastructure.</p>
+<p>In one sentence: customers find GPU clusters, send reservation
+requests, and NCPs accept, negotiate, and contract those requests, while
+NVIDIA Platform Admins oversee the marketplace.</p>
+<h2 id="who-uses-compute-match">Who uses Compute Match?</h2>
+<p>There are three personas:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Who they are</th>
+<th>What they do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Customer</strong> (also called <strong>Offtaker</strong> or
+requester)</td>
+<td>An organization that needs GPU compute</td>
+<td>Browse available GPU clusters, submit reservation requests (to one
+or several NCPs), submit custom requests, track and cancel requests</td>
+</tr>
+<tr>
+<td><strong>NCP</strong> (NVIDIA Cloud Provider / GPU Compute
+Provider)</td>
+<td>An organization that operates GPU data centers</td>
+<td>Upload GPU capacity via CSV, review incoming reservation requests,
+accept, reject, counteroffer, and confirm contracts</td>
+</tr>
+<tr>
+<td><strong>Platform Admin</strong> (NVIDIA operations / business
+admins)</td>
+<td>NVIDIA staff running the marketplace</td>
+<td>Explore global capacity, review future capacity uploads, onboard
+NCPs, approve NCP access requests, broker custom requests, extend
+deadlines, view analytics dashboards</td>
+</tr>
+</tbody>
+</table>
+<p>A single user can hold both customer and NCP access; they switch
+between them with <strong>Switch profile to</strong> in the account
+menu.</p>
+<h2 id="the-core-idea-in-five-steps">The core idea in five steps</h2>
+<ol type="1">
+<li><strong>NCPs publish capacity.</strong> An NCP uploads a CSV
+describing how many GPUs of which platform (for example H100, B200,
+GB200) are available, in which country and city, and from which
+date.</li>
+<li><strong>Customers search.</strong> A customer opens <strong>Find a
+Cluster to Reserve</strong>, filters by platform, region, country, GPU
+count, tenure, and earliest start date, and sees matching clusters on a
+world map and as cards.</li>
+<li><strong>Customers request.</strong> The customer submits a
+<strong>reservation request</strong> for one cluster, or for up to 3
+clusters from different NCPs at once (multi-NCP request). If nothing
+fits, they submit a <strong>custom request</strong> that NVIDIA admins
+broker manually.</li>
+<li><strong>NCPs respond.</strong> Each selected NCP receives an email
+with a secure <strong>magic link</strong>. The NCP accepts (moving the
+request to <strong>In Process</strong>), rejects, or counteroffers, and
+finally clicks <strong>Confirm Contract</strong>.</li>
+<li><strong>Contract.</strong> The first NCP to contract wins; the other
+NCPs’ offerings on the same request are cancelled as superseded.
+Capacity is allocated, and the deal is synced to Salesforce as an
+Offtake record.</li>
+</ol>
+<h2 id="key-business-objects">Key business objects</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Object</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GPU Offering / GPU Capacity</strong></td>
+<td>A cluster an NCP makes available: GPU platform, hosting provider,
+region, country, city, GPU count and availability date windows</td>
+</tr>
+<tr>
+<td><strong>Capacity type</strong></td>
+<td><code>AVAILABLE</code> (current capacity, starts within 90 days of
+upload, published right away) or <code>FUTURE</code> (starts more than
+90 days out, needs Platform Admin review)</td>
+</tr>
+<tr>
+<td><strong>Reservation Request</strong></td>
+<td>A customer’s request to reserve GPU capacity</td>
+</tr>
+<tr>
+<td><strong>Reservation Request Offering</strong></td>
+<td>One NCP’s slice of a reservation request; a multi-NCP request has
+one per NCP, each with its own status and deadlines</td>
+</tr>
+<tr>
+<td><strong>Proposal</strong></td>
+<td>One version of the reservation terms (dates, GPU count, platform,
+region, price). The customer’s original request is the first proposal;
+NCP counteroffers add more</td>
+</tr>
+<tr>
+<td><strong>Custom Request</strong></td>
+<td>A request without a specific cluster; NVIDIA admins move it through
+Open, In Review, Matched or Unserviceable</td>
+</tr>
+<tr>
+<td><strong>Allocation</strong></td>
+<td>Capacity consumed once a request is contracted</td>
+</tr>
+<tr>
+<td><strong>Import Job</strong></td>
+<td>One CSV capacity upload and its processing status</td>
+</tr>
+<tr>
+<td><strong>Access Request</strong></td>
+<td>A pending request from a partner (for example via the NPN portal) to
+join as an NCP</td>
+</tr>
+</tbody>
+</table>
+<h2 id="important-timers-defaults">Important timers (defaults)</h2>
+<ul>
+<li>An NCP has <strong>7 days</strong> to accept a request routed to
+them (acceptance window).</li>
+<li>After accepting, the NCP and customer have <strong>45 days</strong>
+to reach a contract (contract negotiation window).</li>
+<li>Reminder emails are sent <strong>3 days</strong> before each
+deadline.</li>
+<li>A magic link is valid for <strong>1 hour</strong>, and can be
+regenerated for up to <strong>7 days</strong> after routing.</li>
+<li>Custom requests never expire automatically.</li>
+<li>Platform Admins can extend either window by <strong>1 to 200
+days</strong>.</li>
+</ul>
+<h2 id="technology-at-a-glance">Technology at a glance</h2>
+<ul>
+<li><strong>Frontend:</strong> Next.js 15, React 19, Ant Design 6,
+Tailwind CSS 4, NextAuth 5 with Keycloak.</li>
+<li><strong>Backend:</strong> Python 3.13, FastAPI, Domain-Driven Design
+with hexagonal architecture, SQLAlchemy, PostgreSQL, Alembic
+migrations.</li>
+<li><strong>Workflows:</strong> Temporal (Temporal Cloud in shared
+environments) with a Python workflow worker.</li>
+<li><strong>Identity:</strong> Keycloak with NVIDIA Starfleet SSO,
+custom Keycloak extensions.</li>
+<li><strong>Analytics:</strong> Apache Superset dashboards.</li>
+<li><strong>Platform:</strong> Google Cloud — GKE Autopilot, Cloud SQL
+PostgreSQL, Memorystore Redis, Secret Manager; deployed with Terraform
+and Helm through GitLab CI.</li>
+<li><strong>Integrations:</strong> Salesforce (Offtake sync and
+partner-domain sync), email notifications.</li>
+</ul>
+<h2 id="where-to-get-help">Where to get help</h2>
+<ul>
+<li>In the app: <strong>Page Help</strong> (the <code>?</code> icon) for
+context help and <strong>User Manual</strong> (book icon) for the full
+role-filtered manual.</li>
+<li>Support email for access problems: computematchmake@nvidia.com.</li>
+<li>Developer docs: the <code>docs/</code> folder in the repository,
+also published as the Compute Match documentation site.</li>
+</ul>
+</body>
+</html>

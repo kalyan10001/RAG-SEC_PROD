@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Question and Answer Bank</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-question-and-answer-bank" id="toc-compute-match-question-and-answer-bank">Compute Match — Question
+and Answer Bank</a>
+<ul>
+<li><a href="#admin-alerts" id="toc-admin-alerts">Admin —
+alerts</a></li>
+<li><a href="#admin-analytics" id="toc-admin-analytics">Admin —
+analytics</a></li>
+<li><a href="#admin-custom-request" id="toc-admin-custom-request">Admin
+— custom-request</a></li>
+<li><a href="#admin-global-capacity" id="toc-admin-global-capacity">Admin — global-capacity</a></li>
+<li><a href="#admin-onboarding" id="toc-admin-onboarding">Admin —
+onboarding</a></li>
+<li><a href="#admin-review" id="toc-admin-review">Admin —
+review</a></li>
+<li><a href="#admin-timers" id="toc-admin-timers">Admin —
+timers</a></li>
+<li><a href="#any-feedback" id="toc-any-feedback">Any —
+feedback</a></li>
+<li><a href="#any-help" id="toc-any-help">Any — help</a></li>
+<li><a href="#any-lifecycle" id="toc-any-lifecycle">Any —
+lifecycle</a></li>
+<li><a href="#any-overview" id="toc-any-overview">Any —
+overview</a></li>
+<li><a href="#any-roles" id="toc-any-roles">Any — roles</a></li>
+<li><a href="#any-sign-in" id="toc-any-sign-in">Any — sign-in</a></li>
+<li><a href="#any-support" id="toc-any-support">Any — support</a></li>
+<li><a href="#any-timers" id="toc-any-timers">Any — timers</a></li>
+<li><a href="#any-whats-new" id="toc-any-whats-new">Any —
+whats-new</a></li>
+<li><a href="#customer-custom-request" id="toc-customer-custom-request">Customer — custom-request</a></li>
+<li><a href="#customer-request" id="toc-customer-request">Customer —
+request</a></li>
+<li><a href="#customer-search" id="toc-customer-search">Customer —
+search</a></li>
+<li><a href="#customer-tracking" id="toc-customer-tracking">Customer —
+tracking</a></li>
+<li><a href="#developer-api" id="toc-developer-api">Developer —
+api</a></li>
+<li><a href="#developer-architecture" id="toc-developer-architecture">Developer — architecture</a></li>
+<li><a href="#developer-delivery" id="toc-developer-delivery">Developer
+— delivery</a></li>
+<li><a href="#developer-git" id="toc-developer-git">Developer —
+git</a></li>
+<li><a href="#developer-infrastructure" id="toc-developer-infrastructure">Developer — infrastructure</a></li>
+<li><a href="#developer-keycloak" id="toc-developer-keycloak">Developer
+— keycloak</a></li>
+<li><a href="#developer-local" id="toc-developer-local">Developer —
+local</a></li>
+<li><a href="#developer-observability" id="toc-developer-observability">Developer — observability</a></li>
+<li><a href="#developer-salesforce" id="toc-developer-salesforce">Developer — salesforce</a></li>
+<li><a href="#developer-testing" id="toc-developer-testing">Developer —
+testing</a></li>
+<li><a href="#developer-workflows" id="toc-developer-workflows">Developer — workflows</a></li>
+<li><a href="#ncp-dashboard" id="toc-ncp-dashboard">Ncp —
+dashboard</a></li>
+<li><a href="#ncp-magic-link" id="toc-ncp-magic-link">Ncp —
+magic-link</a></li>
+<li><a href="#ncp-manage" id="toc-ncp-manage">Ncp — manage</a></li>
+<li><a href="#ncp-roles" id="toc-ncp-roles">Ncp — roles</a></li>
+<li><a href="#ncp-sign-in" id="toc-ncp-sign-in">Ncp — sign-in</a></li>
+<li><a href="#ncp-upload" id="toc-ncp-upload">Ncp — upload</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-question-and-answer-bank">Compute Match — Question
+and Answer Bank</h1>
+<h2 id="admin-alerts">Admin — alerts</h2>
+<p><strong>Q: Is there a daily alert for requests near their
+deadline?</strong></p>
+<p>A: Yes. A Temporal schedule (in-process-requests-alert-daily) emails
+Platform Admins at 09:00 UTC every day with In Process offerings
+approaching their contract deadline.</p>
+<h2 id="admin-analytics">Admin — analytics</h2>
+<p><strong>Q: What analytics dashboards exist?</strong></p>
+<p>A: Two Superset dashboards: Compute MatchMake System Metrics
+(request, user and capacity analytics such as conversion rate, time to
+contract, capacity by platform and region) and Feedback (ratings,
+reasons, journeys).</p>
+<p><strong>Q: Who can see the Superset dashboards?</strong></p>
+<p>A: Users with the Keycloak role superset_dashboard_viewers (included
+for Platform Admins), mapped to the Superset DashboardViewer role, which
+can view the analytics schema only with no SQL Lab.</p>
+<h2 id="admin-custom-request">Admin — custom-request</h2>
+<p><strong>Q: How do I process a custom request as an
+admin?</strong></p>
+<p>A: Open Custom requests, click the row, move it to In Review, then
+Mark as Matched (optionally recording the NCP, region and comment) or
+Close as Unserviceable. The customer is emailed each step.</p>
+<h2 id="admin-global-capacity">Admin — global-capacity</h2>
+<p><strong>Q: What is the Global Capacity Explorer?</strong></p>
+<p>A: A read-only map, list and chart of GPU capacity across all NCPs.
+Filter by Platform (needed for the chart), region, NCP, country and
+dates; export to Excel or CSV. Requires global_capacity_view.</p>
+<h2 id="admin-onboarding">Admin — onboarding</h2>
+<p><strong>Q: How do I onboard a new NCP?</strong></p>
+<p>A: Go to Onboard NCPs, download the onboarding CSV template, fill in
+organizations and users, and upload it. A background workflow creates
+Keycloak organizations, users, roles and group memberships and sends
+welcome emails. Track progress in the history table.</p>
+<p><strong>Q: How do I approve a partner access request?</strong></p>
+<p>A: In Onboard NCPs, open Review Onboarding Requests, then Approve
+(provisions the organization and user) or Reject with a reason (emailed
+to the applicant). Requires manage_ncp and the NPN integration
+enabled.</p>
+<p><strong>Q: What are the NCP onboarding job statuses?</strong></p>
+<p>A: QUEUED, VALIDATING, VALIDATION_FAILED, ONBOARDING, COMPLETED and
+FAILED.</p>
+<h2 id="admin-review">Admin — review</h2>
+<p><strong>Q: How do I approve future capacity?</strong></p>
+<p>A: Open Review Future Capacities, go to the Pending tab, click Accept
+on the row and Confirm in ‘Approve Future Capacity Submission’. The
+capacity goes live for customers.</p>
+<p><strong>Q: How do I reject future capacity?</strong></p>
+<p>A: In Review Future Capacities, click Reject on a Pending row, enter
+a reason (required, up to 500 characters) and click Submit Rejection.
+The NCP is emailed the reason.</p>
+<p><strong>Q: Are future capacity submissions ever
+auto-approved?</strong></p>
+<p>A: No. They wait until a Platform Admin reviews them.</p>
+<h2 id="admin-timers">Admin — timers</h2>
+<p><strong>Q: How do I extend a request deadline?</strong></p>
+<p>A: In Reservation requests (table view), click the row’s ⋮ menu,
+choose Extend Acceptance Duration or Extend Contract Negotiation
+Duration, enter 1-200 days, check the previewed date and click Confirm.
+Needs accept_contract_extension.</p>
+<p><strong>Q: Can an expired offering be revived?</strong></p>
+<p>A: Yes. Extending the acceptance or contract deadline can move an
+Expired offering back to its previous active status.</p>
+<h2 id="any-feedback">Any — feedback</h2>
+<p><strong>Q: How do I give feedback?</strong></p>
+<p>A: Click Share Feedback in the header, or answer the star-rating
+prompt after creating a request or uploading capacity. When cancelling
+you may be asked for a reason.</p>
+<h2 id="any-help">Any — help</h2>
+<p><strong>Q: Where is the user manual?</strong></p>
+<p>A: Click the book icon (User Manual) in the header. It opens the full
+manual filtered to your role. The ? icon shows help for the current
+page.</p>
+<h2 id="any-lifecycle">Any — lifecycle</h2>
+<p><strong>Q: What are all the reservation request
+statuses?</strong></p>
+<p>A: Open, Awaiting NCP Acceptance (AwaitingProviderAcceptance), In
+Process, Contracted, Rejected, Expired, Cancelled, plus In Review,
+Matched and Unserviceable for custom requests. The UI also shows
+Awaiting Provider Approval and Awaiting Customer Approval for
+counteroffer flows.</p>
+<p><strong>Q: What does In Process mean?</strong></p>
+<p>A: At least one NCP has accepted the request and negotiation is under
+way. The contract must be confirmed within 45 days by default.</p>
+<p><strong>Q: When does a request become Expired?</strong></p>
+<p>A: When NCPs do not accept within the 7-day acceptance window or do
+not contract within the 45-day contract window. When every offering has
+expired, the request is Expired and the customer gets one consolidated
+email.</p>
+<p><strong>Q: What happens to other NCPs when one NCP
+contracts?</strong></p>
+<p>A: Their offerings on the same request are Cancelled and they receive
+a ‘superseded’ email.</p>
+<p><strong>Q: When is a whole request Rejected?</strong></p>
+<p>A: When every NCP offering on the request is rejected.</p>
+<p><strong>Q: What is the difference between reservation status,
+offering status and GPU offering status?</strong></p>
+<p>A: Reservation status covers the whole customer request. Offering
+status covers one NCP’s slice of the request
+(AwaitingProviderAcceptance, InProcess, Contracted, Expired, Rejected,
+Cancelled). GPU offering status is the inventory listing status (ACTIVE,
+PENDING_REVIEW, REJECTED).</p>
+<p><strong>Q: What is a proposal?</strong></p>
+<p>A: A version of the reservation terms: dates, GPU count, platform,
+region and price. The customer’s request is the first proposal; NCP
+counteroffers add more. Price-only changes update in place; material
+changes create a new proposal in history.</p>
+<p><strong>Q: What is an allocation?</strong></p>
+<p>A: The capacity consumed when a request is contracted. Its statuses
+are scheduled, provisioning, running, stopping and complete.</p>
+<h2 id="any-overview">Any — overview</h2>
+<p><strong>Q: What is Compute Match?</strong></p>
+<p>A: Compute Match (the Compute MatchMake System) is an NVIDIA platform
+that connects customers who need GPU compute capacity with NVIDIA Cloud
+Providers (NCPs) who operate GPU infrastructure. Customers search
+clusters and send reservation requests; NCPs accept, negotiate and
+contract them; NVIDIA Platform Admins run the marketplace.</p>
+<p><strong>Q: What does NCP stand for?</strong></p>
+<p>A: NCP means NVIDIA Cloud Provider, also called GPU Compute Provider:
+an organization that owns and operates GPU data centers and publishes
+capacity on Compute Match.</p>
+<p><strong>Q: What are the user personas in Compute Match?</strong></p>
+<p>A: There are three: Customer (also called Offtaker), NCP (provider),
+and Platform Admin (NVIDIA staff). A user with both customer and NCP
+access can switch with ‘Switch profile to’ in the account menu.</p>
+<p><strong>Q: What is NCPMS or Clustruffle?</strong></p>
+<p>A: NCPMS is the Jira project key and internal name for Compute Match.
+Clustruffle is an internal code name that appears in metric names and
+Keycloak endpoints.</p>
+<p><strong>Q: Explain the end-to-end workflow of Compute Match in simple
+steps.</strong></p>
+<p>A: 1) NCPs upload GPU capacity via CSV. 2) Customers filter clusters
+on Find a Cluster to Reserve. 3) Customers submit a reservation request
+to one or up to 3 NCPs, or a custom request. 4) Each NCP gets a
+magic-link email and accepts, rejects or counteroffers. 5) The first NCP
+to click Confirm Contract wins; the request becomes Contracted, others
+are cancelled as superseded, capacity is allocated and the deal syncs to
+Salesforce.</p>
+<h2 id="any-roles">Any — roles</h2>
+<p><strong>Q: How do I switch between customer and NCP
+profiles?</strong></p>
+<p>A: Open the account menu (your name, top-right) and use ‘Switch
+profile to’. Menus and help update to the active profile.</p>
+<p><strong>Q: A menu item is missing for me. Why?</strong></p>
+<p>A: Menu items only appear if you hold the matching scope. For example
+Upload Capacities needs manage_inventory and Global Capacity Explorer
+needs global_capacity_view. Ask your Platform Admin to grant the
+role.</p>
+<p><strong>Q: Who can belong to more than one organization?</strong></p>
+<p>A: Only account-manager roles (account_manager_consumer and
+account_manager_provider). This is enforced by the multi-org-policy
+Keycloak extension.</p>
+<h2 id="any-sign-in">Any — sign-in</h2>
+<p><strong>Q: How do I sign up or log in?</strong></p>
+<p>A: Click Sign up or Login on the home page, enter your work email on
+the login page and click Login. You are redirected to Starfleet (NVIDIA
+SSO) and your company’s identity provider, then back to Compute Match.
+Sign up and login use the same flow.</p>
+<p><strong>Q: Can I use my Gmail account to sign in?</strong></p>
+<p>A: No. Personal email domains such as Gmail, Yahoo and Hotmail are
+blocked. Use your work or enterprise email.</p>
+<p><strong>Q: What is Starfleet?</strong></p>
+<p>A: Starfleet is NVIDIA’s single sign-on service. Compute Match uses
+it through Keycloak to authenticate users with their work identity.</p>
+<p><strong>Q: Why am I seeing Access denied?</strong></p>
+<p>A: Your identity was verified but your account is not authorized
+under current access policies (for example missing role or disallowed
+domain). The page shows your email and the reason. Contact
+computematchmake@nvidia.com, or sign out and use a work account that has
+access.</p>
+<p><strong>Q: What does ‘Thanks for Signing up’ mean?</strong></p>
+<p>A: Your account status is PENDING and awaits activation. You will
+receive an email when it is activated.</p>
+<p><strong>Q: What fields are needed to complete my
+profile?</strong></p>
+<p>A: First Name, Last Name, Organization Name and Phone Number (digits
+only, +1 pre-filled). Click Submit.</p>
+<p><strong>Q: How do I accept the terms and conditions?</strong></p>
+<p>A: A blocking modal appears after login. Scroll to the end, tick ‘I
+have read and agree to the Terms and Conditions’ and click Accept &amp;
+Continue. You can also choose Sign out.</p>
+<p><strong>Q: Where do I land after logging in?</strong></p>
+<p>A: Customers land on Find a Cluster to Reserve, NCPs on the Dashboard
+(/provider/dashboard), and Platform Admins on the Global Capacity
+Explorer when available.</p>
+<h2 id="any-support">Any — support</h2>
+<p><strong>Q: Who do I contact for access problems?</strong></p>
+<p>A: Email computematchmake@nvidia.com, or ask your Platform Admin to
+grant the role you need.</p>
+<h2 id="any-timers">Any — timers</h2>
+<p><strong>Q: How long does an NCP have to accept a
+request?</strong></p>
+<p>A: 7 days by default (MULTI_PROVIDER_ACCEPTANCE_EXPIRY_DAYS). A
+reminder is sent 3 days before the deadline.</p>
+<p><strong>Q: How long is the contract negotiation window?</strong></p>
+<p>A: 45 days from acceptance by default
+(MULTI_PROVIDER_IN_PROCESS_EXPIRY_DAYS), with a reminder 3 days
+before.</p>
+<h2 id="any-whats-new">Any — whats-new</h2>
+<p><strong>Q: What is the What’s New banner?</strong></p>
+<p>A: A release highlight banner shown on your landing page for about 7
+days after a release, tailored to your persona. Dismissing it keeps it
+available under the bell icon (or What’s New in the menu). Use Mark All
+as Read to clear the unread dot.</p>
+<p><strong>Q: What is new in the October 2026 release?</strong></p>
+<p>A: Customers: faster request submission and real-time custom request
+tracking. NCPs: clearer upload status and sign-in from the NPN portal.
+Admins: the full custom request workflow (Open, In Review, Matched or
+Unserviceable).</p>
+<h2 id="customer-custom-request">Customer — custom-request</h2>
+<p><strong>Q: What is a custom request?</strong></p>
+<p>A: A reservation request with no specific cluster selected. NVIDIA
+Platform Admins broker it manually, moving it from Open to In Review to
+Matched or Unserviceable. It never expires.</p>
+<p><strong>Q: How do I submit a custom request?</strong></p>
+<p>A: On Find a Cluster to Reserve click ‘Submit a custom request’ in
+the banner below the filters, or ‘Submit Custom Request’ when no results
+match. Your filters are carried over as hints; GPU Model and
+Geographical Region are required.</p>
+<p><strong>Q: Can I cancel a custom request?</strong></p>
+<p>A: Yes, while it is Open or In Review. Matched, Unserviceable and
+Cancelled are final.</p>
+<h2 id="customer-request">Customer — request</h2>
+<p><strong>Q: How do I create a reservation request?</strong></p>
+<p>A: Select a cluster card (or several with the multi-NCP toggle),
+click Request a Cluster, fill Customer Details, Cluster Details and GPU
+Reservation Period, then click Submit reservation request. You land on
+the request detail page.</p>
+<p><strong>Q: How do I send a request to multiple NCPs?</strong></p>
+<p>A: Turn on ‘Send request to multiple NCP’s’ (requires the
+send_request_multiple_provider permission), tick up to 3 cluster cards
+and click Request a Cluster. They are treated as alternatives; you will
+be matched with one.</p>
+<p><strong>Q: What is the maximum number of NCPs in one
+request?</strong></p>
+<p>A: The UI allows 3 by default
+(NEXT_PUBLIC_MAX_MULTI_NCP_SELECTION_COUNT). The backend cap is 10
+(MULTI_PROVIDER_MAX_GPU_OFFERINGS_PER_REQUEST).</p>
+<p><strong>Q: Which fields are required in the reservation
+form?</strong></p>
+<p>A: Organization Name, GPU count (at least 1), preferred start date
+(after today), and either Duration in months (at least 1) or Tenure.
+Terms are pre-accepted on submit. Organization URL, Contact Email (max
+250 chars) and Purpose (max 1,000 chars) are optional.</p>
+<p><strong>Q: Can I request more GPUs than a cluster shows?</strong></p>
+<p>A: Yes. A yellow warning appears but you can still submit and
+negotiate with the NCP.</p>
+<h2 id="customer-search">Customer — search</h2>
+<p><strong>Q: How do I find available GPU clusters?</strong></p>
+<p>A: Go to Request a Cluster, which opens Find a Cluster to Reserve.
+Select a Platform first, then filter by Geographical Region, Country,
+No. of GPUs, Tenure and Earliest Start Date. Results appear on a world
+map and as capacity cards.</p>
+<p><strong>Q: Why are Tenure and Earliest Start Date
+disabled?</strong></p>
+<p>A: They unlock only after you select a Platform (GPU model).</p>
+<p><strong>Q: What do Current and Future mean on a capacity
+card?</strong></p>
+<p>A: Current means available capacity (starting within 90 days). Future
+means capacity that starts later and was approved by a Platform
+Admin.</p>
+<p><strong>Q: What does the amber note on a cluster card
+mean?</strong></p>
+<p>A: The cluster already has pending requests from other customers.</p>
+<p><strong>Q: What tenure options are available?</strong></p>
+<p>A: 0-1, 1-2, 2-3, 3-4, 4-5, 5-6 and 6+ years. Availability checks use
+the upper bound of the band.</p>
+<h2 id="customer-tracking">Customer — tracking</h2>
+<p><strong>Q: Where can I see my requests?</strong></p>
+<p>A: My requests (/customer/reservations). It lists each request with
+status, platform, region, GPUs and dates. Multi-NCP requests are grouped
+with a child row per NCP. Click a row for details.</p>
+<p><strong>Q: How do I see why an NCP rejected my request?</strong></p>
+<p>A: In My requests, hover the info icon next to the Rejected status,
+or open the request detail page where rejection remarks appear in the
+Reservation Summary.</p>
+<p><strong>Q: How do I cancel a reservation request?</strong></p>
+<p>A: Open the request detail page, click Cancel, and click Confirm in
+the modal (optionally give a reason). Cancel is available while Awaiting
+NCP Acceptance, awaiting approval, In Process or Expired. NCPs are
+notified.</p>
+<p><strong>Q: Can I accept an NCP counteroffer from the request
+page?</strong></p>
+<p>A: No. The customer detail page is for viewing and cancelling only.
+You agree terms with the NCP after the introduction email and the NCP
+confirms the contract.</p>
+<p><strong>Q: What happens after I submit a request?</strong></p>
+<p>A: You get a ‘request received’ email. Each NCP gets a magic link and
+has 7 days to accept. When one accepts, the request is In Process and
+you get an introduction email; there are 45 days to contract. When an
+NCP confirms the contract the request is Contracted and the others are
+cancelled.</p>
+<h2 id="developer-api">Developer — api</h2>
+<p><strong>Q: Where are the API docs?</strong></p>
+<p>A: Locally at http://localhost:8082/docs (Swagger). A snapshot is in
+backend/openapi.json, which omits Access Request and internal
+routes.</p>
+<p><strong>Q: Which endpoint creates a reservation request?</strong></p>
+<p>A: POST /api/v1/reservation-request with scope
+create_reservation_request.</p>
+<p><strong>Q: Which endpoints do NCPs use to act on
+offerings?</strong></p>
+<p>A: POST /api/v1/provider/offering/{id}/accept, /reject and /contract,
+all requiring approver_manage_reservation_request.</p>
+<h2 id="developer-architecture">Developer — architecture</h2>
+<p><strong>Q: What is the tech stack?</strong></p>
+<p>A: Frontend: Next.js 15, React 19, Ant Design 6, Tailwind 4, NextAuth
+5. Backend: Python 3.13 FastAPI with DDD/hexagonal architecture,
+SQLAlchemy, PostgreSQL, Alembic. Workflows: Temporal. Identity: Keycloak
+with Starfleet. Analytics: Superset. Cloud: GCP GKE Autopilot, Cloud
+SQL, Memorystore Redis, Secret Manager, via Terraform, Helm and GitLab
+CI.</p>
+<p><strong>Q: How is the backend structured?</strong></p>
+<p>A: Hexagonal architecture. backend/core holds the domain (bounded
+contexts like gpu_offering, reservation_request, organization, user)
+with ports and services. backend/infrastructure/driving/http is the
+FastAPI adapter; backend/infrastructure/driven holds database, email,
+Keycloak, Temporal and Salesforce adapters.</p>
+<p><strong>Q: What does the workflow worker do versus the
+backend?</strong></p>
+<p>A: The backend owns domain changes. The Temporal worker owns timers,
+schedules, retries and fan-out, and its activities call backend System
+APIs with a service account (scopes notification:send, capacity:sync,
+reservation-request:write).</p>
+<h2 id="developer-delivery">Developer — delivery</h2>
+<p><strong>Q: How are releases promoted across
+environments?</strong></p>
+<p>A: Build once, promote digests: main publishes images, Dev
+auto-deploys and snapshots, QA promotes exact digests into a
+computematch-release package, Staging deploys that package without
+rebuilding. Production promotion is not yet enabled.</p>
+<h2 id="developer-git">Developer — git</h2>
+<p><strong>Q: What is the branch naming convention?</strong></p>
+<p>A: NCPMS-<number>/<kebab-case-outcome>, for example
+NCPMS-565/repository-foundation. One Jira issue per branch, branched
+from an updated main.</p>
+<p><strong>Q: What is the commit message format?</strong></p>
+<p>A: <type>(<scope>): NCPMS-<number> <imperative description>, for
+example fix(backend): NCPMS-855 widen hosting provider name columns.
+Types: feat, fix, docs, test, refactor, perf, build, ci, chore, revert;
+add ! after the scope for breaking changes.</p>
+<p><strong>Q: What labels must a merge request have?</strong></p>
+<p>A: Exactly one type:: label, exactly one risk:: label (low, medium,
+high) and at least one component: label. Add review:security,
+review:database, review:platform or breaking-change when relevant.</p>
+<h2 id="developer-infrastructure">Developer — infrastructure</h2>
+<p><strong>Q: Where does Compute Match run in the cloud?</strong></p>
+<p>A: Private GKE Autopilot clusters on Google Cloud with Cloud SQL
+PostgreSQL, Memorystore Redis, Secret Manager, a regional Gateway and
+Cloud Armor, plus Temporal Cloud.</p>
+<h2 id="developer-keycloak">Developer — keycloak</h2>
+<p><strong>Q: What custom Keycloak extensions exist?</strong></p>
+<p>A: accept-reservation-token (magic-link action token),
+audit-event-listener (login/logout audit to backend),
+default-role-restriction (strip default roles from admin-created users)
+and multi-org-policy (only account managers in multiple
+organizations).</p>
+<h2 id="developer-local">Developer — local</h2>
+<p><strong>Q: How do I run Compute Match locally?</strong></p>
+<p>A: Install Git, Make and Docker Desktop, connect to the NVIDIA VPN,
+run make onboard from the repo root (first build 10-20 minutes), then
+make verify. Open http://localhost:3000 and sign in with a demo account
+from local-setup/.onboarding/accounts.md.</p>
+<p><strong>Q: What are the local demo accounts?</strong></p>
+<p>A: Customer developer@customer-a.example.org, provider
+seed@singtel.example.org, platform business admin
+business-admin@platform.example.org, operations
+ops@platform.example.org. Passwords are in
+local-setup/.onboarding/accounts.md.</p>
+<p><strong>Q: How do I develop only the backend on my
+laptop?</strong></p>
+<p>A: Run make deps MODE=backend once, then make backend. The frontend
+and worker stay in Docker. Return everything to Docker with make
+start.</p>
+<p><strong>Q: What ports do the local services use?</strong></p>
+<p>A: App 3000, backend 8082 (/docs), Keycloak 8080, Temporal UI 7600,
+Temporal gRPC 7233, PostgreSQL 5432, Redis 6379, Superset 8088, SigNoz
+3301 (OTLP 4317/4318).</p>
+<p><strong>Q: My local setup is broken. How do I reset it?</strong></p>
+<p>A: Run make clean &amp;&amp; make onboard &amp;&amp; make verify.
+First check make status, make doctor and make logs SERVICE=backend.</p>
+<p><strong>Q: I signed up locally but see no features.</strong></p>
+<p>A: New sign-ups may need a business role. In Keycloak
+(http://localhost:8080/admin), choose the customer realm, find the user,
+assign a role under Role mapping, then sign out and back in.</p>
+<h2 id="developer-observability">Developer — observability</h2>
+<p><strong>Q: What logging format do services use?</strong></p>
+<p>A: Log Record v2: JSON Lines on stdout with log_schema_version 2,
+severity, event_name, resource, source, optional trace context,
+attributes and exception. No PII or secrets in attributes.</p>
+<h2 id="developer-salesforce">Developer — salesforce</h2>
+<p><strong>Q: How does Compute Match integrate with
+Salesforce?</strong></p>
+<p>A: One-way sync to the Salesforce Offtake object using a
+transactional outbox (salesforce_create_sync) drained by
+SfdcCreateBatchWorkflow: nightly create at 05:00 UTC and status updates
+every 2 minutes. One Offtake per NCP offering. Partner email domains are
+also read from Salesforce twice a day.</p>
+<h2 id="developer-testing">Developer — testing</h2>
+<p><strong>Q: How are end-to-end tests written?</strong></p>
+<p>A: With Playwright and Cucumber (Gherkin) in e2e_playwright/:
+features for Authentication, Customer, Provider and Admin workflows,
+page objects in src/PageObjects and steps in src/Specs. Choose an
+environment with TEST_ENV.</p>
+<h2 id="developer-workflows">Developer — workflows</h2>
+<p><strong>Q: Which Temporal workflows exist?</strong></p>
+<p>A: ReservationRequestWorkflow, OfferingLifecycleWorkflow,
+CsvImportWorkflow, ProviderOnboardingWorkflow, InProcessAlertWorkflow,
+AuditRetentionWorkflow, SfdcCreateBatchWorkflow (create and status
+modes) and SfdcPartnerDomainSyncWorkflow.</p>
+<p><strong>Q: What signals does OfferingLifecycleWorkflow
+accept?</strong></p>
+<p>A: provider_accepted, acceptance_expiry_extended,
+contract_expiry_extended, offering_contracted, offering_rejected and
+offering_cancelled.</p>
+<h2 id="ncp-dashboard">Ncp — dashboard</h2>
+<p><strong>Q: What does the NCP Dashboard show?</strong></p>
+<p>A: A read-only overview: a welcome header with how many requests
+await action, Awaiting Your Action, Available Capacities with your
+latest upload status, and quick links View all requests, Manage
+Reservations, View all uploads and Upload Capacity.</p>
+<h2 id="ncp-magic-link">Ncp — magic-link</h2>
+<p><strong>Q: What is a magic link?</strong></p>
+<p>A: A secure one-click email link sent to NCP users when a request is
+routed to their organization. It logs them in through a Keycloak action
+token and opens Manage reservation so they can accept.</p>
+<p><strong>Q: Who receives magic-link emails?</strong></p>
+<p>A: Users in the NCP organization who have the provider_business_user
+role and belong to the Keycloak group offering-validator. Basic users do
+not.</p>
+<p><strong>Q: My magic link has expired. What do I do?</strong></p>
+<p>A: Magic links are valid for 1 hour. Request a resend (allowed for 7
+days after routing) or simply log in and open Manage reservation.</p>
+<p><strong>Q: Why does the magic link say a different user is logged
+in?</strong></p>
+<p>A: The accept-reservation-token Keycloak extension blocks a link if
+another user is already signed in. Log out and click the link again.</p>
+<h2 id="ncp-manage">Ncp — manage</h2>
+<p><strong>Q: How do I accept a reservation request as an
+NCP?</strong></p>
+<p>A: Open Manage reservation (/provider?view=split), choose the
+Awaiting NCP Acceptance tab, find the card and click Accept. The
+offering becomes In Process and a 45-day contract window starts.</p>
+<p><strong>Q: How do I reject a request?</strong></p>
+<p>A: Click Reject on the card in Manage reservation and confirm.
+Remarks are required and are shown to the customer.</p>
+<p><strong>Q: How do I make a counteroffer?</strong></p>
+<p>A: Click Counteroffer on the card. The Modify Details panel shows the
+original request on the left and editable Proposed Start Date, Proposed
+End Date, Number of GPUs, Platform and Geographical Region on the right.
+Click Confirm (or Reset / Cancel).</p>
+<p><strong>Q: How do I finalize a contract?</strong></p>
+<p>A: For an In Process card, click Confirm Contract. The offering and
+request become Contracted, capacity is allocated, and other NCPs are
+cancelled as superseded.</p>
+<p><strong>Q: Why did Accept or Confirm Contract fail with capacity not
+available?</strong></p>
+<p>A: Your remaining capacity for that offering, region and capacity
+type no longer covers the requested GPUs and period (availability is
+checked at accept and contract time).</p>
+<p><strong>Q: When does the capacity chart appear in Manage
+reservation?</strong></p>
+<p>A: After you select Platform, Geographical Region and Country in the
+left panel filters.</p>
+<p><strong>Q: What is the difference between Manage reservation and
+Reservation requests?</strong></p>
+<p>A: Manage reservation is the split view with action cards and a
+capacity chart. Reservation requests is a sortable table for browsing;
+to act, choose filters and click Manage Reservation.</p>
+<p><strong>Q: Can I reorder reservation cards?</strong></p>
+<p>A: Yes, drag cards to set priority, or use Space/Enter to grab and
+arrow keys to move.</p>
+<h2 id="ncp-roles">Ncp — roles</h2>
+<p><strong>Q: What is the difference between provider_business_user and
+provider_basic_user?</strong></p>
+<p>A: provider_business_user can manage inventory and act on
+reservations, and (with the offering-validator group) receives magic
+links. provider_basic_user is read-only, never receives magic links and
+only gets the table view.</p>
+<p><strong>Q: Why is the customer name shown as
+Confidential?</strong></p>
+<p>A: Customer organization names can be hidden from NCPs and shown
+blurred as Confidential until engagement, to protect customer
+privacy.</p>
+<h2 id="ncp-sign-in">Ncp — sign-in</h2>
+<p><strong>Q: Why does it say ‘Your access is being
+reviewed’?</strong></p>
+<p>A: Your email domain belongs to an NVIDIA partner but your NCP
+organization is not onboarded yet. An access request was created and a
+Platform Admin must approve it. When approved, the page shows ‘Your
+access has been approved’ while your session refreshes.</p>
+<p><strong>Q: How do NPN members sign in?</strong></p>
+<p>A: NPN (NVIDIA Partner Network) members can reach Compute Match
+directly from the NPN portal. They still enter their work email and sign
+in through Starfleet. If their NCP is not onboarded, an access request
+with source NPN_PORTAL is created for admin approval.</p>
+<h2 id="ncp-upload">Ncp — upload</h2>
+<p><strong>Q: How do I upload GPU capacity?</strong></p>
+<p>A: Go to Upload Capacities, click Download Template, fill it, then
+drag and drop or select the CSV. After Upload Successful, watch progress
+in Upload History.</p>
+<p><strong>Q: What columns does the capacity CSV need?</strong></p>
+<p>A: Required: GPU Platform Type, Number of GPUs Available, Live Token
+Date, Country, City. Optional: Region, end_datetime. NCP Name, RA/RD,
+Exemplar Cluster, aaS Capability and State are accepted but ignored.</p>
+<p><strong>Q: What are the CSV size limits?</strong></p>
+<p>A: UTF-8, at most 10 MB, 10,000 data rows and 500 characters per
+cell. (The in-app manual still says 1,000 rows, but the backend enforces
+10,000.)</p>
+<p><strong>Q: Why is my upload Pending Review?</strong></p>
+<p>A: It contains future capacity — rows whose Live Token Date is more
+than 90 days after upload. A Platform Admin must accept or reject it.
+Current-capacity rows already went live.</p>
+<p><strong>Q: What happens to invalid rows in my CSV?</strong></p>
+<p>A: They are skipped and listed as errors (see all details in Upload
+History). The job only fails if no row is valid.</p>
+<p><strong>Q: Do I need to put my hosting provider name in the
+CSV?</strong></p>
+<p>A: No. The hosting provider name comes from your NCP
+organization.</p>
+<p><strong>Q: What are the CSV import job statuses?</strong></p>
+<p>A: Backend: QUEUED, VALIDATING, VALIDATION_FAILED, IMPORTING,
+IMPORT_FAILED, PENDING_REVIEW, APPROVED, REJECTED,
+FUTURE_CAPACITY_REJECTED, COMPLETED. UI labels: Processing, Pending
+Review, Completed, Rejected, Validation Failed.</p>
+<p><strong>Q: What is the difference between current and future
+capacity?</strong></p>
+<p>A: Current (AVAILABLE) capacity starts within 90 days of upload and
+is published right after validation. Future (FUTURE) capacity starts
+more than 90 days out and needs Platform Admin review before customers
+see it.</p>
+</body>
+</html>

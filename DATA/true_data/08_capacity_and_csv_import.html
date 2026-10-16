@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — GPU Capacity Model and CSV Import
+Workflow</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-gpu-capacity-model-and-csv-import-workflow" id="toc-compute-match-gpu-capacity-model-and-csv-import-workflow">Compute
+Match — GPU Capacity Model and CSV Import Workflow</a>
+<ul>
+<li><a href="#gpu-offering-data-model" id="toc-gpu-offering-data-model">GPU offering data model</a></li>
+<li><a href="#csv-capacity-import-end-to-end-flow" id="toc-csv-capacity-import-end-to-end-flow">CSV capacity import —
+end-to-end flow</a></li>
+<li><a href="#csv-columns" id="toc-csv-columns">CSV columns</a></li>
+<li><a href="#ncp-onboarding-csv" id="toc-ncp-onboarding-csv">NCP
+onboarding CSV</a></li>
+<li><a href="#legacy-bootstrap-importers" id="toc-legacy-bootstrap-importers">Legacy bootstrap importers</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-gpu-capacity-model-and-csv-import-workflow">Compute
+Match — GPU Capacity Model and CSV Import Workflow</h1>
+<h2 id="gpu-offering-data-model">GPU offering data model</h2>
+<p>A <strong>GPU offering</strong>
+(<code>backend/core/gpu_offering/gpu_offering.py</code>) represents a
+GPU cluster type an NCP offers:</p>
+<ul>
+<li>GPU model / platform (for example H100, H200, B200, GB200)</li>
+<li>Provider organization and <strong>hosting provider</strong> (the
+NCP’s data-center brand)</li>
+<li>Description, product link (must be HTTP(S)), VRAM (positive if
+set)</li>
+<li>Interconnect: <code>InfiniBand</code> or
+<code>Spectrum-X</code></li>
+<li>Status: <code>ACTIVE</code> (listed to customers),
+<code>PENDING_REVIEW</code> (awaiting admin review),
+<code>REJECTED</code></li>
+<li>One or more <strong>regional capacities</strong></li>
+</ul>
+<p>A <strong>regional capacity</strong> ties the offering to a location:
+geographical region, country, address and latitude/longitude, with a
+list of <strong>capacity windows</strong>.</p>
+<p>A <strong>capacity window</strong> has a date range (finite or
+open-ended), GPU count, delivery id, block location, a <strong>capacity
+type</strong> (<code>AVAILABLE</code> or <code>FUTURE</code>) and an
+AI-compute flag.</p>
+<p>Reference data: - <strong>Region</strong> — a data-center location
+belonging to a hosting provider and a geographical region. -
+<strong>Geographical region</strong> — a broad area with a code, display
+name and list of ISO country codes. - <strong>GPU model</strong> —
+catalog of platform names.</p>
+<h2 id="csv-capacity-import-end-to-end-flow">CSV capacity import —
+end-to-end flow</h2>
+<ol type="1">
+<li><strong>Upload.</strong> An NCP with <code>manage_inventory</code>
+uploads a CSV on <strong>Upload Capacities</strong>
+(<code>POST /api/v1/provider/gpu-offerings/import</code>, returns 202
+Accepted). The backend checks size (10 MB) and row count (10,000).</li>
+<li><strong>Job created.</strong> An <code>ImportJob</code> is stored
+with status <code>QUEUED</code>, and Temporal workflow
+<code>CsvImportWorkflow</code> starts with id
+<code>csv-import-{job_id}</code>.</li>
+<li><strong>Validate.</strong> The worker validates columns and rows
+(<code>VALIDATING</code>). If nothing is valid →
+<code>VALIDATION_FAILED</code>.</li>
+<li><strong>Import.</strong> Valid rows are imported atomically
+(<code>IMPORTING</code>). Failures here →
+<code>IMPORT_FAILED</code>.</li>
+<li><strong>Classify.</strong> Rows starting within 90 days of upload
+become <code>AVAILABLE</code> and are published immediately. Rows
+starting later become <code>FUTURE</code>.</li>
+<li><strong>Review (future only).</strong> If there are new future rows,
+the job moves to <code>PENDING_REVIEW</code>, admins are emailed, and
+the workflow waits for an <code>approve_import</code> or
+<code>reject_import</code> signal.</li>
+<li><strong>Decision.</strong> A Platform Admin with
+<code>review_capacity</code> accepts (<code>APPROVED</code> then
+<code>COMPLETED</code>, offerings activated) or rejects
+(<code>REJECTED</code> / <code>FUTURE_CAPACITY_REJECTED</code>, with
+reason).</li>
+<li><strong>Notify.</strong> The NCP is emailed the result.</li>
+</ol>
+<h3 id="import-job-statuses">Import job statuses</h3>
+<p><code>QUEUED</code>, <code>VALIDATING</code>,
+<code>VALIDATION_FAILED</code>, <code>IMPORTING</code>,
+<code>IMPORT_FAILED</code>, <code>PENDING_REVIEW</code>,
+<code>APPROVED</code>, <code>REJECTED</code>,
+<code>FUTURE_CAPACITY_REJECTED</code>, <code>COMPLETED</code>.</p>
+<p>UI labels: Processing, Pending Review, Completed, Rejected,
+Validation Failed.</p>
+<h3 id="retry-behaviour">Retry behaviour</h3>
+<ul>
+<li>Import activities retry up to 3 times; validation and CSV-format
+errors are not retried.</li>
+<li>The workflow itself runs at most once, so users never get duplicate
+emails from replays.</li>
+</ul>
+<h2 id="csv-columns">CSV columns</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Column</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPU Platform Type</td>
+<td>Yes</td>
+<td>Vendor prefix such as “NVIDIA” tolerated</td>
+</tr>
+<tr>
+<td>Number of GPUs Available</td>
+<td>Yes</td>
+<td>Positive integer</td>
+</tr>
+<tr>
+<td>Live Token Date</td>
+<td>Yes</td>
+<td>Start of availability; decides AVAILABLE vs FUTURE</td>
+</tr>
+<tr>
+<td>Country</td>
+<td>Yes</td>
+<td>Names normalized (“USA” → United States, “Holland” →
+Netherlands)</td>
+</tr>
+<tr>
+<td>City</td>
+<td>Yes</td>
+<td>Matched against a city index with alternate names</td>
+</tr>
+<tr>
+<td>Region</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>end_datetime</td>
+<td>No</td>
+<td>End of availability; open-ended if blank</td>
+</tr>
+<tr>
+<td>NCP Name, RA/RD, Exemplar Cluster, aaS Capability, State</td>
+<td>No</td>
+<td>Metadata, ignored on import</td>
+</tr>
+</tbody>
+</table>
+<p>Limits: UTF-8, 10 MB, 10,000 rows, 500 characters per cell.
+Formula-like cells (<code>=</code>, <code>+</code>, <code>-</code>,
+<code>@</code>) are neutralized.</p>
+<p>Note: the in-app User Manual still says 1,000 rows; the backend
+enforces 10,000 (<code>MAX_CSV_ROWS</code> in
+<code>backend/core/gpu_offering/gpu_offering_csv_import_fields.py</code>).</p>
+<h2 id="ncp-onboarding-csv">NCP onboarding CSV</h2>
+<p>Admins with <code>manage_ncp</code> upload an onboarding CSV
+(<code>POST /api/v1/provider/onboard-providers</code>).
+<code>ProviderOnboardingWorkflow</code> validates it, creates Keycloak
+organizations, users, roles and group memberships (30-minute timeout),
+then emails the initiator. Statuses: <code>QUEUED</code>,
+<code>VALIDATING</code>, <code>VALIDATION_FAILED</code>,
+<code>ONBOARDING</code>, <code>COMPLETED</code>,
+<code>FAILED</code>.</p>
+<h2 id="legacy-bootstrap-importers">Legacy bootstrap importers</h2>
+<p>For seeding environments there are offline scripts in
+<code>backend/</code>: <code>import_excel_gpu_data.py</code> (see
+<code>EXCEL_IMPORT_README.md</code>), <code>csv_data_importer.py</code>,
+<code>csv_gpu_importer.py</code>, <code>generate_seed_data.py</code>.
+They use an older column layout and are separate from the production
+Temporal import path.</p>
+</body>
+</html>

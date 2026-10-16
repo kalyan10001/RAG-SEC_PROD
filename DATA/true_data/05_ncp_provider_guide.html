@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — NCP (Provider) Guide</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-ncp-provider-guide" id="toc-compute-match-ncp-provider-guide">Compute Match — NCP (Provider)
+Guide</a>
+<ul>
+<li><a href="#ncp-menu" id="toc-ncp-menu">NCP menu</a></li>
+<li><a href="#dashboard" id="toc-dashboard">Dashboard</a></li>
+<li><a href="#upload-capacities-csv" id="toc-upload-capacities-csv">Upload Capacities (CSV)</a></li>
+<li><a href="#manage-reservation-split-view" id="toc-manage-reservation-split-view">Manage reservation (split
+view)</a></li>
+<li><a href="#reservation-requests-table-view" id="toc-reservation-requests-table-view">Reservation requests (table
+view)</a></li>
+<li><a href="#reservation-detail" id="toc-reservation-detail">Reservation detail</a></li>
+<li><a href="#deadlines-you-must-watch" id="toc-deadlines-you-must-watch">Deadlines you must watch</a></li>
+<li><a href="#emails-ncps-receive" id="toc-emails-ncps-receive">Emails
+NCPs receive</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-ncp-provider-guide">Compute Match — NCP (Provider)
+Guide</h1>
+<p>This guide is for NVIDIA Cloud Providers (NCPs): organizations that
+publish GPU capacity and respond to customer reservation requests.</p>
+<h2 id="ncp-menu">NCP menu</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Menu item</th>
+<th>Route</th>
+<th>Needs scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dashboard</td>
+<td><code>/provider/dashboard</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Upload Capacities</td>
+<td><code>/provider/gpu-capacities-upload</code></td>
+<td><code>manage_inventory</code></td>
+</tr>
+<tr>
+<td>Manage reservation</td>
+<td><code>/provider?view=split</code></td>
+<td><code>approver_manage_reservation_request</code></td>
+</tr>
+<tr>
+<td>Reservation requests</td>
+<td><code>/provider?view=table</code></td>
+<td><code>approver_view_reservation_request</code></td>
+</tr>
+<tr>
+<td>Custom requests</td>
+<td><code>/provider/custom-requests</code></td>
+<td>custom request scopes (usually admins)</td>
+</tr>
+</tbody>
+</table>
+<p>There is no sidebar and no in-page back button on the main NCP pages;
+navigate with the account menu.</p>
+<h2 id="dashboard">Dashboard</h2>
+<p>Route: <code>/provider/dashboard</code>. A read-only overview that
+loads fresh on each visit.</p>
+<ul>
+<li><strong>Welcome header</strong> with your name and how many requests
+await your action.</li>
+<li><strong>Awaiting Your Action</strong> — requests waiting for accept,
+reject, counter or contract.</li>
+<li><strong>Available Capacities</strong> — your live inventory plus
+your latest upload status.</li>
+<li>Quick links: <strong>View all requests</strong> (table view),
+<strong>Manage Reservations</strong> (split view), <strong>View all
+uploads</strong>, <strong>Upload Capacity</strong>.</li>
+<li>Before your first upload, both panels show a guided empty
+state.</li>
+</ul>
+<h2 id="upload-capacities-csv">Upload Capacities (CSV)</h2>
+<p>Route: <code>/provider/gpu-capacities-upload</code>.</p>
+<ol type="1">
+<li>Click <strong>Download Template</strong>.</li>
+<li>Fill one row per capacity block.</li>
+<li>Drag and drop or click to upload the CSV.</li>
+<li>You see <strong>Upload Successful</strong>; processing continues in
+the background and appears in <strong>Upload History</strong>.</li>
+</ol>
+<h3 id="csv-rules">CSV rules</h3>
+<ul>
+<li>UTF-8 CSV, at most <strong>10 MB</strong> and <strong>10,000 data
+rows</strong>, each cell at most 500 characters.</li>
+<li>Required columns: <code>GPU Platform Type</code>,
+<code>Number of GPUs Available</code>, <code>Live Token Date</code>,
+<code>Country</code>, <code>City</code>.</li>
+<li>Optional columns: <code>Region</code>,
+<code>end_datetime</code>.</li>
+<li>Metadata columns that are accepted but ignored:
+<code>NCP Name</code>, <code>RA/RD</code>,
+<code>Exemplar Cluster</code>, <code>aaS Capability</code>,
+<code>State</code>.</li>
+<li>The hosting provider name comes from your NCP organization, not from
+the CSV.</li>
+<li>Vendor prefixes like “NVIDIA” in the platform cell are tolerated;
+country names such as “USA” or “Holland” are normalized.</li>
+<li>Cells beginning with <code>=</code>, <code>+</code>, <code>-</code>
+or <code>@</code> are neutralized to prevent spreadsheet formula
+injection.</li>
+<li>Invalid rows are skipped with errors listed; the job fails only if
+no row succeeds.</li>
+</ul>
+<h3 id="current-versus-future-capacity">Current versus future
+capacity</h3>
+<ul>
+<li>Rows whose Live Token Date is <strong>within 90 days</strong> of
+upload are <strong>current (AVAILABLE)</strong> capacity and go live
+immediately after validation.</li>
+<li>Rows starting <strong>more than 90 days</strong> out are
+<strong>future (FUTURE)</strong> capacity. The job waits in
+<strong>Pending Review</strong> until a Platform Admin accepts or
+rejects it. You are emailed the result and any rejection reason appears
+in the Details column.</li>
+</ul>
+<h3 id="upload-history-statuses">Upload History statuses</h3>
+<p>Processing, Pending Review, Completed, Rejected, Validation Failed.
+Click “See all details” for the full error list.</p>
+<p>After uploading you may be asked “How was the Upload Capacity
+experience?”.</p>
+<h2 id="manage-reservation-split-view">Manage reservation (split
+view)</h2>
+<p>Route: <code>/provider?view=split</code>. Your main workspace.</p>
+<ul>
+<li><strong>Left panel</strong>: request cards with status tabs
+(Awaiting NCP Acceptance, Awaiting Provider Approval, In Process,
+Contracted, Rejected, Cancelled, Expired) and filters for Platform,
+Geographical Region and Country, plus search.</li>
+<li><strong>Right panel</strong>: a capacity availability chart once
+Platform, Region and Country are all selected, so you can see whether
+you have room before acting.</li>
+<li>Drag cards to reorder priority (keyboard: Space or Enter to grab,
+arrows to move).</li>
+<li>Expand <strong>View details</strong> to see dates: <strong>In
+Process Since</strong>, <strong>Contracted On</strong>, <strong>Rejected
+On</strong>, <strong>Expired On</strong>, <strong>Cancelled
+On</strong>.</li>
+</ul>
+<h3 id="actions-on-a-card">Actions on a card</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Action</th>
+<th>When</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Accept</strong></td>
+<td>Awaiting NCP Acceptance</td>
+<td>Offering moves to <strong>In Process</strong>; a 45-day contract
+window starts; customer receives an introduction email</td>
+</tr>
+<tr>
+<td><strong>Reject</strong></td>
+<td>Awaiting acceptance or In Process</td>
+<td>Offering moves to <strong>Rejected</strong>; remarks are required
+and shown to the customer</td>
+</tr>
+<tr>
+<td><strong>Counteroffer</strong></td>
+<td>Before contract</td>
+<td>Opens <strong>Modify Details</strong>: original request on the left,
+editable Proposed Start Date, Proposed End Date, Number of GPUs,
+Platform and Geographical Region on the right. <strong>Reset</strong>,
+<strong>Cancel</strong> or <strong>Confirm</strong></td>
+</tr>
+<tr>
+<td><strong>Confirm Contract</strong></td>
+<td>In Process</td>
+<td>Offering becomes <strong>Contracted</strong>, capacity is allocated,
+the whole request is Contracted and other NCPs on the request are
+cancelled as superseded</td>
+</tr>
+</tbody>
+</table>
+<p>Accepting or contracting can fail with “capacity not available” if
+your remaining capacity no longer covers the request.</p>
+<h2 id="reservation-requests-table-view">Reservation requests (table
+view)</h2>
+<p>Route: <code>/provider?view=table</code>. A sortable table with GPU
+Model, Country, Geographical Region, Status and sort filters. To act,
+choose Platform, Region and Country and click <strong>Manage
+Reservation</strong> to open the split view with those filters. Basic
+NCP users only get this view.</p>
+<h2 id="reservation-detail">Reservation detail</h2>
+<p>Route: <code>/provider/reservations/{reservationId}</code>. Read-only
+<strong>Reservation Request History</strong> with Requested By, dates,
+region, platform, GPUs, capacity, total GPU hours, and price and cost
+when enabled.</p>
+<h2 id="deadlines-you-must-watch">Deadlines you must watch</h2>
+<ul>
+<li><strong>7 days</strong> to accept after a request is routed to you.
+Reminder 3 days before. If you miss it the offering becomes
+<strong>Expired</strong>.</li>
+<li><strong>45 days</strong> from acceptance to confirm the contract.
+Reminder 3 days before.</li>
+<li>Platform Admins can extend either window.</li>
+<li>Magic links expire after 1 hour; ask for a resend within 7 days of
+routing, or just log in and open Manage reservation.</li>
+</ul>
+<h2 id="emails-ncps-receive">Emails NCPs receive</h2>
+<p>Magic link (new request), resend, introduction (after accept),
+contracted, superseded (another NCP won), expiry reminders, expired,
+request cancelled by customer, future capacity approved or rejected,
+welcome email for new users.</p>
+</body>
+</html>

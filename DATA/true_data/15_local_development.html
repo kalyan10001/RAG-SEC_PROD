@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Local Development Guide</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-local-development-guide" id="toc-compute-match-local-development-guide">Compute Match — Local
+Development Guide</a>
+<ul>
+<li><a href="#prerequisites" id="toc-prerequisites">Prerequisites</a></li>
+<li><a href="#first-run" id="toc-first-run">First run</a></li>
+<li><a href="#demo-accounts" id="toc-demo-accounts">Demo
+accounts</a></li>
+<li><a href="#development-modes" id="toc-development-modes">Development
+modes</a></li>
+<li><a href="#make-targets" id="toc-make-targets">Make targets</a></li>
+<li><a href="#local-urls-and-ports" id="toc-local-urls-and-ports">Local
+URLs and ports</a></li>
+<li><a href="#configuration-files" id="toc-configuration-files">Configuration files</a></li>
+<li><a href="#everyday-loop" id="toc-everyday-loop">Everyday
+loop</a></li>
+<li><a href="#common-problems" id="toc-common-problems">Common
+problems</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-local-development-guide">Compute Match — Local
+Development Guide</h1>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Git, Bash, Make, Docker Desktop with Compose v2, and NVIDIA
+network/VPN access.</li>
+<li>Either <strong>Devbox</strong> 0.18.3 or newer (supplies all tools)
+or installed tools: Node 22 (frontend), Python 3.13 and <code>uv</code>
+(backend and worker).</li>
+<li>Docker-only mode (<code>make onboard</code>,
+<code>make start</code>) needs no Node or Python on your laptop.</li>
+</ul>
+<h2 id="first-run">First run</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> onboard      <span class="co"># build containers, prepare databases and identity, create demo accounts and inventory</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> verify       <span class="co"># should finish with &quot;status&quot;: &quot;ready&quot;</span></span></code></pre></div>
+<p>The first build can take 10–20 minutes. Without Make, run
+<code>./local-setup/onboard.sh</code>. If it fails, read
+<code>local-setup/.onboarding/setup.log</code>, fix the problem and
+rerun.</p>
+<p>Open <code>http://localhost:3000</code>, click
+<strong>Login</strong>, enter a demo account email, then its generated
+password.</p>
+<h2 id="demo-accounts">Demo accounts</h2>
+<p>Passwords are generated into
+<code>local-setup/.onboarding/accounts.md</code> (human guide) and
+<code>credentials.json</code> (machine-readable, includes the Keycloak
+admin login). These files are Git-ignored.</p>
+<table>
+<thead>
+<tr>
+<th>Experience</th>
+<th>Account</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Customer</td>
+<td><code>developer@customer-a.example.org</code></td>
+</tr>
+<tr>
+<td>Provider (NCP)</td>
+<td><code>seed@singtel.example.org</code></td>
+</tr>
+<tr>
+<td>Platform business admin</td>
+<td><code>business-admin@platform.example.org</code></td>
+</tr>
+<tr>
+<td>Operations</td>
+<td><code>ops@platform.example.org</code></td>
+</tr>
+</tbody>
+</table>
+<p>Normal onboarding creates 17 accounts; Singtel and Firmus provider
+accounts test isolation between NCPs, and colleague accounts test shared
+inventory inside one NCP.
+<code>make onboard ONBOARD_ARGS=&quot;--with-scenarios&quot;</code> adds
+22-account regression personas, including
+<code>pending@scenarios.example.org</code> (pending activation),
+<code>terms@scenarios.example.org</code> (terms not accepted),
+<code>restricted@scenarios.example.org</code> (active, no business
+role), <code>infra-manager@customer-a.example.org</code> and
+<code>tech-admin@customer-b.example.org</code>.</p>
+<p>Test sign-ups with addresses such as <code>you@example.com</code>;
+<code>example.com</code> and <code>nvidia.com</code> auto-activate,
+personal domains are blocked, and local email delivery is disabled. A
+new sign-up may need a role assigned in Keycloak
+(<strong>customer</strong> realm → user → <strong>Role
+mapping</strong>), then sign out and in again.</p>
+<p><code>make onboard ONBOARD_ARGS=&quot;--no-seed&quot;</code> creates accounts
+without demo inventory. Sample CSVs for upload testing are in
+<code>local-setup/fixtures/</code>.</p>
+<h2 id="development-modes">Development modes</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Runs on your laptop</th>
+<th>Runs in Docker</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>make start</code></td>
+<td>nothing</td>
+<td>frontend, backend, worker</td>
+</tr>
+<tr>
+<td><code>make frontend</code></td>
+<td>frontend</td>
+<td>backend, worker</td>
+</tr>
+<tr>
+<td><code>make backend</code></td>
+<td>backend</td>
+<td>frontend, worker</td>
+</tr>
+<tr>
+<td><code>make worker</code></td>
+<td>worker</td>
+<td>frontend, backend</td>
+</tr>
+<tr>
+<td><code>make dev</code> (fullstack)</td>
+<td>all three</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<p>PostgreSQL, Keycloak, Temporal and Redis always stay in Docker.
+Install dependencies for a mode with <code>make deps MODE=backend</code>
+(or <code>frontend</code>, <code>worker</code>).</p>
+<h2 id="make-targets">Make targets</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Target</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>make help</code></td>
+<td>List commands</td>
+</tr>
+<tr>
+<td><code>make onboard</code></td>
+<td>Configure, start and seed (<code>ONBOARD_ARGS</code> for
+options)</td>
+</tr>
+<tr>
+<td><code>make doctor</code></td>
+<td>Check prerequisites and configuration only</td>
+</tr>
+<tr>
+<td><code>make deps</code></td>
+<td>Install locked dependencies for a <code>MODE</code></td>
+</tr>
+<tr>
+<td><code>make build</code></td>
+<td>Build local images</td>
+</tr>
+<tr>
+<td><code>make start</code> / <code>make stop</code></td>
+<td>Start all in Docker / stop everything but keep data</td>
+</tr>
+<tr>
+<td><code>make start-infra</code></td>
+<td>Start only supporting containers</td>
+</tr>
+<tr>
+<td><code>make status</code></td>
+<td>Show mode, processes and URLs</td>
+</tr>
+<tr>
+<td><code>make logs SERVICE=backend</code></td>
+<td>Follow logs (frontend, backend or worker)</td>
+</tr>
+<tr>
+<td><code>make verify</code></td>
+<td>Check accounts, permissions, inventory, login routing and worker
+polling</td>
+</tr>
+<tr>
+<td><code>make test</code>, <code>make test-backend</code>,
+<code>make test-frontend</code>, …</td>
+<td>Unit tests</td>
+</tr>
+<tr>
+<td><code>make quality</code></td>
+<td>Lint, type checks and tests</td>
+</tr>
+<tr>
+<td><code>make clean</code></td>
+<td>Remove containers, volumes and images</td>
+</tr>
+<tr>
+<td><code>make obs-start</code> / <code>obs-stop</code> /
+<code>obs-logs</code></td>
+<td>Optional SigNoz telemetry stack</td>
+</tr>
+</tbody>
+</table>
+<h2 id="local-urls-and-ports">Local URLs and ports</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Service</th>
+<th>Address</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application</td>
+<td>http://localhost:3000</td>
+</tr>
+<tr>
+<td>Backend API docs (Swagger)</td>
+<td>http://localhost:8082/docs</td>
+</tr>
+<tr>
+<td>Keycloak</td>
+<td>http://localhost:8080 (admin at <code>/admin</code>, realm
+<code>customer</code>)</td>
+</tr>
+<tr>
+<td>Temporal UI</td>
+<td>http://localhost:7600</td>
+</tr>
+<tr>
+<td>Temporal gRPC</td>
+<td>localhost:7233</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>localhost:5432</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>localhost:6379</td>
+</tr>
+<tr>
+<td>Superset (optional)</td>
+<td>http://localhost:8088</td>
+</tr>
+<tr>
+<td>SigNoz (optional)</td>
+<td>http://localhost:3301 (OTLP gRPC 4317, HTTP 4318)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-files">Configuration files</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Location</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>local-setup/.env</code></td>
+<td>Generated service settings and secrets</td>
+</tr>
+<tr>
+<td><code>local-setup/.onboarding/credentials.json</code></td>
+<td>Account credentials</td>
+</tr>
+<tr>
+<td><code>local-setup/.onboarding/accounts.md</code></td>
+<td>Account guide</td>
+</tr>
+<tr>
+<td><code>local-setup/.onboarding/dev/</code></td>
+<td>Host-mode settings, process state and logs</td>
+</tr>
+<tr>
+<td><code>local-setup/.onboarding/setup.log</code></td>
+<td>Onboarding diagnostics</td>
+</tr>
+</tbody>
+</table>
+<p>You do not need to copy <code>.env.sample</code> or create service
+dotenv files.</p>
+<h2 id="everyday-loop">Everyday loop</h2>
+<p><code>make stop</code> at the end of the day keeps your data;
+<code>make start</code> resumes. Use <code>make status</code>, then
+<code>make logs SERVICE=...</code> when something looks wrong.</p>
+<h2 id="common-problems">Common problems</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Image or Maven downloads fail</td>
+<td>Connect to the NVIDIA VPN</td>
+</tr>
+<tr>
+<td>Port already in use</td>
+<td>Stop the other checkout or process using the port</td>
+</tr>
+<tr>
+<td>Wrong Node version</td>
+<td>Use Node 22 or set <code>LOCAL_DEV_NODE</code></td>
+</tr>
+<tr>
+<td>Login redirects to a Docker hostname</td>
+<td>Restore localhost public URLs in the generated settings</td>
+</tr>
+<tr>
+<td>Signed up but see no features</td>
+<td>Assign a realm role in Keycloak and sign in again</td>
+</tr>
+<tr>
+<td>SigNoz shows no data</td>
+<td>Finish SigNoz first-user setup, run <code>make obs-start</code>,
+restart apps with tracing; Docker Engine 25+ for container metrics</td>
+</tr>
+<tr>
+<td>Everything is broken</td>
+<td><code>make clean &amp;&amp; make onboard &amp;&amp; make verify</code></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

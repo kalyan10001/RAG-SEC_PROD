@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Signing Up, Signing In and First-Time
+Setup</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-signing-up-signing-in-and-first-time-setup" id="toc-compute-match-signing-up-signing-in-and-first-time-setup">Compute
+Match — Signing Up, Signing In and First-Time Setup</a>
+<ul>
+<li><a href="#how-sign-in-works" id="toc-how-sign-in-works">How sign-in
+works</a></li>
+<li><a href="#where-you-land-after-sign-in" id="toc-where-you-land-after-sign-in">Where you land after
+sign-in</a></li>
+<li><a href="#first-time-checks" id="toc-first-time-checks">First-time
+checks</a></li>
+<li><a href="#ncp-sign-in-paths" id="toc-ncp-sign-in-paths">NCP sign-in
+paths</a></li>
+<li><a href="#how-partner-detection-works" id="toc-how-partner-detection-works">How partner detection
+works</a></li>
+<li><a href="#signing-out" id="toc-signing-out">Signing out</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-signing-up-signing-in-and-first-time-setup">Compute
+Match — Signing Up, Signing In and First-Time Setup</h1>
+<h2 id="how-sign-in-works">How sign-in works</h2>
+<p>Compute Match uses <strong>Starfleet</strong>, NVIDIA’s single
+sign-on service, through <strong>Keycloak</strong>. Sign up and Login
+use the same flow.</p>
+<ol type="1">
+<li>Open the home page and click <strong>Get Started</strong>,
+<strong>Sign up</strong> or <strong>Login</strong>.</li>
+<li>On the <code>/login</code> page enter your <strong>Work
+email</strong> and click <strong>Login</strong>.</li>
+<li>Personal email domains (Gmail, Yahoo, Hotmail and similar) are
+blocked with an explanation. Use your work or enterprise email.</li>
+<li>You are redirected to Starfleet and your organization’s identity
+provider (for example NVIDIA corporate login or your company SSO).</li>
+<li>After authentication you return to Compute Match. You may briefly
+pass through several authentication pages; this is normal.</li>
+</ol>
+<p>Technically, the frontend uses NextAuth 5 with the Keycloak client
+<code>customer-web</code> in the <code>customer</code> realm, and passes
+<code>kc_idp_hint=starfleet</code> to send users to the Starfleet
+identity broker.</p>
+<h2 id="where-you-land-after-sign-in">Where you land after sign-in</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Landing page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Customer</td>
+<td><strong>Find a Cluster to Reserve</strong>
+(<code>/customer/reservation-request/available-clusters</code>)</td>
+</tr>
+<tr>
+<td>NCP</td>
+<td><strong>Dashboard</strong> (<code>/provider/dashboard</code>)</td>
+</tr>
+<tr>
+<td>Platform Admin</td>
+<td><strong>Global Capacity Explorer</strong>
+(<code>/provider/global-capacity</code>) when available, otherwise the
+provider dashboard</td>
+</tr>
+</tbody>
+</table>
+<h2 id="first-time-checks">First-time checks</h2>
+<p>After the first sign-in you may see one or more of these screens:</p>
+<ul>
+<li><strong>Complete Your Profile</strong> (customers,
+<code>/customer/additional-user-details</code>) or <strong>Complete Your
+NCP Profile</strong> (NCPs,
+<code>/provider/additional-user-details</code>). Fill First Name, Last
+Name, Organization Name and Phone Number (digits only; <code>+1</code>
+is pre-filled) and click <strong>Submit</strong>.</li>
+<li><strong>Terms and Conditions modal</strong>. Scroll to the end, tick
+the checkbox and click <strong>Accept &amp; Continue</strong>, or
+<strong>Sign out</strong>. Acceptance is stored as a timestamp on your
+user (<code>POST /api/v1/users/me/terms-acceptance</code>).</li>
+<li><strong>Thanks for Signing up</strong>
+(<code>/user-status-pending</code>). Your account is pending activation;
+you will get an email when activated.</li>
+<li><strong>Your access is being reviewed</strong>
+(<code>/access-pending</code>). Your company is an NVIDIA partner but
+its NCP organization is not onboarded yet. A Platform Admin must approve
+your access request. Once approved, the page shows <strong>Your access
+has been approved</strong> while the session refreshes.</li>
+<li><strong>Access denied</strong> (<code>/access-denied</code>). Your
+identity was verified but you are not authorized. The page shows your
+email and the reason. Contact computematchmake@nvidia.com or sign out
+and use another work account.</li>
+</ul>
+<h2 id="ncp-sign-in-paths">NCP sign-in paths</h2>
+<h3 id="welcome-email">Welcome email</h3>
+<p>New NCP users created by NCP onboarding receive a
+<code>provider_welcome</code> email with a direct login link.</p>
+<h3 id="magic-link-respond-to-a-reservation">Magic link (respond to a
+reservation)</h3>
+<p>When a reservation request is routed to an NCP, users in that NCP
+organization who have the <code>provider_business_user</code> role and
+belong to the <code>offering-validator</code> group get an email with a
+magic link.</p>
+<ol type="1">
+<li>The link is a Keycloak action token created by the custom
+<code>accept-reservation-token</code> extension.</li>
+<li>Keycloak validates the token and a one-time nonce with the backend
+(<code>POST /api/v1/offering/validate-nonce</code>), blocks the link if
+a different user is already logged in, creates a session and
+redirects.</li>
+<li>The browser lands on
+<code>/automatic-login?from=magic-link&amp;callbackUrl=...</code>, which
+skips the email page and reuses the SSO session, then opens
+<strong>Manage reservation</strong> so the NCP can
+<strong>Accept</strong>.</li>
+<li>A magic link is valid for 1 hour. NCPs or admins can resend one
+(<code>POST /api/v1/provider/offering/{offeringId}/resend-magic-link</code>)
+within 7 days of routing.</li>
+</ol>
+<h3 id="npn-portal">NPN portal</h3>
+<p>NVIDIA Partner Network (NPN) members can reach Compute Match directly
+from the NPN portal (feature flag
+<code>NPN_PORTAL_INTEGRATION_ENABLED</code>). They still pass through
+the work-email page and Starfleet. If their partner organization is not
+onboarded yet, an access request with source <code>NPN_PORTAL</code> is
+created and they wait on the access-pending page.</p>
+<h2 id="how-partner-detection-works">How partner detection works</h2>
+<ul>
+<li>Compute Match keeps a <strong>partner domain</strong> mirror of
+email domains belonging to NVIDIA partners, synced from Salesforce twice
+a day.</li>
+<li>Domain lookup statuses are <code>PARTNER</code>,
+<code>NOT_PARTNER</code> and <code>PENDING</code>.</li>
+<li>Personal mail providers can never be partner domains.</li>
+<li>When a user from a partner domain signs up and their NCP is not
+onboarded, <code>POST /api/v1/user</code> creates an <strong>access
+request</strong> (statuses <code>PENDING</code>, <code>APPROVED</code>,
+<code>REJECTED</code>; sources <code>NPN_PORTAL</code>,
+<code>SIGNUP</code>).</li>
+<li>A Platform Admin approves or rejects it under <strong>Onboard NCPs →
+Review Onboarding Requests</strong>. Approval provisions the
+organization and user in Keycloak; rejection emails the reason. A
+rejected applicant can apply again, which creates a new request.</li>
+</ul>
+<h2 id="signing-out">Signing out</h2>
+<p>Use <strong>Logout</strong> in the account menu. If your session
+cannot be refreshed, the app shows a recovery screen and performs a full
+Keycloak logout.</p>
+</body>
+</html>

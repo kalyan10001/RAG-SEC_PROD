@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Reservation Request Lifecycle and Status
+Reference</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-reservation-request-lifecycle-and-status-reference" id="toc-compute-match-reservation-request-lifecycle-and-status-reference">Compute
+Match — Reservation Request Lifecycle and Status Reference</a>
+<ul>
+<li><a href="#two-levels-of-status" id="toc-two-levels-of-status">Two
+levels of status</a></li>
+<li><a href="#reservation-request-statuses" id="toc-reservation-request-statuses">Reservation request
+statuses</a></li>
+<li><a href="#offering-statuses-per-ncp" id="toc-offering-statuses-per-ncp">Offering statuses (per NCP)</a></li>
+<li><a href="#catalog-multi-ncp-flow-step-by-step" id="toc-catalog-multi-ncp-flow-step-by-step">Catalog / multi-NCP flow,
+step by step</a></li>
+<li><a href="#custom-request-flow" id="toc-custom-request-flow">Custom
+request flow</a></li>
+<li><a href="#capacity-rules-that-affect-requests" id="toc-capacity-rules-that-affect-requests">Capacity rules that affect
+requests</a></li>
+<li><a href="#configuration-defaults" id="toc-configuration-defaults">Configuration defaults</a></li>
+<li><a href="#allocation-statuses" id="toc-allocation-statuses">Allocation statuses</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-reservation-request-lifecycle-and-status-reference">Compute
+Match — Reservation Request Lifecycle and Status Reference</h1>
+<p>This document explains, end to end, how a reservation request moves
+through statuses, who triggers each change, and which timers apply.</p>
+<h2 id="two-levels-of-status">Two levels of status</h2>
+<ol type="1">
+<li><strong>Reservation request status</strong> — the status of the
+whole customer request.</li>
+<li><strong>Offering status</strong> — the status of each NCP’s slice
+(<code>ReservationRequestOffering</code>). A request sent to 3 NCPs has
+3 offerings.</li>
+</ol>
+<p>Do not confuse these with <strong>GPU offering status</strong>
+(inventory listing status: <code>ACTIVE</code>,
+<code>PENDING_REVIEW</code>, <code>REJECTED</code>).</p>
+<h2 id="reservation-request-statuses">Reservation request statuses</h2>
+<p>Backend enum <code>ReservationRequestStatus</code>
+(<code>backend/core/reservation_request/reservation_request_status.py</code>):</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Backend value</th>
+<th>UI label</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Open</code></td>
+<td>Open</td>
+<td>Submitted; not yet routed (custom requests start and may stay
+here)</td>
+</tr>
+<tr>
+<td><code>AwaitingProviderAcceptance</code></td>
+<td>Awaiting NCP Acceptance</td>
+<td>Routed to one or more NCPs, waiting for a response</td>
+</tr>
+<tr>
+<td><code>InProcess</code></td>
+<td>In Process</td>
+<td>At least one NCP accepted; negotiation under way</td>
+</tr>
+<tr>
+<td><code>Contracted</code></td>
+<td>Contracted</td>
+<td>An NCP confirmed the contract (legacy <code>Approved</code> also
+shows as Contracted)</td>
+</tr>
+<tr>
+<td><code>Rejected</code></td>
+<td>Rejected</td>
+<td>All NCPs rejected</td>
+</tr>
+<tr>
+<td><code>Expired</code></td>
+<td>Expired</td>
+<td>Deadlines passed without action</td>
+</tr>
+<tr>
+<td><code>Cancelled</code></td>
+<td>Cancelled</td>
+<td>Cancelled by the customer</td>
+</tr>
+<tr>
+<td><code>InReview</code></td>
+<td>In Review</td>
+<td>Custom request being worked on by admins</td>
+</tr>
+<tr>
+<td><code>Matched</code></td>
+<td>Matched</td>
+<td>Custom request matched to an NCP by admins</td>
+</tr>
+<tr>
+<td><code>Unserviceable</code></td>
+<td>Unserviceable</td>
+<td>Custom request closed as not serviceable</td>
+</tr>
+</tbody>
+</table>
+<p>The UI also shows <strong>Awaiting Provider Approval</strong> and
+<strong>Awaiting Customer Approval</strong> for older
+proposal/counteroffer flows.</p>
+<h2 id="offering-statuses-per-ncp">Offering statuses (per NCP)</h2>
+<p><code>OfferingStatus</code>: <code>AwaitingProviderAcceptance</code>,
+<code>InProcess</code>, <code>Contracted</code>, <code>Expired</code>,
+<code>Rejected</code>, <code>Cancelled</code>.</p>
+<h2 id="catalog-multi-ncp-flow-step-by-step">Catalog / multi-NCP flow,
+step by step</h2>
+<ol type="1">
+<li><strong>Customer submits</strong>
+(<code>POST /api/v1/reservation-request</code>). The backend creates the
+request and the customer’s first proposal, then routes it: one offering
+per selected cluster (backend limit 10, UI limit 3 by default).</li>
+<li>Each offering starts as <strong>AwaitingProviderAcceptance</strong>
+with <code>acceptance_expiry_date = now + 7 days</code>. The request
+becomes <strong>AwaitingProviderAcceptance</strong>.</li>
+<li>Temporal starts a parent <code>ReservationRequestWorkflow</code> and
+one child <code>OfferingLifecycleWorkflow</code> per offering. The
+customer gets a “request received” email; each NCP gets a magic-link
+email.</li>
+<li><strong>NCP accepts</strong> → offering <strong>InProcess</strong>,
+<code>contract_expiry_date = now + 45 days</code>, NCP and customer
+receive an introduction email. The first acceptance moves the request to
+<strong>InProcess</strong>.</li>
+<li><strong>NCP counteroffers</strong> → a new proposal is recorded
+(price-only changes update in place; material changes create a new
+proposal in history).</li>
+<li><strong>NCP confirms contract</strong> → offering
+<strong>Contracted</strong>, an <strong>Allocation</strong> is created
+(status <code>scheduled</code>), the request becomes
+<strong>Contracted</strong>, and sibling offerings are
+<strong>Cancelled</strong> with “superseded” emails.</li>
+<li><strong>NCP rejects</strong> (remarks required) → offering
+<strong>Rejected</strong>. If all offerings are rejected, the request is
+<strong>Rejected</strong>.</li>
+<li><strong>Timers</strong>: if an NCP does not accept in 7 days →
+offering <strong>Expired</strong>. If no contract in 45 days → offering
+<strong>Expired</strong>. When every offering has expired, the customer
+gets one consolidated expiry email and the request becomes
+<strong>Expired</strong>. Reminders go out 3 days before each
+deadline.</li>
+<li><strong>Customer cancels</strong> → request
+<strong>Cancelled</strong>; NCPs are notified.</li>
+<li><strong>Extensions</strong>: a Platform Admin (scope
+<code>accept_contract_extension</code>) can extend acceptance or
+contract deadlines by 1–200 days; this can revive an Expired
+offering.</li>
+</ol>
+<pre class="text"><code>                 accept               confirm contract
+AwaitingProviderAcceptance ──────▶ InProcess ──────────▶ Contracted
+        │   │                         │  │
+  7 days│   │reject            45 days│  │reject
+        ▼   ▼                         ▼  ▼
+     Expired Rejected              Expired Rejected
+(any non-final state) ── customer cancel / sibling contracted ──▶ Cancelled</code></pre>
+<h2 id="custom-request-flow">Custom request flow</h2>
+<p>A custom request has no selected cluster
+(<code>gpu_offering_id</code> is empty and there are no offerings).</p>
+<pre class="text"><code>Open ──▶ InReview ──▶ Matched
+  │          │──────▶ Unserviceable
+  │──────────────────▶ Matched / Unserviceable
+  └── customer cancel (from Open or InReview) ──▶ Cancelled</code></pre>
+<ul>
+<li>Only admins with
+<code>approver_manage_custom_reservation_request</code> move it
+forward.</li>
+<li>Only the customer cancels.</li>
+<li>Never returns to Open; Matched, Unserviceable and Cancelled are
+final.</li>
+<li>Custom requests never expire.</li>
+<li>Each transition records a timestamp and optional NCP name, NCP
+region and comment, and emails the customer.</li>
+</ul>
+<h2 id="capacity-rules-that-affect-requests">Capacity rules that affect
+requests</h2>
+<ul>
+<li>Capacity windows of the same type (AVAILABLE or FUTURE) cannot
+partially overlap; at most one open-ended window per type.</li>
+<li>Availability checks use the <strong>upper bound</strong> of the
+tenure band (for example <code>2-3</code> years is checked as 3 years)
+to be conservative.</li>
+<li>Allocations only subtract from the matching capacity type.</li>
+<li>An optional cap
+(<code>MAX_PENDING_REQUESTS_PER_REGIONAL_CAPACITY</code>, default 0 =
+unlimited) hides clusters with too many pending requests and rejects new
+requests against them.</li>
+<li>GPU count per request must be between 1 and 100,000.</li>
+<li>Contracted price must be zero or positive and is only visible to
+NCPs and NVIDIA admins.</li>
+</ul>
+<h2 id="configuration-defaults">Configuration defaults</h2>
+<p>From <code>backend/multi_provider_config.py</code> (environment
+prefix <code>MULTI_PROVIDER_</code>):</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACCEPTANCE_EXPIRY_DAYS</code></td>
+<td>7</td>
+<td>NCP acceptance window</td>
+</tr>
+<tr>
+<td><code>IN_PROCESS_EXPIRY_DAYS</code></td>
+<td>45</td>
+<td>Contract negotiation window</td>
+</tr>
+<tr>
+<td><code>MAX_GPU_OFFERINGS_PER_REQUEST</code></td>
+<td>10</td>
+<td>Backend cap on offerings per request (UI default is 3,
+<code>NEXT_PUBLIC_MAX_MULTI_NCP_SELECTION_COUNT</code>)</td>
+</tr>
+<tr>
+<td><code>MAX_PENDING_REQUESTS_PER_REGIONAL_CAPACITY</code></td>
+<td>0</td>
+<td>0 means unlimited</td>
+</tr>
+<tr>
+<td><code>MAGIC_LINK_EXPIRY_SECONDS</code></td>
+<td>3600</td>
+<td>Magic link valid for 1 hour</td>
+</tr>
+<tr>
+<td><code>MAGIC_LINK_REGENERATION_WINDOW_DAYS</code></td>
+<td>7</td>
+<td>Resend allowed for 7 days after routing</td>
+</tr>
+</tbody>
+</table>
+<p>Reminder lead time is <code>EXPIRY_REMINDER_LEAD_DAYS = 3</code> in
+the Temporal workflow.</p>
+<h2 id="allocation-statuses">Allocation statuses</h2>
+<p><code>scheduled</code>, <code>provisioning</code>,
+<code>running</code>, <code>stopping</code>, <code>complete</code>.</p>
+</body>
+</html>

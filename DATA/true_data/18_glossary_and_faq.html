@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Glossary, FAQ and Troubleshooting for
+Users</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-glossary-faq-and-troubleshooting-for-users" id="toc-compute-match-glossary-faq-and-troubleshooting-for-users">Compute
+Match — Glossary, FAQ and Troubleshooting for Users</a>
+<ul>
+<li><a href="#glossary" id="toc-glossary">Glossary</a></li>
+<li><a href="#frequently-asked-questions" id="toc-frequently-asked-questions">Frequently asked questions</a></li>
+<li><a href="#whats-new-october-2026-release-v1.3.0" id="toc-whats-new-october-2026-release-v1.3.0">What’s New — October 2026
+release (v1.3.0)</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-glossary-faq-and-troubleshooting-for-users">Compute
+Match — Glossary, FAQ and Troubleshooting for Users</h1>
+<h2 id="glossary">Glossary</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Compute Match / Compute MatchMake System</strong></td>
+<td>NVIDIA’s marketplace matching GPU capacity seekers with NVIDIA Cloud
+Providers</td>
+</tr>
+<tr>
+<td><strong>NCPMS</strong></td>
+<td>Jira project key and internal name</td>
+</tr>
+<tr>
+<td><strong>Clustruffle</strong></td>
+<td>Internal code name seen in metrics and Keycloak endpoints</td>
+</tr>
+<tr>
+<td><strong>NCP</strong></td>
+<td>NVIDIA Cloud Provider (GPU Compute Provider) that publishes
+capacity</td>
+</tr>
+<tr>
+<td><strong>Customer / Offtaker</strong></td>
+<td>Organization reserving GPU capacity</td>
+</tr>
+<tr>
+<td><strong>Platform Admin</strong></td>
+<td>NVIDIA admin who reviews capacity, onboards NCPs, brokers custom
+requests</td>
+</tr>
+<tr>
+<td><strong>NPN</strong></td>
+<td>NVIDIA Partner Network; NPN portal members can sign in directly</td>
+</tr>
+<tr>
+<td><strong>Starfleet</strong></td>
+<td>NVIDIA single sign-on service</td>
+</tr>
+<tr>
+<td><strong>Platform</strong></td>
+<td>GPU model, for example H100 or B200</td>
+</tr>
+<tr>
+<td><strong>GPU Offering / GPU Capacity</strong></td>
+<td>A cluster published by an NCP</td>
+</tr>
+<tr>
+<td><strong>Hosting provider</strong></td>
+<td>The NCP’s data-center brand that hosts the offering</td>
+</tr>
+<tr>
+<td><strong>Region</strong></td>
+<td>A specific data-center location</td>
+</tr>
+<tr>
+<td><strong>Geographical Region</strong></td>
+<td>A broad area like North America or Europe</td>
+</tr>
+<tr>
+<td><strong>Current capacity (AVAILABLE)</strong></td>
+<td>Capacity starting within 90 days of upload; goes live
+immediately</td>
+</tr>
+<tr>
+<td><strong>Future capacity (FUTURE)</strong></td>
+<td>Capacity starting more than 90 days out; needs admin review</td>
+</tr>
+<tr>
+<td><strong>Live Token Date</strong></td>
+<td>CSV column for when capacity becomes available</td>
+</tr>
+<tr>
+<td><strong>Earliest Available Date</strong></td>
+<td>First date a cluster can be reserved from</td>
+</tr>
+<tr>
+<td><strong>Tenure</strong></td>
+<td>Reservation length band in years: 0-1, 1-2, 2-3, 3-4, 4-5, 5-6,
+6+</td>
+</tr>
+<tr>
+<td><strong>Reservation Request</strong></td>
+<td>Customer’s request to reserve capacity</td>
+</tr>
+<tr>
+<td><strong>Multi-NCP request</strong></td>
+<td>One request sent to several NCPs as alternatives; first to contract
+wins</td>
+</tr>
+<tr>
+<td><strong>Custom Request</strong></td>
+<td>Request with no specific cluster, brokered by admins</td>
+</tr>
+<tr>
+<td><strong>Offering (in a request)</strong></td>
+<td>One NCP’s slice of a reservation request</td>
+</tr>
+<tr>
+<td><strong>Proposal</strong></td>
+<td>A version of the reservation terms; counteroffers add proposals</td>
+</tr>
+<tr>
+<td><strong>Counteroffer</strong></td>
+<td>NCP proposes different dates, GPU count, platform or region</td>
+</tr>
+<tr>
+<td><strong>Magic link</strong></td>
+<td>Secure one-click email link letting an NCP open and accept a
+request</td>
+</tr>
+<tr>
+<td><strong>Acceptance window</strong></td>
+<td>7 days for an NCP to accept</td>
+</tr>
+<tr>
+<td><strong>Contract negotiation window</strong></td>
+<td>45 days from acceptance to confirm the contract</td>
+</tr>
+<tr>
+<td><strong>Superseded</strong></td>
+<td>Another NCP contracted the same request, so yours was cancelled</td>
+</tr>
+<tr>
+<td><strong>Allocation</strong></td>
+<td>Capacity consumed by a contracted request</td>
+</tr>
+<tr>
+<td><strong>Offtake</strong></td>
+<td>Salesforce record for a deal synced from Compute Match</td>
+</tr>
+<tr>
+<td><strong>Access request</strong></td>
+<td>A partner’s pending request for NCP access</td>
+</tr>
+<tr>
+<td><strong>offering-validator</strong></td>
+<td>Keycloak group whose members receive magic links</td>
+</tr>
+<tr>
+<td><strong>Confidential</strong></td>
+<td>Label shown when a customer’s name is hidden from an NCP</td>
+</tr>
+</tbody>
+</table>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>How do I sign up?</strong> Click Sign up or Login, enter your
+work email, and sign in through Starfleet. Personal emails are not
+allowed.</p>
+<p><strong>Why do I see “Access denied”?</strong> Your identity was
+verified but your account is not authorized under current policies.
+Contact computematchmake@nvidia.com or sign in with another work
+account.</p>
+<p><strong>Why do I see “Your access is being reviewed”?</strong> Your
+company is an NVIDIA partner but its NCP organization is not on the
+platform yet. A Platform Admin must approve your access request.</p>
+<p><strong>How many NCPs can I send one request to?</strong> Up to 3 in
+the UI by default (backend allows up to 10), if you have the multi-NCP
+permission.</p>
+<p><strong>Will I get several contracts if I send to several
+NCPs?</strong> No. The options are alternatives; the first NCP to
+confirm the contract wins and the others are cancelled.</p>
+<p><strong>How long does an NCP have to respond?</strong> 7 days to
+accept, then 45 days to contract. Reminders arrive 3 days before each
+deadline. Admins can extend both.</p>
+<p><strong>My magic link says it expired.</strong> Links last 1 hour.
+Ask for a resend (possible for 7 days after routing) or log in normally
+and open Manage reservation.</p>
+<p><strong>Can I accept an NCP counteroffer as a customer?</strong> The
+customer detail page is view and cancel only; the NCP confirms the
+contract after you agree with them directly.</p>
+<p><strong>When can I cancel?</strong> While the request is Awaiting NCP
+Acceptance, awaiting approval, In Process or Expired; custom requests
+while Open or In Review.</p>
+<p><strong>What if no cluster matches my needs?</strong> Submit a custom
+request. Admins will review and mark it Matched or Unserviceable.</p>
+<p><strong>My CSV upload shows Pending Review.</strong> It contains
+future capacity (starting more than 90 days out); a Platform Admin must
+accept it.</p>
+<p><strong>My CSV upload shows Validation Failed.</strong> Open “See all
+details” for row errors. Check the five required columns, UTF-8
+encoding, 10 MB and 10,000-row limits.</p>
+<p><strong>Why can’t I see Upload Capacities or Manage
+reservation?</strong> You lack the scope (<code>manage_inventory</code>
+or <code>approver_manage_reservation_request</code>). Basic NCP users
+are read-only. Ask your Platform Admin.</p>
+<p><strong>I have customer and NCP access. How do I switch?</strong> Use
+<strong>Switch profile to</strong> at the top of the account menu.</p>
+<p><strong>Where is the user manual?</strong> Click the book icon in the
+header; it opens the manual filtered to your role. The <code>?</code>
+icon shows help for the current page.</p>
+<p><strong>What does What’s New show?</strong> Release highlights for
+your persona. A banner appears on your landing page for about 7 days;
+dismissing it keeps it under the bell icon. Use <strong>Mark All as
+Read</strong> to clear the unread dot.</p>
+<p><strong>How do I give feedback?</strong> Use <strong>Share
+Feedback</strong> in the header, or answer the star rating after
+creating a request or uploading capacity.</p>
+<h2 id="whats-new-october-2026-release-v1.3.0">What’s New — October 2026
+release (v1.3.0)</h2>
+<ul>
+<li>Customers: faster, more compact request submission; real-time
+tracking of custom requests from Open to In Review to Matched.</li>
+<li>NCPs: clearer upload status and errors; sign in directly through the
+NPN portal.</li>
+<li>Admins: complete custom request workflow (Open → In Review → Matched
+or Unserviceable) in the admin view.</li>
+</ul>
+</body>
+</html>

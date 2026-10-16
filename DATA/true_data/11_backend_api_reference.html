@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Backend API Reference (Summary)</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-backend-api-reference-summary" id="toc-compute-match-backend-api-reference-summary">Compute Match —
+Backend API Reference (Summary)</a>
+<ul>
+<li><a href="#public" id="toc-public">Public</a></li>
+<li><a href="#customers-apis" id="toc-customers-apis">Customers
+APIs</a></li>
+<li><a href="#providers-apis-ncp-and-admin" id="toc-providers-apis-ncp-and-admin">Providers APIs (NCP and
+admin)</a></li>
+<li><a href="#access-request-apis-only-when-npn-integration-is-enabled-otherwise-404" id="toc-access-request-apis-only-when-npn-integration-is-enabled-otherwise-404">Access
+Request APIs (only when NPN integration is enabled, otherwise
+404)</a></li>
+<li><a href="#inventory-apis-reference-data" id="toc-inventory-apis-reference-data">Inventory APIs (reference
+data)</a></li>
+<li><a href="#users-apis" id="toc-users-apis">Users APIs</a></li>
+<li><a href="#operations-apis-role-operations" id="toc-operations-apis-role-operations">Operations APIs (role
+<code>operations</code>)</a></li>
+<li><a href="#feedback-apis" id="toc-feedback-apis">Feedback
+APIs</a></li>
+<li><a href="#system-apis-temporal-worker-service-account" id="toc-system-apis-temporal-worker-service-account">System APIs
+(Temporal worker service account)</a></li>
+<li><a href="#internal-apis-hidden-from-schema" id="toc-internal-apis-hidden-from-schema">Internal APIs (hidden from
+schema)</a></li>
+<li><a href="#cross-cutting-behaviour" id="toc-cross-cutting-behaviour">Cross-cutting behaviour</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-backend-api-reference-summary">Compute Match —
+Backend API Reference (Summary)</h1>
+<p>Interactive documentation runs at
+<code>http://localhost:8082/docs</code> locally. A snapshot is in
+<code>backend/openapi.json</code> (it omits Access Request and internal
+routes). Routers are in
+<code>backend/infrastructure/driving/http/routers/</code> and are
+mounted in <code>main.py</code>. All business APIs are under
+<code>/api/v1</code> (one v2 endpoint).</p>
+<h2 id="public">Public</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/health</code></td>
+<td>Liveness check, no auth</td>
+</tr>
+</tbody>
+</table>
+<h2 id="customers-apis">Customers APIs</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/reservation-request</code></td>
+<td>Create a reservation or custom request</td>
+<td><code>create_reservation_request</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/customer/reservation-requests</code></td>
+<td>List my requests</td>
+<td><code>requester_view_reservation_request</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/customer/reservation-request/{id}</code></td>
+<td>Request detail</td>
+<td>same</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/reservation-request/{id}/cancel</code></td>
+<td>Cancel</td>
+<td><code>requester_manage_reservation_request</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/reservation-request/{id}/offering/{oid}/extend-acceptance-expiry</code></td>
+<td>Extend acceptance window</td>
+<td><code>accept_contract_extension</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/reservation-request/{id}/offering/{oid}/extend-contract-expiry</code></td>
+<td>Extend contract window</td>
+<td><code>accept_contract_extension</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/gpu-offerings</code></td>
+<td>Browse offerings</td>
+<td><code>view_capacity</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/gpu-offerings/availability</code></td>
+<td>Availability</td>
+<td><code>view_capacity</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/gpu-offerings/capacity-overview</code></td>
+<td>Capacity overview</td>
+<td><code>view_capacity</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v2/gpu-offerings/availability-by-filters</code></td>
+<td>Filtered availability</td>
+<td><code>view_capacity</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/organizations/suggest</code></td>
+<td>Organization name suggestions</td>
+<td>authenticated</td>
+</tr>
+</tbody>
+</table>
+<h2 id="providers-apis-ncp-and-admin">Providers APIs (NCP and
+admin)</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/reservation-requests</code></td>
+<td>List requests for my NCP (all for admins)</td>
+<td><code>approver_view_reservation_request</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/reservation-request/{id}</code></td>
+<td>Detail</td>
+<td>same</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/offering/{id}/accept</code></td>
+<td>Accept offering</td>
+<td><code>approver_manage_reservation_request</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/offering/{id}/reject</code></td>
+<td>Reject (remarks required)</td>
+<td>same</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/offering/{id}/contract</code></td>
+<td>Confirm contract</td>
+<td>same</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/offering/{id}/resend-magic-link</code></td>
+<td>Resend magic link</td>
+<td>provider/admin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/custom-demand-requests</code></td>
+<td>List custom requests</td>
+<td><code>approver_view_custom_reservation_request</code></td>
+</tr>
+<tr>
+<td>(status update)</td>
+<td>custom demand transition endpoints</td>
+<td>In Review / Matched / Unserviceable</td>
+<td><code>approver_manage_custom_reservation_request</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/gpu-offerings</code></td>
+<td>My inventory</td>
+<td><code>view_provider_inventory</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/gpu-offerings/import</code></td>
+<td>Upload capacity CSV (202)</td>
+<td><code>manage_inventory</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/gpu-offerings/import/history</code></td>
+<td>Upload history</td>
+<td><code>manage_inventory</code> / admin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/gpu-offerings/import/{id}/approve</code></td>
+<td>Accept future capacity</td>
+<td><code>review_capacity</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/gpu-offerings/import/{id}/reject</code></td>
+<td>Reject future capacity</td>
+<td><code>review_capacity</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/onboard-providers</code></td>
+<td>Bulk onboard NCPs (CSV)</td>
+<td><code>manage_ncp</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/global-capacity-map</code></td>
+<td>Global capacity</td>
+<td><code>global_capacity_view</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="access-request-apis-only-when-npn-integration-is-enabled-otherwise-404">Access
+Request APIs (only when NPN integration is enabled, otherwise 404)</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/access-requests</code></td>
+<td><code>manage_ncp</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/access-requests/{id}</code></td>
+<td><code>manage_ncp</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/access-requests/{id}/approve</code></td>
+<td><code>manage_ncp</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/access-requests/{id}/reject</code></td>
+<td><code>manage_ncp</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="inventory-apis-reference-data">Inventory APIs (reference
+data)</h2>
+<p>Countries, geographical regions, GPU models, hosting providers,
+interconnect types, regions — read with <code>view_capacity</code>;
+create geographical region or GPU model with
+<code>manage_inventory</code>.</p>
+<h2 id="users-apis">Users APIs</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/user</code></td>
+<td>Provision the signed-in user from JWT claims (organization, partner
+domain checks; may create an access request)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/user</code></td>
+<td>Current user</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/users/me/terms-acceptance</code></td>
+<td>Record Terms and Conditions acceptance</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/auth/logout</code></td>
+<td>Logout</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operations-apis-role-operations">Operations APIs (role
+<code>operations</code>)</h2>
+<p>Activate user, list users, resend activation magic link, delete
+user.</p>
+<h2 id="feedback-apis">Feedback APIs</h2>
+<p>Submit feedback, check eligibility
+(<code>/api/v1/feedback/eligibility</code>), record prompt state
+(<code>/api/v1/feedback/prompt</code>). Feedback kinds:
+<code>POST_TASK</code>, <code>GENERAL</code>, <code>CANCELLATION</code>,
+<code>DROP_OFF</code>. Journeys: <code>capacity_upload</code>,
+<code>reservation_request</code>, <code>app_general</code>. Categories:
+<code>suggest_feature</code>, <code>report_problem</code>,
+<code>general</code>. Prompt states: <code>SHOWN</code>,
+<code>SUBMITTED</code>, <code>SKIPPED</code>,
+<code>DISMISSED</code>.</p>
+<h2 id="system-apis-temporal-worker-service-account">System APIs
+(Temporal worker service account)</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Group</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/v1/notification/*</code> (all emails, reminders, magic
+links)</td>
+<td><code>notification:send</code></td>
+</tr>
+<tr>
+<td><code>/api/v1/multi-provider/expire-acceptance</code>,
+<code>/expire-contract</code></td>
+<td><code>notification:send</code></td>
+</tr>
+<tr>
+<td><code>/api/v1/reservation-request/expire</code></td>
+<td><code>reservation-request:write</code></td>
+</tr>
+<tr>
+<td><code>/api/v1/offering/validate-nonce</code></td>
+<td>Keycloak extension</td>
+</tr>
+<tr>
+<td><code>/api/v1/system/csv-import/*</code>,
+<code>/api/v1/system/provider-onboarding/process</code></td>
+<td><code>capacity:sync</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="internal-apis-hidden-from-schema">Internal APIs (hidden from
+schema)</h2>
+<ul>
+<li><code>POST /api/v1/internal/salesforce/offtake-sync</code>,
+<code>/notify-failure</code>, <code>/partner-domain-sync</code> — caller
+<code>client_id</code> must equal
+<code>SFDC_SYNC_CALLER_CLIENT_ID</code>.</li>
+<li><code>POST /api/v1/internal/audit/keycloak-event</code> — Keycloak
+audit listener ingest.</li>
+</ul>
+<h2 id="cross-cutting-behaviour">Cross-cutting behaviour</h2>
+<ul>
+<li>JWT validation against Keycloak; permissions from
+<code>scope</code>, <code>realm_access.roles</code> and
+<code>resource_access.*.roles</code> claims.</li>
+<li>Middleware blocks users who are PENDING or have not accepted terms
+(with an allowlist for the endpoints needed to finish setup).</li>
+<li>Request body limit 15 MB; CSV upload limit 10 MB.</li>
+<li>Redis-backed rate limiting per bucket.</li>
+</ul>
+</body>
+</html>

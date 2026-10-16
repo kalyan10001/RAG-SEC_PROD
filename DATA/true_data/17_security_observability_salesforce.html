@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Security, Observability, Salesforce Integration
+and Testing</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-security-observability-salesforce-integration-and-testing" id="toc-compute-match-security-observability-salesforce-integration-and-testing">Compute
+Match — Security, Observability, Salesforce Integration and Testing</a>
+<ul>
+<li><a href="#security-model" id="toc-security-model">Security
+model</a></li>
+<li><a href="#observability" id="toc-observability">Observability</a></li>
+<li><a href="#salesforce-integration-adr-001" id="toc-salesforce-integration-adr-001">Salesforce integration
+(ADR-001)</a></li>
+<li><a href="#testing" id="toc-testing">Testing</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-security-observability-salesforce-integration-and-testing">Compute
+Match — Security, Observability, Salesforce Integration and Testing</h1>
+<h2 id="security-model">Security model</h2>
+<ul>
+<li><strong>Delivery identity:</strong> GitLab OIDC with Google Workload
+Identity Federation; separate Google service accounts for plan, apply,
+deploy, verify and Keycloak.</li>
+<li><strong>Runtime identity:</strong> Kubernetes service accounts
+mapped to Google service accounts; secrets from Secret Manager with
+least privilege; Cloud SQL Auth Proxy; separate database roles (for
+example the audit-retention role can only SELECT and DELETE).</li>
+<li><strong>Network:</strong> NetworkPolicies, private Cloud SQL and
+Redis, Cloud Armor and Gateway at the edge.</li>
+<li><strong>Application:</strong> Keycloak JWTs with audiences per
+client (<code>customer-web</code>, <code>workflow-worker</code>,
+<code>audit-listener</code>…). Internal Salesforce and audit endpoints
+only accept a pinned caller <code>client_id</code>. CSV cells are
+sanitized against formula injection. Personal email domains are
+blocked.</li>
+<li><strong>Repository:</strong> protected <code>main</code>,
+CODEOWNERS, secret scanning (gitleaks, trufflehog, talisman), no secrets
+in manifests or docs.</li>
+<li><strong>Audit:</strong> Keycloak login/logout events and domain
+actions are written to an audit log, kept about 13 months then purged by
+<code>AuditRetentionWorkflow</code>.</li>
+</ul>
+<h2 id="observability">Observability</h2>
+<ul>
+<li><strong>Logs:</strong> every owned service writes JSON Lines to
+stdout using <strong>Log Record v2</strong>
+(<code>docs/architecture/logging/log-record-v2.md</code>):
+<code>log_schema_version: 2</code>, severity, <code>event_name</code>,
+resource, source, optional trace context, attributes and exception.
+Unsafe fields are redacted; no PII or secrets in attributes.</li>
+<li><strong>Event catalog</strong>
+(<code>docs/architecture/logging/event-catalog.md</code>): for example
+<code>workflow.started</code>, <code>workflow.completed</code>,
+<code>workflow.failed</code>, <code>reservation.request.*</code>,
+<code>csv_import.*</code>, <code>provider_onboarding.*</code>,
+<code>integration.salesforce.failed</code>,
+<code>notification.delivery.failed</code>,
+<code>authorization.denied</code>.</li>
+<li><strong>Traces and metrics:</strong> OpenTelemetry in frontend,
+backend, worker (Temporal TracingInterceptor) and Keycloak. In GCP the
+Helm <code>otel-collector</code> exports to Google Cloud; logs go to
+Cloud Logging. Locally, optional SigNoz (<code>make obs-start</code>, UI
+on port 3301).</li>
+<li>Runbooks: <code>docs/operations/*-observability.md</code> for
+backend, frontend, worker, Keycloak, Superset and gateway.</li>
+</ul>
+<h2 id="salesforce-integration-adr-001">Salesforce integration
+(ADR-001)</h2>
+<ul>
+<li><strong>Direction:</strong> one-way, Compute Match → Salesforce
+<strong>Offtake</strong> object (<code>Offtake_Request__c</code>).</li>
+<li><strong>Pattern:</strong> transactional outbox table
+<code>salesforce_create_sync</code>, drained by Temporal
+<code>SfdcCreateBatchWorkflow</code> which calls backend internal APIs
+(domain stays in the backend). No Kafka or Pub/Sub.</li>
+<li><strong>Granularity:</strong> one Offtake per NCP offering (external
+id <code>Reservation_Request_Offering_Id__c</code>); open custom
+requests get one create-only Offtake keyed by the request id.</li>
+<li><strong>Jobs:</strong> nightly <strong>create</strong> (05:00 UTC,
+full projection) and <strong>status</strong> every 2 minutes (status
+and, when Contracted, negotiated terms). Upserts use the sObject
+Collections external-id API, up to 200 records per call.</li>
+<li><strong>Reliability:</strong> outbox states PENDING, SYNCED, FAILED;
+retries for Salesforce outages; mandatory failure summary email; audit
+events <code>SFDC_OFFTAKE_SYNCED</code> /
+<code>SFDC_OFFTAKE_SYNC_FAILED</code> written atomically with the
+outbox.</li>
+<li><strong>Toggles:</strong> <code>SFDC_SYNC_ENABLED</code>;
+partner-domain read sync separately with
+<code>SFDC_PARTNER_DOMAIN_SYNC_ENABLED</code>.</li>
+</ul>
+<h2 id="testing">Testing</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Tooling</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend</td>
+<td>pytest, TestContainers</td>
+<td><code>make test-backend</code></td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td>Jest 30, React Testing Library, jest-axe</td>
+<td><code>make test-frontend</code> (<code>npm run test</code>,
+<code>test:a11y</code>, <code>quality-gate</code>)</td>
+</tr>
+<tr>
+<td>Workflows / worker</td>
+<td>pytest</td>
+<td><code>make test</code></td>
+</tr>
+<tr>
+<td>End-to-end</td>
+<td>Playwright + Cucumber (Gherkin) in <code>e2e_playwright/</code></td>
+<td>see its README</td>
+</tr>
+</tbody>
+</table>
+<p>E2E features cover Authentication, CustomerWorkflow, ProviderWorkflow
+and AdminWorkflow, using page objects in <code>src/PageObjects/</code>
+and step definitions in <code>src/Specs/</code>. Choose the target with
+<code>TEST_ENV</code> (<code>local</code>,
+<code>computematch-dev</code>, <code>computematch-qa</code>,
+<code>computematch-stg</code>). Secrets go in a Git-ignored
+<code>.env.local</code>. HTML reports are written to
+<code>reports/</code>. <code>make verify</code> does not run the E2E
+suite.</p>
+</body>
+</html>

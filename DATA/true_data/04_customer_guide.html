@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Customer Guide (Find, Request and Track GPU
+Clusters)</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-customer-guide-find-request-and-track-gpu-clusters" id="toc-compute-match-customer-guide-find-request-and-track-gpu-clusters">Compute
+Match — Customer Guide (Find, Request and Track GPU Clusters)</a>
+<ul>
+<li><a href="#customer-menu" id="toc-customer-menu">Customer
+menu</a></li>
+<li><a href="#step-1-find-a-cluster-to-reserve" id="toc-step-1-find-a-cluster-to-reserve">Step 1 — Find a Cluster to
+Reserve</a></li>
+<li><a href="#step-2-fill-the-reservation-form" id="toc-step-2-fill-the-reservation-form">Step 2 — Fill the reservation
+form</a></li>
+<li><a href="#custom-requests-no-matching-cluster" id="toc-custom-requests-no-matching-cluster">Custom requests (no
+matching cluster)</a></li>
+<li><a href="#step-3-track-requests-in-my-requests" id="toc-step-3-track-requests-in-my-requests">Step 3 — Track requests in
+My Requests</a></li>
+<li><a href="#step-4-reservation-detail" id="toc-step-4-reservation-detail">Step 4 — Reservation detail</a></li>
+<li><a href="#what-happens-after-you-submit" id="toc-what-happens-after-you-submit">What happens after you
+submit</a></li>
+<li><a href="#feedback" id="toc-feedback">Feedback</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-customer-guide-find-request-and-track-gpu-clusters">Compute
+Match — Customer Guide (Find, Request and Track GPU Clusters)</h1>
+<p>This guide is for customers (also called Offtakers): organizations
+that want to reserve GPU capacity from NVIDIA Cloud Providers
+(NCPs).</p>
+<h2 id="customer-menu">Customer menu</h2>
+<p>Click your name in the top-right to open the account menu:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Menu item</th>
+<th>Route</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request a Cluster</td>
+<td><code>/customer</code> (redirects to Find a Cluster to Reserve)</td>
+</tr>
+<tr>
+<td>My requests</td>
+<td><code>/customer/reservations</code></td>
+</tr>
+<tr>
+<td>Logout</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>The header also has <strong>Page Help</strong> (<code>?</code>),
+<strong>User Manual</strong> (book icon), <strong>Share
+Feedback</strong>, and the <strong>What’s New</strong> bell.</p>
+<h2 id="step-1-find-a-cluster-to-reserve">Step 1 — Find a Cluster to
+Reserve</h2>
+<p>Route: <code>/customer/reservation-request/available-clusters</code>.
+This is the customer landing page. It shows GPU clusters from all NCPs
+on an interactive world map plus capacity cards.</p>
+<h3 id="filters">Filters</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Filter</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Search</td>
+<td>Free text across platform, region, country, GPU model</td>
+</tr>
+<tr>
+<td><strong>Platform</strong></td>
+<td>GPU model (for example H100, B200). Select this first: Tenure and
+Earliest Start Date unlock only after a platform is chosen</td>
+</tr>
+<tr>
+<td>Geographical Region</td>
+<td>Broad region such as North America, Europe, Asia Pacific</td>
+</tr>
+<tr>
+<td>Country</td>
+<td>Cascades from Geographical Region</td>
+</tr>
+<tr>
+<td>No. of GPUs</td>
+<td>Minimum available GPUs</td>
+</tr>
+<tr>
+<td>Tenure</td>
+<td>Reservation length band: <code>0-1</code>, <code>1-2</code>,
+<code>2-3</code>, <code>3-4</code>, <code>4-5</code>, <code>5-6</code>,
+<code>6+</code> years. Requires Platform</td>
+</tr>
+<tr>
+<td>Earliest Start Date</td>
+<td>Must be after today</td>
+</tr>
+</tbody>
+</table>
+<p>Each card shows City, GPU count, and <strong>Earliest Available
+Date</strong>. Cards are labelled <strong>Current</strong> (available
+capacity) or <strong>Future</strong> (capacity starting later). An amber
+note means the cluster already has pending requests. If the platform
+admins set a pending-request cap, oversubscribed clusters are
+hidden.</p>
+<h3 id="selecting-clusters">Selecting clusters</h3>
+<ol type="1">
+<li>Narrow the list with filters.</li>
+<li>Click a map bubble or a card.</li>
+<li>Optional: turn on <strong>Send request to multiple NCP’s</strong>
+(needs the <code>send_request_multiple_provider</code> scope).
+Checkboxes appear; you can select up to <strong>3</strong> clusters
+(configurable). Selecting more shows a warning.</li>
+<li>Click <strong>Request a Cluster</strong> to open the reservation
+form with your selection pre-filled.</li>
+</ol>
+<p>Changing the Platform while cards are selected asks you to confirm
+clearing the selection.</p>
+<h2 id="step-2-fill-the-reservation-form">Step 2 — Fill the reservation
+form</h2>
+<p>The form opens in a modal with three sections.</p>
+<h3 id="cluster-details">Cluster Details</h3>
+<ul>
+<li>Pre-filled and read-only when you picked a cluster.</li>
+<li>With several clusters, they are shown as Option 1, Option 2…
+separated by “or”, with an amber banner: these are
+<strong>alternatives</strong>, and your request will be matched with
+<strong>one</strong> cluster based on NCP availability.</li>
+<li>For custom requests, GPU Model and Geographical Region are required
+and Country is optional.</li>
+</ul>
+<h3 id="customer-details">Customer Details</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Rules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Organization Name</td>
+<td>Yes</td>
+<td>Dropdown with suggestions, or “Other” with a new unique name</td>
+</tr>
+<tr>
+<td>Organization URL</td>
+<td>No</td>
+<td>Valid URL</td>
+</tr>
+<tr>
+<td>Contact Email</td>
+<td>No</td>
+<td>Valid email, max 250 characters</td>
+</tr>
+<tr>
+<td>Purpose</td>
+<td>No</td>
+<td>Max 1,000 characters</td>
+</tr>
+<tr>
+<td>Terms &amp; Conditions</td>
+<td>Yes</td>
+<td>Pre-accepted on submit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gpu-reservation-period">GPU Reservation Period</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Rules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPUs</td>
+<td>Yes</td>
+<td>Whole number of at least 1</td>
+</tr>
+<tr>
+<td>Preferred start date / Earliest Start Date</td>
+<td>Yes</td>
+<td>After today</td>
+</tr>
+<tr>
+<td>Duration (months)</td>
+<td>When not using tenure</td>
+<td>At least 1 month</td>
+</tr>
+<tr>
+<td>Tenure</td>
+<td>When you came in with a tenure filter</td>
+<td>One of the tenure bands</td>
+</tr>
+</tbody>
+</table>
+<p>If you ask for more GPUs or an earlier date than the cluster shows, a
+yellow warning appears; you can still submit and negotiate with the
+NCP.</p>
+<h3 id="form-buttons">Form buttons</h3>
+<ul>
+<li><strong>Submit reservation request</strong> validates and submits
+(<code>POST /api/v1/reservation-request</code>). On success you see
+“Successfully created Reservation Request” and land on the request
+detail page.</li>
+<li><strong>Clear Form</strong> resets fields but keeps the cluster
+pre-fill.</li>
+<li>Clicking outside or pressing Esc after typing asks why you are
+leaving, or asks you to <strong>Keep editing</strong> or
+<strong>Discard</strong>. The × and <strong>Cancel</strong> buttons
+close immediately.</li>
+</ul>
+<h2 id="custom-requests-no-matching-cluster">Custom requests (no
+matching cluster)</h2>
+<p>If nothing fits, click <strong>Submit a custom request</strong>
+(banner under the filters) or <strong>Submit Custom Request</strong>
+(empty state). Your current filters are carried over as hints. A custom
+request is not sent to a specific NCP; NVIDIA Platform Admins broker it
+manually and move it through:</p>
+<p><strong>Open → In Review → Matched</strong> or
+<strong>Unserviceable</strong>. You can cancel it while it is Open or In
+Review. Custom requests never expire. You get an email at each step.</p>
+<h2 id="step-3-track-requests-in-my-requests">Step 3 — Track requests in
+My Requests</h2>
+<p>Route: <code>/customer/reservations</code>.</p>
+<ul>
+<li>Columns: Request ID (shown as “REQ-1 - Status”), Customer, Contact
+Email, Platform, Geographical Region, Country, Requested GPUs, Total
+GPUs, Requested Date, Start/End Date, Duration (Hours), Status.</li>
+<li>Multi-NCP requests show as a grouped row with one child row per
+NCP.</li>
+<li>The date under the status chip is when it moved to In Process,
+Contracted, Rejected, Expired or Cancelled. Rejected rows have an info
+icon with the NCP’s remarks.</li>
+<li>Filters: Status, Hosting Provider (hidden for multi-provider),
+Platform, Geographical Region, Country, Sort by request date,
+<strong>Clear All</strong>.</li>
+<li>With no requests you see <strong>No requests found</strong> with a
+button to create one.</li>
+</ul>
+<h2 id="step-4-reservation-detail">Step 4 — Reservation detail</h2>
+<p>Route: <code>/customer/reservations/{reservationId}</code>.</p>
+<ul>
+<li>A headline states the status, for example “Your Reservation request
+is awaiting NCP acceptance” or “Contract Complete!”, with the expiry
+date when relevant.</li>
+<li><strong>Reservation Summary</strong>: organization, contact email,
+period, GPU count, platform, region, country, rejection remarks, terms
+acceptance.</li>
+<li><strong>Proposal History</strong>: every proposal (yours and NCP
+counteroffers), grouped by region when several NCPs are involved.</li>
+<li><strong>Cancel</strong>: available while Awaiting NCP Acceptance,
+Awaiting Provider/Customer Approval, In Process or Expired. Confirm in
+the modal; you may give a reason. All involved NCPs are notified by
+email.</li>
+<li>You cannot accept or reject NCP proposals on this page; the NCP
+confirms the contract.</li>
+</ul>
+<h2 id="what-happens-after-you-submit">What happens after you
+submit</h2>
+<ol type="1">
+<li>You get a “request received” email.</li>
+<li>Each selected NCP gets a magic-link email and has 7 days to
+accept.</li>
+<li>When an NCP accepts, the request goes <strong>In Process</strong>
+and you get an introduction email so you can negotiate directly. The
+contract window is 45 days.</li>
+<li>When an NCP clicks <strong>Confirm Contract</strong>, your request
+becomes <strong>Contracted</strong>; other NCPs on the same request are
+cancelled as superseded.</li>
+<li>If every NCP rejects, the request is <strong>Rejected</strong>. If
+all deadlines pass, it is <strong>Expired</strong> and you get one
+consolidated expiry email.</li>
+</ol>
+<h2 id="feedback">Feedback</h2>
+<p>After creating a request you may see “How was the Request a Cluster
+experience?” with 1-5 stars and <strong>Submit Feedback</strong>. When
+cancelling or leaving the marketplace you may be asked why. You can also
+click <strong>Share Feedback</strong> in the header at any time.</p>
+</body>
+</html>

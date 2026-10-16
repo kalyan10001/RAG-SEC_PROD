@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Analytics with Superset</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-analytics-with-superset" id="toc-compute-match-analytics-with-superset">Compute Match — Analytics
+with Superset</a>
+<ul>
+<li><a href="#access" id="toc-access">Access</a></li>
+<li><a href="#dashboard-1-compute-matchmake-system-metrics-marketplace" id="toc-dashboard-1-compute-matchmake-system-metrics-marketplace">Dashboard
+1 — Compute MatchMake System Metrics (marketplace)</a></li>
+<li><a href="#dashboard-2-feedback" id="toc-dashboard-2-feedback">Dashboard 2 — Feedback</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-analytics-with-superset">Compute Match — Analytics
+with Superset</h1>
+<p>Apache Superset (<code>superset/</code>) provides dashboards for
+Platform Admins. Locally, start it with
+<code>make onboard ONBOARD_ARGS=&quot;--with-analytics&quot;</code> and open
+<code>http://localhost:8088</code> with the operations demo account.</p>
+<h2 id="access">Access</h2>
+<ul>
+<li>Custom role <strong>DashboardViewer</strong>: can view dashboards,
+charts and datasets in the <code>analytics</code> schema only; no SQL
+Lab, no query editing, no database admin.</li>
+<li>Keycloak role <code>superset_dashboard_viewers</code> (part of the
+Platform Admin composite) maps to DashboardViewer
+(<code>superset/superset_config.py</code>,
+<code>superset/custom_roles.py</code>).</li>
+<li>In the app, Platform Admins open it via the external
+<strong>Dashboard</strong> menu item.</li>
+</ul>
+<h2 id="dashboard-1-compute-matchmake-system-metrics-marketplace">Dashboard
+1 — Compute MatchMake System Metrics (marketplace)</h2>
+<p>Defined in
+<code>superset/dashboards/marketplace_metrics.py</code>.</p>
+<ul>
+<li><strong>Request analytics</strong>: total requests, requests per
+week, average time to contract (overall and by NCP), conversion rate
+(overall and by GPU), acceptance and rejection by NCP, custom-request
+percentage, contracted GPUs by month and platform.</li>
+<li><strong>User analytics</strong>: NCP and customer activity tiers
+with detail tables, new sign-ups in the last 4 weeks, logins per user
+over 90 days.</li>
+<li><strong>Capacity analytics</strong>: available, reserved and future
+GPUs, NCPs with capacity, capacity by platform and region, future
+pipeline by month.</li>
+</ul>
+<p>Sources: views such as
+<code>analytics.v_reservation_request_*</code>,
+<code>v_ncp_activity</code>, <code>v_customer_activity</code>,
+<code>v_user_actions</code>, <code>v_ncp_capacity_overview</code>,
+<code>v_future_pipeline_by_month</code>.</p>
+<h2 id="dashboard-2-feedback">Dashboard 2 — Feedback</h2>
+<p>Defined in <code>superset/dashboards/feedback_metrics.py</code>.
+KPIs: average rating, number of responses, satisfied versus
+dissatisfied, rating distribution, top reasons, journey summary, recent
+feedback. Filters: time, persona, journey. Source:
+<code>analytics.v_feedback</code> and a funnel view.</p>
+</body>
+</html>

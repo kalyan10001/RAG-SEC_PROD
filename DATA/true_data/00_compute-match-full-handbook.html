@@ -1,0 +1,3721 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Full Handbook</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-product-overview" id="toc-compute-match-product-overview">Compute Match — Product
+Overview</a>
+<ul>
+<li><a href="#what-is-compute-match" id="toc-what-is-compute-match">What
+is Compute Match?</a></li>
+<li><a href="#who-uses-compute-match" id="toc-who-uses-compute-match">Who uses Compute Match?</a></li>
+<li><a href="#the-core-idea-in-five-steps" id="toc-the-core-idea-in-five-steps">The core idea in five
+steps</a></li>
+<li><a href="#key-business-objects" id="toc-key-business-objects">Key
+business objects</a></li>
+<li><a href="#important-timers-defaults" id="toc-important-timers-defaults">Important timers (defaults)</a></li>
+<li><a href="#technology-at-a-glance" id="toc-technology-at-a-glance">Technology at a glance</a></li>
+<li><a href="#where-to-get-help" id="toc-where-to-get-help">Where to get
+help</a></li>
+</ul></li>
+<li><a href="#compute-match-roles-permissions-and-access-control" id="toc-compute-match-roles-permissions-and-access-control">Compute
+Match — Roles, Permissions and Access Control</a>
+<ul>
+<li><a href="#personas-and-the-roles-behind-them" id="toc-personas-and-the-roles-behind-them">Personas and the roles
+behind them</a></li>
+<li><a href="#feature-scopes" id="toc-feature-scopes">Feature
+scopes</a></li>
+<li><a href="#organization-scoping" id="toc-organization-scoping">Organization scoping</a></li>
+<li><a href="#customer-confidentiality" id="toc-customer-confidentiality">Customer confidentiality</a></li>
+<li><a href="#account-status-gates" id="toc-account-status-gates">Account status gates</a></li>
+<li><a href="#why-is-a-menu-item-missing" id="toc-why-is-a-menu-item-missing">Why is a menu item missing?</a></li>
+</ul></li>
+<li><a href="#compute-match-signing-up-signing-in-and-first-time-setup" id="toc-compute-match-signing-up-signing-in-and-first-time-setup">Compute
+Match — Signing Up, Signing In and First-Time Setup</a>
+<ul>
+<li><a href="#how-sign-in-works" id="toc-how-sign-in-works">How sign-in
+works</a></li>
+<li><a href="#where-you-land-after-sign-in" id="toc-where-you-land-after-sign-in">Where you land after
+sign-in</a></li>
+<li><a href="#first-time-checks" id="toc-first-time-checks">First-time
+checks</a></li>
+<li><a href="#ncp-sign-in-paths" id="toc-ncp-sign-in-paths">NCP sign-in
+paths</a></li>
+<li><a href="#how-partner-detection-works" id="toc-how-partner-detection-works">How partner detection
+works</a></li>
+<li><a href="#signing-out" id="toc-signing-out">Signing out</a></li>
+</ul></li>
+<li><a href="#compute-match-customer-guide-find-request-and-track-gpu-clusters" id="toc-compute-match-customer-guide-find-request-and-track-gpu-clusters">Compute
+Match — Customer Guide (Find, Request and Track GPU Clusters)</a>
+<ul>
+<li><a href="#customer-menu" id="toc-customer-menu">Customer
+menu</a></li>
+<li><a href="#step-1-find-a-cluster-to-reserve" id="toc-step-1-find-a-cluster-to-reserve">Step 1 — Find a Cluster to
+Reserve</a></li>
+<li><a href="#step-2-fill-the-reservation-form" id="toc-step-2-fill-the-reservation-form">Step 2 — Fill the reservation
+form</a></li>
+<li><a href="#custom-requests-no-matching-cluster" id="toc-custom-requests-no-matching-cluster">Custom requests (no
+matching cluster)</a></li>
+<li><a href="#step-3-track-requests-in-my-requests" id="toc-step-3-track-requests-in-my-requests">Step 3 — Track requests in
+My Requests</a></li>
+<li><a href="#step-4-reservation-detail" id="toc-step-4-reservation-detail">Step 4 — Reservation detail</a></li>
+<li><a href="#what-happens-after-you-submit" id="toc-what-happens-after-you-submit">What happens after you
+submit</a></li>
+<li><a href="#feedback" id="toc-feedback">Feedback</a></li>
+</ul></li>
+<li><a href="#compute-match-ncp-provider-guide" id="toc-compute-match-ncp-provider-guide">Compute Match — NCP (Provider)
+Guide</a>
+<ul>
+<li><a href="#ncp-menu" id="toc-ncp-menu">NCP menu</a></li>
+<li><a href="#dashboard" id="toc-dashboard">Dashboard</a></li>
+<li><a href="#upload-capacities-csv" id="toc-upload-capacities-csv">Upload Capacities (CSV)</a></li>
+<li><a href="#manage-reservation-split-view" id="toc-manage-reservation-split-view">Manage reservation (split
+view)</a></li>
+<li><a href="#reservation-requests-table-view" id="toc-reservation-requests-table-view">Reservation requests (table
+view)</a></li>
+<li><a href="#reservation-detail" id="toc-reservation-detail">Reservation detail</a></li>
+<li><a href="#deadlines-you-must-watch" id="toc-deadlines-you-must-watch">Deadlines you must watch</a></li>
+<li><a href="#emails-ncps-receive" id="toc-emails-ncps-receive">Emails
+NCPs receive</a></li>
+</ul></li>
+<li><a href="#compute-match-platform-admin-guide" id="toc-compute-match-platform-admin-guide">Compute Match — Platform
+Admin Guide</a>
+<ul>
+<li><a href="#admin-menu-in-order" id="toc-admin-menu-in-order">Admin
+menu (in order)</a></li>
+<li><a href="#global-capacity-explorer" id="toc-global-capacity-explorer">Global Capacity Explorer</a></li>
+<li><a href="#review-future-capacities" id="toc-review-future-capacities">Review Future Capacities</a></li>
+<li><a href="#onboard-ncps" id="toc-onboard-ncps">Onboard NCPs</a></li>
+<li><a href="#custom-requests" id="toc-custom-requests">Custom
+requests</a></li>
+<li><a href="#reservation-requests-across-all-ncps" id="toc-reservation-requests-across-all-ncps">Reservation requests
+across all NCPs</a></li>
+<li><a href="#user-operations" id="toc-user-operations">User
+operations</a></li>
+<li><a href="#daily-alert-email" id="toc-daily-alert-email">Daily alert
+email</a></li>
+<li><a href="#analytics" id="toc-analytics">Analytics</a></li>
+</ul></li>
+<li><a href="#compute-match-reservation-request-lifecycle-and-status-reference" id="toc-compute-match-reservation-request-lifecycle-and-status-reference">Compute
+Match — Reservation Request Lifecycle and Status Reference</a>
+<ul>
+<li><a href="#two-levels-of-status" id="toc-two-levels-of-status">Two
+levels of status</a></li>
+<li><a href="#reservation-request-statuses" id="toc-reservation-request-statuses">Reservation request
+statuses</a></li>
+<li><a href="#offering-statuses-per-ncp" id="toc-offering-statuses-per-ncp">Offering statuses (per NCP)</a></li>
+<li><a href="#catalog-multi-ncp-flow-step-by-step" id="toc-catalog-multi-ncp-flow-step-by-step">Catalog / multi-NCP flow,
+step by step</a></li>
+<li><a href="#custom-request-flow" id="toc-custom-request-flow">Custom
+request flow</a></li>
+<li><a href="#capacity-rules-that-affect-requests" id="toc-capacity-rules-that-affect-requests">Capacity rules that affect
+requests</a></li>
+<li><a href="#configuration-defaults" id="toc-configuration-defaults">Configuration defaults</a></li>
+<li><a href="#allocation-statuses" id="toc-allocation-statuses">Allocation statuses</a></li>
+</ul></li>
+<li><a href="#compute-match-gpu-capacity-model-and-csv-import-workflow" id="toc-compute-match-gpu-capacity-model-and-csv-import-workflow">Compute
+Match — GPU Capacity Model and CSV Import Workflow</a>
+<ul>
+<li><a href="#gpu-offering-data-model" id="toc-gpu-offering-data-model">GPU offering data model</a></li>
+<li><a href="#csv-capacity-import-end-to-end-flow" id="toc-csv-capacity-import-end-to-end-flow">CSV capacity import —
+end-to-end flow</a></li>
+<li><a href="#csv-columns" id="toc-csv-columns">CSV columns</a></li>
+<li><a href="#ncp-onboarding-csv" id="toc-ncp-onboarding-csv">NCP
+onboarding CSV</a></li>
+<li><a href="#legacy-bootstrap-importers" id="toc-legacy-bootstrap-importers">Legacy bootstrap importers</a></li>
+</ul></li>
+<li><a href="#compute-match-email-notifications" id="toc-compute-match-email-notifications">Compute Match — Email
+Notifications</a>
+<ul>
+<li><a href="#customer-emails" id="toc-customer-emails">Customer
+emails</a></li>
+<li><a href="#ncp-emails" id="toc-ncp-emails">NCP emails</a></li>
+<li><a href="#admin-and-operations-emails" id="toc-admin-and-operations-emails">Admin and operations
+emails</a></li>
+<li><a href="#account-emails" id="toc-account-emails">Account
+emails</a></li>
+<li><a href="#magic-links-in-detail" id="toc-magic-links-in-detail">Magic links in detail</a></li>
+<li><a href="#reliability" id="toc-reliability">Reliability</a></li>
+</ul></li>
+<li><a href="#compute-match-system-architecture" id="toc-compute-match-system-architecture">Compute Match — System
+Architecture</a>
+<ul>
+<li><a href="#runtime-components" id="toc-runtime-components">Runtime
+components</a></li>
+<li><a href="#backend-architecture-ddd-hexagonal" id="toc-backend-architecture-ddd-hexagonal">Backend architecture (DDD +
+hexagonal)</a></li>
+<li><a href="#division-of-labour-between-backend-and-worker" id="toc-division-of-labour-between-backend-and-worker">Division of
+labour between backend and worker</a></li>
+<li><a href="#data-stores" id="toc-data-stores">Data stores</a></li>
+<li><a href="#frontend-architecture" id="toc-frontend-architecture">Frontend architecture</a></li>
+<li><a href="#cloud-platform" id="toc-cloud-platform">Cloud
+platform</a></li>
+</ul></li>
+<li><a href="#compute-match-backend-api-reference-summary" id="toc-compute-match-backend-api-reference-summary">Compute Match —
+Backend API Reference (Summary)</a>
+<ul>
+<li><a href="#public" id="toc-public">Public</a></li>
+<li><a href="#customers-apis" id="toc-customers-apis">Customers
+APIs</a></li>
+<li><a href="#providers-apis-ncp-and-admin" id="toc-providers-apis-ncp-and-admin">Providers APIs (NCP and
+admin)</a></li>
+<li><a href="#access-request-apis-only-when-npn-integration-is-enabled-otherwise-404" id="toc-access-request-apis-only-when-npn-integration-is-enabled-otherwise-404">Access
+Request APIs (only when NPN integration is enabled, otherwise
+404)</a></li>
+<li><a href="#inventory-apis-reference-data" id="toc-inventory-apis-reference-data">Inventory APIs (reference
+data)</a></li>
+<li><a href="#users-apis" id="toc-users-apis">Users APIs</a></li>
+<li><a href="#operations-apis-role-operations" id="toc-operations-apis-role-operations">Operations APIs (role
+<code>operations</code>)</a></li>
+<li><a href="#feedback-apis" id="toc-feedback-apis">Feedback
+APIs</a></li>
+<li><a href="#system-apis-temporal-worker-service-account" id="toc-system-apis-temporal-worker-service-account">System APIs
+(Temporal worker service account)</a></li>
+<li><a href="#internal-apis-hidden-from-schema" id="toc-internal-apis-hidden-from-schema">Internal APIs (hidden from
+schema)</a></li>
+<li><a href="#cross-cutting-behaviour" id="toc-cross-cutting-behaviour">Cross-cutting behaviour</a></li>
+</ul></li>
+<li><a href="#compute-match-temporal-workflows-and-schedules" id="toc-compute-match-temporal-workflows-and-schedules">Compute Match —
+Temporal Workflows and Schedules</a>
+<ul>
+<li><a href="#summary" id="toc-summary">Summary</a></li>
+<li><a href="#reservationrequestworkflow" id="toc-reservationrequestworkflow">ReservationRequestWorkflow</a></li>
+<li><a href="#offeringlifecycleworkflow" id="toc-offeringlifecycleworkflow">OfferingLifecycleWorkflow</a></li>
+<li><a href="#csvimportworkflow" id="toc-csvimportworkflow">CsvImportWorkflow</a></li>
+<li><a href="#provideronboardingworkflow" id="toc-provideronboardingworkflow">ProviderOnboardingWorkflow</a></li>
+<li><a href="#salesforce-workflows" id="toc-salesforce-workflows">Salesforce workflows</a></li>
+<li><a href="#retry-policies-sharedworkflowsworkflow_commonretry.py" id="toc-retry-policies-sharedworkflowsworkflow_commonretry.py">Retry
+policies
+(<code>shared/workflows/workflow_common/retry.py</code>)</a></li>
+<li><a href="#viewing-workflows-locally" id="toc-viewing-workflows-locally">Viewing workflows locally</a></li>
+</ul></li>
+<li><a href="#compute-match-identity-and-keycloak" id="toc-compute-match-identity-and-keycloak">Compute Match — Identity
+and Keycloak</a>
+<ul>
+<li><a href="#realm-and-clients" id="toc-realm-and-clients">Realm and
+clients</a></li>
+<li><a href="#roles" id="toc-roles">Roles</a></li>
+<li><a href="#custom-extensions-keycloak-extensions" id="toc-custom-extensions-keycloak-extensions">Custom extensions
+(<code>keycloak-extensions/</code>)</a></li>
+<li><a href="#themes" id="toc-themes">Themes</a></li>
+<li><a href="#organizations" id="toc-organizations">Organizations</a></li>
+<li><a href="#local-keycloak" id="toc-local-keycloak">Local
+Keycloak</a></li>
+</ul></li>
+<li><a href="#compute-match-analytics-with-superset" id="toc-compute-match-analytics-with-superset">Compute Match — Analytics
+with Superset</a>
+<ul>
+<li><a href="#access" id="toc-access">Access</a></li>
+<li><a href="#dashboard-1-compute-matchmake-system-metrics-marketplace" id="toc-dashboard-1-compute-matchmake-system-metrics-marketplace">Dashboard
+1 — Compute MatchMake System Metrics (marketplace)</a></li>
+<li><a href="#dashboard-2-feedback" id="toc-dashboard-2-feedback">Dashboard 2 — Feedback</a></li>
+</ul></li>
+<li><a href="#compute-match-local-development-guide" id="toc-compute-match-local-development-guide">Compute Match — Local
+Development Guide</a>
+<ul>
+<li><a href="#prerequisites" id="toc-prerequisites">Prerequisites</a></li>
+<li><a href="#first-run" id="toc-first-run">First run</a></li>
+<li><a href="#demo-accounts" id="toc-demo-accounts">Demo
+accounts</a></li>
+<li><a href="#development-modes" id="toc-development-modes">Development
+modes</a></li>
+<li><a href="#make-targets" id="toc-make-targets">Make targets</a></li>
+<li><a href="#local-urls-and-ports" id="toc-local-urls-and-ports">Local
+URLs and ports</a></li>
+<li><a href="#configuration-files" id="toc-configuration-files">Configuration files</a></li>
+<li><a href="#everyday-loop" id="toc-everyday-loop">Everyday
+loop</a></li>
+<li><a href="#common-problems" id="toc-common-problems">Common
+problems</a></li>
+</ul></li>
+<li><a href="#compute-match-environments-infrastructure-delivery-and-ci" id="toc-compute-match-environments-infrastructure-delivery-and-ci">Compute
+Match — Environments, Infrastructure, Delivery and CI</a>
+<ul>
+<li><a href="#environments" id="toc-environments">Environments</a></li>
+<li><a href="#google-cloud-infrastructure-terraform" id="toc-google-cloud-infrastructure-terraform">Google Cloud
+infrastructure (Terraform)</a></li>
+<li><a href="#helm" id="toc-helm">Helm</a></li>
+<li><a href="#application-release-train" id="toc-application-release-train">Application release train</a></li>
+<li><a href="#gitlab-ci" id="toc-gitlab-ci">GitLab CI</a></li>
+<li><a href="#git-workflow-contributing.md" id="toc-git-workflow-contributing.md">Git workflow
+(CONTRIBUTING.md)</a></li>
+</ul></li>
+<li><a href="#compute-match-security-observability-salesforce-integration-and-testing" id="toc-compute-match-security-observability-salesforce-integration-and-testing">Compute
+Match — Security, Observability, Salesforce Integration and Testing</a>
+<ul>
+<li><a href="#security-model" id="toc-security-model">Security
+model</a></li>
+<li><a href="#observability" id="toc-observability">Observability</a></li>
+<li><a href="#salesforce-integration-adr-001" id="toc-salesforce-integration-adr-001">Salesforce integration
+(ADR-001)</a></li>
+<li><a href="#testing" id="toc-testing">Testing</a></li>
+</ul></li>
+<li><a href="#compute-match-glossary-faq-and-troubleshooting-for-users" id="toc-compute-match-glossary-faq-and-troubleshooting-for-users">Compute
+Match — Glossary, FAQ and Troubleshooting for Users</a>
+<ul>
+<li><a href="#glossary" id="toc-glossary">Glossary</a></li>
+<li><a href="#frequently-asked-questions" id="toc-frequently-asked-questions">Frequently asked questions</a></li>
+<li><a href="#whats-new-october-2026-release-v1.3.0" id="toc-whats-new-october-2026-release-v1.3.0">What’s New — October 2026
+release (v1.3.0)</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-product-overview">Compute Match — Product
+Overview</h1>
+<h2 id="what-is-compute-match">What is Compute Match?</h2>
+<p>Compute Match, also called the <strong>Compute MatchMake
+System</strong> (internal project key <strong>NCPMS</strong>, code name
+<strong>Clustruffle</strong>), is an NVIDIA web platform that connects
+<strong>customers</strong> who need GPU compute capacity with
+<strong>NVIDIA Cloud Providers (NCPs)</strong> who own and operate GPU
+infrastructure.</p>
+<p>In one sentence: customers find GPU clusters, send reservation
+requests, and NCPs accept, negotiate, and contract those requests, while
+NVIDIA Platform Admins oversee the marketplace.</p>
+<h2 id="who-uses-compute-match">Who uses Compute Match?</h2>
+<p>There are three personas:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Who they are</th>
+<th>What they do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Customer</strong> (also called <strong>Offtaker</strong> or
+requester)</td>
+<td>An organization that needs GPU compute</td>
+<td>Browse available GPU clusters, submit reservation requests (to one
+or several NCPs), submit custom requests, track and cancel requests</td>
+</tr>
+<tr>
+<td><strong>NCP</strong> (NVIDIA Cloud Provider / GPU Compute
+Provider)</td>
+<td>An organization that operates GPU data centers</td>
+<td>Upload GPU capacity via CSV, review incoming reservation requests,
+accept, reject, counteroffer, and confirm contracts</td>
+</tr>
+<tr>
+<td><strong>Platform Admin</strong> (NVIDIA operations / business
+admins)</td>
+<td>NVIDIA staff running the marketplace</td>
+<td>Explore global capacity, review future capacity uploads, onboard
+NCPs, approve NCP access requests, broker custom requests, extend
+deadlines, view analytics dashboards</td>
+</tr>
+</tbody>
+</table>
+<p>A single user can hold both customer and NCP access; they switch
+between them with <strong>Switch profile to</strong> in the account
+menu.</p>
+<h2 id="the-core-idea-in-five-steps">The core idea in five steps</h2>
+<ol type="1">
+<li><strong>NCPs publish capacity.</strong> An NCP uploads a CSV
+describing how many GPUs of which platform (for example H100, B200,
+GB200) are available, in which country and city, and from which
+date.</li>
+<li><strong>Customers search.</strong> A customer opens <strong>Find a
+Cluster to Reserve</strong>, filters by platform, region, country, GPU
+count, tenure, and earliest start date, and sees matching clusters on a
+world map and as cards.</li>
+<li><strong>Customers request.</strong> The customer submits a
+<strong>reservation request</strong> for one cluster, or for up to 3
+clusters from different NCPs at once (multi-NCP request). If nothing
+fits, they submit a <strong>custom request</strong> that NVIDIA admins
+broker manually.</li>
+<li><strong>NCPs respond.</strong> Each selected NCP receives an email
+with a secure <strong>magic link</strong>. The NCP accepts (moving the
+request to <strong>In Process</strong>), rejects, or counteroffers, and
+finally clicks <strong>Confirm Contract</strong>.</li>
+<li><strong>Contract.</strong> The first NCP to contract wins; the other
+NCPs’ offerings on the same request are cancelled as superseded.
+Capacity is allocated, and the deal is synced to Salesforce as an
+Offtake record.</li>
+</ol>
+<h2 id="key-business-objects">Key business objects</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Object</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GPU Offering / GPU Capacity</strong></td>
+<td>A cluster an NCP makes available: GPU platform, hosting provider,
+region, country, city, GPU count and availability date windows</td>
+</tr>
+<tr>
+<td><strong>Capacity type</strong></td>
+<td><code>AVAILABLE</code> (current capacity, starts within 90 days of
+upload, published right away) or <code>FUTURE</code> (starts more than
+90 days out, needs Platform Admin review)</td>
+</tr>
+<tr>
+<td><strong>Reservation Request</strong></td>
+<td>A customer’s request to reserve GPU capacity</td>
+</tr>
+<tr>
+<td><strong>Reservation Request Offering</strong></td>
+<td>One NCP’s slice of a reservation request; a multi-NCP request has
+one per NCP, each with its own status and deadlines</td>
+</tr>
+<tr>
+<td><strong>Proposal</strong></td>
+<td>One version of the reservation terms (dates, GPU count, platform,
+region, price). The customer’s original request is the first proposal;
+NCP counteroffers add more</td>
+</tr>
+<tr>
+<td><strong>Custom Request</strong></td>
+<td>A request without a specific cluster; NVIDIA admins move it through
+Open, In Review, Matched or Unserviceable</td>
+</tr>
+<tr>
+<td><strong>Allocation</strong></td>
+<td>Capacity consumed once a request is contracted</td>
+</tr>
+<tr>
+<td><strong>Import Job</strong></td>
+<td>One CSV capacity upload and its processing status</td>
+</tr>
+<tr>
+<td><strong>Access Request</strong></td>
+<td>A pending request from a partner (for example via the NPN portal) to
+join as an NCP</td>
+</tr>
+</tbody>
+</table>
+<h2 id="important-timers-defaults">Important timers (defaults)</h2>
+<ul>
+<li>An NCP has <strong>7 days</strong> to accept a request routed to
+them (acceptance window).</li>
+<li>After accepting, the NCP and customer have <strong>45 days</strong>
+to reach a contract (contract negotiation window).</li>
+<li>Reminder emails are sent <strong>3 days</strong> before each
+deadline.</li>
+<li>A magic link is valid for <strong>1 hour</strong>, and can be
+regenerated for up to <strong>7 days</strong> after routing.</li>
+<li>Custom requests never expire automatically.</li>
+<li>Platform Admins can extend either window by <strong>1 to 200
+days</strong>.</li>
+</ul>
+<h2 id="technology-at-a-glance">Technology at a glance</h2>
+<ul>
+<li><strong>Frontend:</strong> Next.js 15, React 19, Ant Design 6,
+Tailwind CSS 4, NextAuth 5 with Keycloak.</li>
+<li><strong>Backend:</strong> Python 3.13, FastAPI, Domain-Driven Design
+with hexagonal architecture, SQLAlchemy, PostgreSQL, Alembic
+migrations.</li>
+<li><strong>Workflows:</strong> Temporal (Temporal Cloud in shared
+environments) with a Python workflow worker.</li>
+<li><strong>Identity:</strong> Keycloak with NVIDIA Starfleet SSO,
+custom Keycloak extensions.</li>
+<li><strong>Analytics:</strong> Apache Superset dashboards.</li>
+<li><strong>Platform:</strong> Google Cloud — GKE Autopilot, Cloud SQL
+PostgreSQL, Memorystore Redis, Secret Manager; deployed with Terraform
+and Helm through GitLab CI.</li>
+<li><strong>Integrations:</strong> Salesforce (Offtake sync and
+partner-domain sync), email notifications.</li>
+</ul>
+<h2 id="where-to-get-help">Where to get help</h2>
+<ul>
+<li>In the app: <strong>Page Help</strong> (the <code>?</code> icon) for
+context help and <strong>User Manual</strong> (book icon) for the full
+role-filtered manual.</li>
+<li>Support email for access problems: computematchmake@nvidia.com.</li>
+<li>Developer docs: the <code>docs/</code> folder in the repository,
+also published as the Compute Match documentation site.</li>
+</ul>
+<h1 id="compute-match-roles-permissions-and-access-control">Compute
+Match — Roles, Permissions and Access Control</h1>
+<h2 id="personas-and-the-roles-behind-them">Personas and the roles
+behind them</h2>
+<p>Compute Match uses Keycloak realm roles. The frontend turns roles
+into feature <strong>scopes</strong>, and the backend checks scopes on
+each API call.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Keycloak roles (examples)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Customer / Offtaker</td>
+<td><code>customer</code>, <code>customer_account_manager</code>,
+Starfleet variants such as <code>customer_consumer</code>,
+<code>customer_tech_admin</code></td>
+<td>Self sign-up users get <code>default-roles-customer</code></td>
+</tr>
+<tr>
+<td>NCP business user</td>
+<td><code>provider</code>, <code>provider_business_user</code></td>
+<td>Can manage inventory and act on reservations. Members of the
+Keycloak group <code>offering-validator</code> receive magic-link
+emails</td>
+</tr>
+<tr>
+<td>NCP basic user</td>
+<td><code>provider_basic_user</code></td>
+<td>Read-only NCP access; never receives magic links</td>
+</tr>
+<tr>
+<td>Platform Admin</td>
+<td><code>platform_business_admin</code>,
+<code>platform_business_admin_super_user</code>,
+<code>platform_business_admin_ops_user</code>,
+<code>platform_customer_provider_am</code></td>
+<td>Cross-NCP visibility, review and onboarding</td>
+</tr>
+<tr>
+<td>Account managers</td>
+<td><code>account_manager_consumer</code>,
+<code>account_manager_provider</code></td>
+<td>The only roles allowed to belong to more than one organization</td>
+</tr>
+<tr>
+<td>Operations / system</td>
+<td><code>operations</code>, <code>systems</code></td>
+<td>User activation, service accounts</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td><code>superset_users</code>, <code>superset_admins</code>,
+<code>superset_dashboard_viewers</code></td>
+<td>Superset access</td>
+</tr>
+</tbody>
+</table>
+<h2 id="feature-scopes">Feature scopes</h2>
+<p>Scopes are defined in
+<code>backend/infrastructure/driving/http/routers/scopes.py</code> and
+<code>frontend/src/services/auth/accessControl/scopes.ts</code>.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Allows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>view_capacity</code></td>
+<td>Browse GPU offerings and availability, read reference data</td>
+</tr>
+<tr>
+<td><code>create_reservation_request</code></td>
+<td>Submit reservation and custom requests</td>
+</tr>
+<tr>
+<td><code>requester_view_reservation_request</code></td>
+<td>See your own requests (My Requests)</td>
+</tr>
+<tr>
+<td><code>requester_manage_reservation_request</code></td>
+<td>Cancel your own requests</td>
+</tr>
+<tr>
+<td><code>send_request_multiple_provider</code></td>
+<td>Use the <strong>Send request to multiple NCP’s</strong> toggle</td>
+</tr>
+<tr>
+<td><code>view_provider_inventory</code></td>
+<td>NCP views own inventory</td>
+</tr>
+<tr>
+<td><code>manage_inventory</code></td>
+<td>Upload capacities, add or delete offerings (gates
+<code>/provider/gpu-capacities-upload</code>)</td>
+</tr>
+<tr>
+<td><code>approver_view_reservation_request</code></td>
+<td>NCP sees reservation requests</td>
+</tr>
+<tr>
+<td><code>approver_manage_reservation_request</code></td>
+<td>NCP accepts, rejects, contracts (gates the split <strong>Manage
+reservation</strong> view)</td>
+</tr>
+<tr>
+<td><code>approver_view_custom_reservation_request</code> /
+<code>approver_manage_custom_reservation_request</code></td>
+<td>View and move custom requests (Platform Admin)</td>
+</tr>
+<tr>
+<td><code>review_capacity</code></td>
+<td>Accept or reject future capacity uploads (gates
+<code>/provider/review-future-capacities</code>)</td>
+</tr>
+<tr>
+<td><code>manage_ncp</code></td>
+<td>Onboard NCPs and review access requests (gates
+<code>/provider/ncp-onboarding</code>)</td>
+</tr>
+<tr>
+<td><code>global_capacity_view</code></td>
+<td>Global Capacity Explorer (gates
+<code>/provider/global-capacity</code>)</td>
+</tr>
+<tr>
+<td><code>accept_contract_extension</code></td>
+<td>Extend acceptance or contract deadlines</td>
+</tr>
+<tr>
+<td><code>notification:send</code>, <code>capacity:sync</code>,
+<code>reservation-request:write</code></td>
+<td>Service-account scopes used by the Temporal worker</td>
+</tr>
+</tbody>
+</table>
+<h2 id="organization-scoping">Organization scoping</h2>
+<ul>
+<li>Every user belongs to a Keycloak <strong>Organization</strong>. NCP
+offerings carry <code>provider_organization_id</code>, so NCP users only
+see their own organization’s inventory and requests.</li>
+<li>Platform Admins see across all NCPs.</li>
+<li>Only account-manager roles may be in multiple organizations
+(enforced by the <code>multi-org-policy</code> Keycloak extension).</li>
+<li>One organization exists per Salesforce partner account; NCP
+organization names come from the Salesforce account name.</li>
+</ul>
+<h2 id="customer-confidentiality">Customer confidentiality</h2>
+<p>NCPs may see a customer’s organization name blurred and labelled
+<strong>Confidential</strong> until engagement. Contracted prices are
+only visible to NCPs, platform account managers and admins.</p>
+<h2 id="account-status-gates">Account status gates</h2>
+<p>After login, the backend middleware and frontend middleware check, in
+order:</p>
+<ol type="1">
+<li><strong>Access denied</strong> — identity verified but not
+authorized (for example personal email domain, missing role). User is
+pinned to <code>/access-denied</code>.</li>
+<li><strong>Access pending</strong> — the user’s email domain belongs to
+an NVIDIA partner but the NCP has not been onboarded yet. An access
+request is created and the user waits on <code>/access-pending</code>
+until a Platform Admin approves.</li>
+<li><strong>User status PENDING</strong> — account awaiting activation;
+user sees <code>/user-status-pending</code> (“Thanks for Signing
+up”).</li>
+<li><strong>Profile incomplete</strong> — user must fill
+<strong>Complete Your Profile</strong> (first name, last name,
+organization name, phone).</li>
+<li><strong>Terms not accepted</strong> — a blocking modal requires
+scrolling the Terms and Conditions, ticking “I have read and agree to
+the Terms and Conditions” and clicking <strong>Accept &amp;
+Continue</strong>.</li>
+</ol>
+<p>User account statuses are <code>ACTIVE</code> and
+<code>PENDING</code>.</p>
+<h2 id="why-is-a-menu-item-missing">Why is a menu item missing?</h2>
+<p>Menu items appear only when you hold the matching scope. For example,
+<strong>Upload Capacities</strong> needs <code>manage_inventory</code>;
+<strong>Global Capacity Explorer</strong> needs
+<code>global_capacity_view</code>. If something is missing, ask your
+Platform Admin to grant the role. NCP basic users
+(<code>provider_basic_user</code>) are read-only by design and are sent
+to the table view instead of the split Manage reservation view.</p>
+<h1 id="compute-match-signing-up-signing-in-and-first-time-setup">Compute
+Match — Signing Up, Signing In and First-Time Setup</h1>
+<h2 id="how-sign-in-works">How sign-in works</h2>
+<p>Compute Match uses <strong>Starfleet</strong>, NVIDIA’s single
+sign-on service, through <strong>Keycloak</strong>. Sign up and Login
+use the same flow.</p>
+<ol type="1">
+<li>Open the home page and click <strong>Get Started</strong>,
+<strong>Sign up</strong> or <strong>Login</strong>.</li>
+<li>On the <code>/login</code> page enter your <strong>Work
+email</strong> and click <strong>Login</strong>.</li>
+<li>Personal email domains (Gmail, Yahoo, Hotmail and similar) are
+blocked with an explanation. Use your work or enterprise email.</li>
+<li>You are redirected to Starfleet and your organization’s identity
+provider (for example NVIDIA corporate login or your company SSO).</li>
+<li>After authentication you return to Compute Match. You may briefly
+pass through several authentication pages; this is normal.</li>
+</ol>
+<p>Technically, the frontend uses NextAuth 5 with the Keycloak client
+<code>customer-web</code> in the <code>customer</code> realm, and passes
+<code>kc_idp_hint=starfleet</code> to send users to the Starfleet
+identity broker.</p>
+<h2 id="where-you-land-after-sign-in">Where you land after sign-in</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Landing page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Customer</td>
+<td><strong>Find a Cluster to Reserve</strong>
+(<code>/customer/reservation-request/available-clusters</code>)</td>
+</tr>
+<tr>
+<td>NCP</td>
+<td><strong>Dashboard</strong> (<code>/provider/dashboard</code>)</td>
+</tr>
+<tr>
+<td>Platform Admin</td>
+<td><strong>Global Capacity Explorer</strong>
+(<code>/provider/global-capacity</code>) when available, otherwise the
+provider dashboard</td>
+</tr>
+</tbody>
+</table>
+<h2 id="first-time-checks">First-time checks</h2>
+<p>After the first sign-in you may see one or more of these screens:</p>
+<ul>
+<li><strong>Complete Your Profile</strong> (customers,
+<code>/customer/additional-user-details</code>) or <strong>Complete Your
+NCP Profile</strong> (NCPs,
+<code>/provider/additional-user-details</code>). Fill First Name, Last
+Name, Organization Name and Phone Number (digits only; <code>+1</code>
+is pre-filled) and click <strong>Submit</strong>.</li>
+<li><strong>Terms and Conditions modal</strong>. Scroll to the end, tick
+the checkbox and click <strong>Accept &amp; Continue</strong>, or
+<strong>Sign out</strong>. Acceptance is stored as a timestamp on your
+user (<code>POST /api/v1/users/me/terms-acceptance</code>).</li>
+<li><strong>Thanks for Signing up</strong>
+(<code>/user-status-pending</code>). Your account is pending activation;
+you will get an email when activated.</li>
+<li><strong>Your access is being reviewed</strong>
+(<code>/access-pending</code>). Your company is an NVIDIA partner but
+its NCP organization is not onboarded yet. A Platform Admin must approve
+your access request. Once approved, the page shows <strong>Your access
+has been approved</strong> while the session refreshes.</li>
+<li><strong>Access denied</strong> (<code>/access-denied</code>). Your
+identity was verified but you are not authorized. The page shows your
+email and the reason. Contact computematchmake@nvidia.com or sign out
+and use another work account.</li>
+</ul>
+<h2 id="ncp-sign-in-paths">NCP sign-in paths</h2>
+<h3 id="welcome-email">Welcome email</h3>
+<p>New NCP users created by NCP onboarding receive a
+<code>provider_welcome</code> email with a direct login link.</p>
+<h3 id="magic-link-respond-to-a-reservation">Magic link (respond to a
+reservation)</h3>
+<p>When a reservation request is routed to an NCP, users in that NCP
+organization who have the <code>provider_business_user</code> role and
+belong to the <code>offering-validator</code> group get an email with a
+magic link.</p>
+<ol type="1">
+<li>The link is a Keycloak action token created by the custom
+<code>accept-reservation-token</code> extension.</li>
+<li>Keycloak validates the token and a one-time nonce with the backend
+(<code>POST /api/v1/offering/validate-nonce</code>), blocks the link if
+a different user is already logged in, creates a session and
+redirects.</li>
+<li>The browser lands on
+<code>/automatic-login?from=magic-link&amp;callbackUrl=...</code>, which
+skips the email page and reuses the SSO session, then opens
+<strong>Manage reservation</strong> so the NCP can
+<strong>Accept</strong>.</li>
+<li>A magic link is valid for 1 hour. NCPs or admins can resend one
+(<code>POST /api/v1/provider/offering/{offeringId}/resend-magic-link</code>)
+within 7 days of routing.</li>
+</ol>
+<h3 id="npn-portal">NPN portal</h3>
+<p>NVIDIA Partner Network (NPN) members can reach Compute Match directly
+from the NPN portal (feature flag
+<code>NPN_PORTAL_INTEGRATION_ENABLED</code>). They still pass through
+the work-email page and Starfleet. If their partner organization is not
+onboarded yet, an access request with source <code>NPN_PORTAL</code> is
+created and they wait on the access-pending page.</p>
+<h2 id="how-partner-detection-works">How partner detection works</h2>
+<ul>
+<li>Compute Match keeps a <strong>partner domain</strong> mirror of
+email domains belonging to NVIDIA partners, synced from Salesforce twice
+a day.</li>
+<li>Domain lookup statuses are <code>PARTNER</code>,
+<code>NOT_PARTNER</code> and <code>PENDING</code>.</li>
+<li>Personal mail providers can never be partner domains.</li>
+<li>When a user from a partner domain signs up and their NCP is not
+onboarded, <code>POST /api/v1/user</code> creates an <strong>access
+request</strong> (statuses <code>PENDING</code>, <code>APPROVED</code>,
+<code>REJECTED</code>; sources <code>NPN_PORTAL</code>,
+<code>SIGNUP</code>).</li>
+<li>A Platform Admin approves or rejects it under <strong>Onboard NCPs →
+Review Onboarding Requests</strong>. Approval provisions the
+organization and user in Keycloak; rejection emails the reason. A
+rejected applicant can apply again, which creates a new request.</li>
+</ul>
+<h2 id="signing-out">Signing out</h2>
+<p>Use <strong>Logout</strong> in the account menu. If your session
+cannot be refreshed, the app shows a recovery screen and performs a full
+Keycloak logout.</p>
+<h1 id="compute-match-customer-guide-find-request-and-track-gpu-clusters">Compute
+Match — Customer Guide (Find, Request and Track GPU Clusters)</h1>
+<p>This guide is for customers (also called Offtakers): organizations
+that want to reserve GPU capacity from NVIDIA Cloud Providers
+(NCPs).</p>
+<h2 id="customer-menu">Customer menu</h2>
+<p>Click your name in the top-right to open the account menu:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Menu item</th>
+<th>Route</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request a Cluster</td>
+<td><code>/customer</code> (redirects to Find a Cluster to Reserve)</td>
+</tr>
+<tr>
+<td>My requests</td>
+<td><code>/customer/reservations</code></td>
+</tr>
+<tr>
+<td>Logout</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>The header also has <strong>Page Help</strong> (<code>?</code>),
+<strong>User Manual</strong> (book icon), <strong>Share
+Feedback</strong>, and the <strong>What’s New</strong> bell.</p>
+<h2 id="step-1-find-a-cluster-to-reserve">Step 1 — Find a Cluster to
+Reserve</h2>
+<p>Route: <code>/customer/reservation-request/available-clusters</code>.
+This is the customer landing page. It shows GPU clusters from all NCPs
+on an interactive world map plus capacity cards.</p>
+<h3 id="filters">Filters</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Filter</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Search</td>
+<td>Free text across platform, region, country, GPU model</td>
+</tr>
+<tr>
+<td><strong>Platform</strong></td>
+<td>GPU model (for example H100, B200). Select this first: Tenure and
+Earliest Start Date unlock only after a platform is chosen</td>
+</tr>
+<tr>
+<td>Geographical Region</td>
+<td>Broad region such as North America, Europe, Asia Pacific</td>
+</tr>
+<tr>
+<td>Country</td>
+<td>Cascades from Geographical Region</td>
+</tr>
+<tr>
+<td>No. of GPUs</td>
+<td>Minimum available GPUs</td>
+</tr>
+<tr>
+<td>Tenure</td>
+<td>Reservation length band: <code>0-1</code>, <code>1-2</code>,
+<code>2-3</code>, <code>3-4</code>, <code>4-5</code>, <code>5-6</code>,
+<code>6+</code> years. Requires Platform</td>
+</tr>
+<tr>
+<td>Earliest Start Date</td>
+<td>Must be after today</td>
+</tr>
+</tbody>
+</table>
+<p>Each card shows City, GPU count, and <strong>Earliest Available
+Date</strong>. Cards are labelled <strong>Current</strong> (available
+capacity) or <strong>Future</strong> (capacity starting later). An amber
+note means the cluster already has pending requests. If the platform
+admins set a pending-request cap, oversubscribed clusters are
+hidden.</p>
+<h3 id="selecting-clusters">Selecting clusters</h3>
+<ol type="1">
+<li>Narrow the list with filters.</li>
+<li>Click a map bubble or a card.</li>
+<li>Optional: turn on <strong>Send request to multiple NCP’s</strong>
+(needs the <code>send_request_multiple_provider</code> scope).
+Checkboxes appear; you can select up to <strong>3</strong> clusters
+(configurable). Selecting more shows a warning.</li>
+<li>Click <strong>Request a Cluster</strong> to open the reservation
+form with your selection pre-filled.</li>
+</ol>
+<p>Changing the Platform while cards are selected asks you to confirm
+clearing the selection.</p>
+<h2 id="step-2-fill-the-reservation-form">Step 2 — Fill the reservation
+form</h2>
+<p>The form opens in a modal with three sections.</p>
+<h3 id="cluster-details">Cluster Details</h3>
+<ul>
+<li>Pre-filled and read-only when you picked a cluster.</li>
+<li>With several clusters, they are shown as Option 1, Option 2…
+separated by “or”, with an amber banner: these are
+<strong>alternatives</strong>, and your request will be matched with
+<strong>one</strong> cluster based on NCP availability.</li>
+<li>For custom requests, GPU Model and Geographical Region are required
+and Country is optional.</li>
+</ul>
+<h3 id="customer-details">Customer Details</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Rules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Organization Name</td>
+<td>Yes</td>
+<td>Dropdown with suggestions, or “Other” with a new unique name</td>
+</tr>
+<tr>
+<td>Organization URL</td>
+<td>No</td>
+<td>Valid URL</td>
+</tr>
+<tr>
+<td>Contact Email</td>
+<td>No</td>
+<td>Valid email, max 250 characters</td>
+</tr>
+<tr>
+<td>Purpose</td>
+<td>No</td>
+<td>Max 1,000 characters</td>
+</tr>
+<tr>
+<td>Terms &amp; Conditions</td>
+<td>Yes</td>
+<td>Pre-accepted on submit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gpu-reservation-period">GPU Reservation Period</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Rules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPUs</td>
+<td>Yes</td>
+<td>Whole number of at least 1</td>
+</tr>
+<tr>
+<td>Preferred start date / Earliest Start Date</td>
+<td>Yes</td>
+<td>After today</td>
+</tr>
+<tr>
+<td>Duration (months)</td>
+<td>When not using tenure</td>
+<td>At least 1 month</td>
+</tr>
+<tr>
+<td>Tenure</td>
+<td>When you came in with a tenure filter</td>
+<td>One of the tenure bands</td>
+</tr>
+</tbody>
+</table>
+<p>If you ask for more GPUs or an earlier date than the cluster shows, a
+yellow warning appears; you can still submit and negotiate with the
+NCP.</p>
+<h3 id="form-buttons">Form buttons</h3>
+<ul>
+<li><strong>Submit reservation request</strong> validates and submits
+(<code>POST /api/v1/reservation-request</code>). On success you see
+“Successfully created Reservation Request” and land on the request
+detail page.</li>
+<li><strong>Clear Form</strong> resets fields but keeps the cluster
+pre-fill.</li>
+<li>Clicking outside or pressing Esc after typing asks why you are
+leaving, or asks you to <strong>Keep editing</strong> or
+<strong>Discard</strong>. The × and <strong>Cancel</strong> buttons
+close immediately.</li>
+</ul>
+<h2 id="custom-requests-no-matching-cluster">Custom requests (no
+matching cluster)</h2>
+<p>If nothing fits, click <strong>Submit a custom request</strong>
+(banner under the filters) or <strong>Submit Custom Request</strong>
+(empty state). Your current filters are carried over as hints. A custom
+request is not sent to a specific NCP; NVIDIA Platform Admins broker it
+manually and move it through:</p>
+<p><strong>Open → In Review → Matched</strong> or
+<strong>Unserviceable</strong>. You can cancel it while it is Open or In
+Review. Custom requests never expire. You get an email at each step.</p>
+<h2 id="step-3-track-requests-in-my-requests">Step 3 — Track requests in
+My Requests</h2>
+<p>Route: <code>/customer/reservations</code>.</p>
+<ul>
+<li>Columns: Request ID (shown as “REQ-1 - Status”), Customer, Contact
+Email, Platform, Geographical Region, Country, Requested GPUs, Total
+GPUs, Requested Date, Start/End Date, Duration (Hours), Status.</li>
+<li>Multi-NCP requests show as a grouped row with one child row per
+NCP.</li>
+<li>The date under the status chip is when it moved to In Process,
+Contracted, Rejected, Expired or Cancelled. Rejected rows have an info
+icon with the NCP’s remarks.</li>
+<li>Filters: Status, Hosting Provider (hidden for multi-provider),
+Platform, Geographical Region, Country, Sort by request date,
+<strong>Clear All</strong>.</li>
+<li>With no requests you see <strong>No requests found</strong> with a
+button to create one.</li>
+</ul>
+<h2 id="step-4-reservation-detail">Step 4 — Reservation detail</h2>
+<p>Route: <code>/customer/reservations/{reservationId}</code>.</p>
+<ul>
+<li>A headline states the status, for example “Your Reservation request
+is awaiting NCP acceptance” or “Contract Complete!”, with the expiry
+date when relevant.</li>
+<li><strong>Reservation Summary</strong>: organization, contact email,
+period, GPU count, platform, region, country, rejection remarks, terms
+acceptance.</li>
+<li><strong>Proposal History</strong>: every proposal (yours and NCP
+counteroffers), grouped by region when several NCPs are involved.</li>
+<li><strong>Cancel</strong>: available while Awaiting NCP Acceptance,
+Awaiting Provider/Customer Approval, In Process or Expired. Confirm in
+the modal; you may give a reason. All involved NCPs are notified by
+email.</li>
+<li>You cannot accept or reject NCP proposals on this page; the NCP
+confirms the contract.</li>
+</ul>
+<h2 id="what-happens-after-you-submit">What happens after you
+submit</h2>
+<ol type="1">
+<li>You get a “request received” email.</li>
+<li>Each selected NCP gets a magic-link email and has 7 days to
+accept.</li>
+<li>When an NCP accepts, the request goes <strong>In Process</strong>
+and you get an introduction email so you can negotiate directly. The
+contract window is 45 days.</li>
+<li>When an NCP clicks <strong>Confirm Contract</strong>, your request
+becomes <strong>Contracted</strong>; other NCPs on the same request are
+cancelled as superseded.</li>
+<li>If every NCP rejects, the request is <strong>Rejected</strong>. If
+all deadlines pass, it is <strong>Expired</strong> and you get one
+consolidated expiry email.</li>
+</ol>
+<h2 id="feedback">Feedback</h2>
+<p>After creating a request you may see “How was the Request a Cluster
+experience?” with 1-5 stars and <strong>Submit Feedback</strong>. When
+cancelling or leaving the marketplace you may be asked why. You can also
+click <strong>Share Feedback</strong> in the header at any time.</p>
+<h1 id="compute-match-ncp-provider-guide">Compute Match — NCP (Provider)
+Guide</h1>
+<p>This guide is for NVIDIA Cloud Providers (NCPs): organizations that
+publish GPU capacity and respond to customer reservation requests.</p>
+<h2 id="ncp-menu">NCP menu</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Menu item</th>
+<th>Route</th>
+<th>Needs scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dashboard</td>
+<td><code>/provider/dashboard</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Upload Capacities</td>
+<td><code>/provider/gpu-capacities-upload</code></td>
+<td><code>manage_inventory</code></td>
+</tr>
+<tr>
+<td>Manage reservation</td>
+<td><code>/provider?view=split</code></td>
+<td><code>approver_manage_reservation_request</code></td>
+</tr>
+<tr>
+<td>Reservation requests</td>
+<td><code>/provider?view=table</code></td>
+<td><code>approver_view_reservation_request</code></td>
+</tr>
+<tr>
+<td>Custom requests</td>
+<td><code>/provider/custom-requests</code></td>
+<td>custom request scopes (usually admins)</td>
+</tr>
+</tbody>
+</table>
+<p>There is no sidebar and no in-page back button on the main NCP pages;
+navigate with the account menu.</p>
+<h2 id="dashboard">Dashboard</h2>
+<p>Route: <code>/provider/dashboard</code>. A read-only overview that
+loads fresh on each visit.</p>
+<ul>
+<li><strong>Welcome header</strong> with your name and how many requests
+await your action.</li>
+<li><strong>Awaiting Your Action</strong> — requests waiting for accept,
+reject, counter or contract.</li>
+<li><strong>Available Capacities</strong> — your live inventory plus
+your latest upload status.</li>
+<li>Quick links: <strong>View all requests</strong> (table view),
+<strong>Manage Reservations</strong> (split view), <strong>View all
+uploads</strong>, <strong>Upload Capacity</strong>.</li>
+<li>Before your first upload, both panels show a guided empty
+state.</li>
+</ul>
+<h2 id="upload-capacities-csv">Upload Capacities (CSV)</h2>
+<p>Route: <code>/provider/gpu-capacities-upload</code>.</p>
+<ol type="1">
+<li>Click <strong>Download Template</strong>.</li>
+<li>Fill one row per capacity block.</li>
+<li>Drag and drop or click to upload the CSV.</li>
+<li>You see <strong>Upload Successful</strong>; processing continues in
+the background and appears in <strong>Upload History</strong>.</li>
+</ol>
+<h3 id="csv-rules">CSV rules</h3>
+<ul>
+<li>UTF-8 CSV, at most <strong>10 MB</strong> and <strong>10,000 data
+rows</strong>, each cell at most 500 characters.</li>
+<li>Required columns: <code>GPU Platform Type</code>,
+<code>Number of GPUs Available</code>, <code>Live Token Date</code>,
+<code>Country</code>, <code>City</code>.</li>
+<li>Optional columns: <code>Region</code>,
+<code>end_datetime</code>.</li>
+<li>Metadata columns that are accepted but ignored:
+<code>NCP Name</code>, <code>RA/RD</code>,
+<code>Exemplar Cluster</code>, <code>aaS Capability</code>,
+<code>State</code>.</li>
+<li>The hosting provider name comes from your NCP organization, not from
+the CSV.</li>
+<li>Vendor prefixes like “NVIDIA” in the platform cell are tolerated;
+country names such as “USA” or “Holland” are normalized.</li>
+<li>Cells beginning with <code>=</code>, <code>+</code>, <code>-</code>
+or <code>@</code> are neutralized to prevent spreadsheet formula
+injection.</li>
+<li>Invalid rows are skipped with errors listed; the job fails only if
+no row succeeds.</li>
+</ul>
+<h3 id="current-versus-future-capacity">Current versus future
+capacity</h3>
+<ul>
+<li>Rows whose Live Token Date is <strong>within 90 days</strong> of
+upload are <strong>current (AVAILABLE)</strong> capacity and go live
+immediately after validation.</li>
+<li>Rows starting <strong>more than 90 days</strong> out are
+<strong>future (FUTURE)</strong> capacity. The job waits in
+<strong>Pending Review</strong> until a Platform Admin accepts or
+rejects it. You are emailed the result and any rejection reason appears
+in the Details column.</li>
+</ul>
+<h3 id="upload-history-statuses">Upload History statuses</h3>
+<p>Processing, Pending Review, Completed, Rejected, Validation Failed.
+Click “See all details” for the full error list.</p>
+<p>After uploading you may be asked “How was the Upload Capacity
+experience?”.</p>
+<h2 id="manage-reservation-split-view">Manage reservation (split
+view)</h2>
+<p>Route: <code>/provider?view=split</code>. Your main workspace.</p>
+<ul>
+<li><strong>Left panel</strong>: request cards with status tabs
+(Awaiting NCP Acceptance, Awaiting Provider Approval, In Process,
+Contracted, Rejected, Cancelled, Expired) and filters for Platform,
+Geographical Region and Country, plus search.</li>
+<li><strong>Right panel</strong>: a capacity availability chart once
+Platform, Region and Country are all selected, so you can see whether
+you have room before acting.</li>
+<li>Drag cards to reorder priority (keyboard: Space or Enter to grab,
+arrows to move).</li>
+<li>Expand <strong>View details</strong> to see dates: <strong>In
+Process Since</strong>, <strong>Contracted On</strong>, <strong>Rejected
+On</strong>, <strong>Expired On</strong>, <strong>Cancelled
+On</strong>.</li>
+</ul>
+<h3 id="actions-on-a-card">Actions on a card</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Action</th>
+<th>When</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Accept</strong></td>
+<td>Awaiting NCP Acceptance</td>
+<td>Offering moves to <strong>In Process</strong>; a 45-day contract
+window starts; customer receives an introduction email</td>
+</tr>
+<tr>
+<td><strong>Reject</strong></td>
+<td>Awaiting acceptance or In Process</td>
+<td>Offering moves to <strong>Rejected</strong>; remarks are required
+and shown to the customer</td>
+</tr>
+<tr>
+<td><strong>Counteroffer</strong></td>
+<td>Before contract</td>
+<td>Opens <strong>Modify Details</strong>: original request on the left,
+editable Proposed Start Date, Proposed End Date, Number of GPUs,
+Platform and Geographical Region on the right. <strong>Reset</strong>,
+<strong>Cancel</strong> or <strong>Confirm</strong></td>
+</tr>
+<tr>
+<td><strong>Confirm Contract</strong></td>
+<td>In Process</td>
+<td>Offering becomes <strong>Contracted</strong>, capacity is allocated,
+the whole request is Contracted and other NCPs on the request are
+cancelled as superseded</td>
+</tr>
+</tbody>
+</table>
+<p>Accepting or contracting can fail with “capacity not available” if
+your remaining capacity no longer covers the request.</p>
+<h2 id="reservation-requests-table-view">Reservation requests (table
+view)</h2>
+<p>Route: <code>/provider?view=table</code>. A sortable table with GPU
+Model, Country, Geographical Region, Status and sort filters. To act,
+choose Platform, Region and Country and click <strong>Manage
+Reservation</strong> to open the split view with those filters. Basic
+NCP users only get this view.</p>
+<h2 id="reservation-detail">Reservation detail</h2>
+<p>Route: <code>/provider/reservations/{reservationId}</code>. Read-only
+<strong>Reservation Request History</strong> with Requested By, dates,
+region, platform, GPUs, capacity, total GPU hours, and price and cost
+when enabled.</p>
+<h2 id="deadlines-you-must-watch">Deadlines you must watch</h2>
+<ul>
+<li><strong>7 days</strong> to accept after a request is routed to you.
+Reminder 3 days before. If you miss it the offering becomes
+<strong>Expired</strong>.</li>
+<li><strong>45 days</strong> from acceptance to confirm the contract.
+Reminder 3 days before.</li>
+<li>Platform Admins can extend either window.</li>
+<li>Magic links expire after 1 hour; ask for a resend within 7 days of
+routing, or just log in and open Manage reservation.</li>
+</ul>
+<h2 id="emails-ncps-receive">Emails NCPs receive</h2>
+<p>Magic link (new request), resend, introduction (after accept),
+contracted, superseded (another NCP won), expiry reminders, expired,
+request cancelled by customer, future capacity approved or rejected,
+welcome email for new users.</p>
+<h1 id="compute-match-platform-admin-guide">Compute Match — Platform
+Admin Guide</h1>
+<p>Platform Admins are NVIDIA staff (roles such as
+<code>platform_business_admin</code>,
+<code>platform_business_admin_super_user</code>,
+<code>platform_business_admin_ops_user</code>) who run the marketplace.
+They use the same <code>/provider/*</code> pages as NCPs, with extra
+pages and cross-NCP visibility. The header shows the persona label
+<strong>Platform Admin</strong>.</p>
+<h2 id="admin-menu-in-order">Admin menu (in order)</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Menu item</th>
+<th>Route</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Global Capacity Explorer</td>
+<td><code>/provider/global-capacity</code></td>
+<td><code>global_capacity_view</code></td>
+</tr>
+<tr>
+<td>Upload Capacities</td>
+<td><code>/provider/gpu-capacities-upload</code></td>
+<td><code>manage_inventory</code></td>
+</tr>
+<tr>
+<td>Reservation requests</td>
+<td><code>/provider?view=table</code></td>
+<td>approver view</td>
+</tr>
+<tr>
+<td>Onboard NCPs</td>
+<td><code>/provider/ncp-onboarding</code></td>
+<td><code>manage_ncp</code></td>
+</tr>
+<tr>
+<td>Review Future Capacities</td>
+<td><code>/provider/review-future-capacities</code></td>
+<td><code>review_capacity</code></td>
+</tr>
+<tr>
+<td>Custom requests</td>
+<td><code>/provider/custom-requests</code></td>
+<td>custom request scopes</td>
+</tr>
+<tr>
+<td>Dashboard (external)</td>
+<td>Superset analytics, opens in a new tab</td>
+<td>Superset role</td>
+</tr>
+</tbody>
+</table>
+<h2 id="global-capacity-explorer">Global Capacity Explorer</h2>
+<p>A read-only world view of all GPU capacity across NCPs.</p>
+<ul>
+<li>Filters: Search, <strong>Platform</strong> (required for the chart),
+Geographical Region, <strong>NCP</strong>, Country / Data Centre
+Location, Start Date, End Date.</li>
+<li><strong>Map | List</strong> toggle. The map shows capacity hotspots;
+“No datacenter locations match the current filters.” when empty.</li>
+<li><strong>Available Capacity</strong> chart over time, colour-coded
+per NCP (same colour for current and future). Tooltips show the month’s
+peak-day total, current and future split, and per-city breakdown.</li>
+<li><strong>Export to Excel</strong> and <strong>Export to
+CSV</strong>.</li>
+<li>API: <code>GET /api/v1/provider/global-capacity-map</code>.</li>
+</ul>
+<h2 id="review-future-capacities">Review Future Capacities</h2>
+<p>NCP uploads that include rows starting more than 90 days out wait
+here.</p>
+<ul>
+<li>Tabs: <strong>All</strong>, <strong>Pending</strong>,
+<strong>Accepted</strong>, <strong>Rejected</strong>. Filter by
+<strong>NCP</strong>.</li>
+<li>Columns: NCP, File Name (click for details), Uploaded Date, Status,
+Actions.</li>
+<li><strong>Accept</strong>: confirm in <strong>Approve Future Capacity
+Submission</strong>; status becomes Accepted and capacity goes live for
+customers.</li>
+<li><strong>Reject</strong>: enter a reason (required, up to 500
+characters) and click <strong>Submit Rejection</strong>; the NCP is
+emailed the reason.</li>
+<li>Nothing is accepted or rejected automatically; submissions wait
+until reviewed.</li>
+</ul>
+<h2 id="onboard-ncps">Onboard NCPs</h2>
+<ol type="1">
+<li>Download the NCP onboarding CSV template.</li>
+<li>Fill in the NCP organizations and users.</li>
+<li>Upload. A background Temporal
+<code>ProviderOnboardingWorkflow</code> validates the file, creates
+Keycloak organizations, users, roles and the
+<code>offering-validator</code> group membership, and sends welcome
+emails.</li>
+<li>Watch status in the history table. Onboarding job statuses: QUEUED,
+VALIDATING, VALIDATION_FAILED, ONBOARDING, COMPLETED, FAILED.</li>
+</ol>
+<h3 id="review-onboarding-requests-access-requests">Review Onboarding
+Requests (access requests)</h3>
+<p>When the NPN portal integration is on, partner users whose NCP is not
+onboarded appear here. <strong>Approve</strong> provisions them like a
+CSV onboarding; <strong>Reject</strong> requires a reason and emails it.
+API: <code>/api/v1/provider/access-requests</code> (+
+<code>/approve</code>, <code>/reject</code>).</p>
+<h2 id="custom-requests">Custom requests</h2>
+<p>Route: <code>/provider/custom-requests</code>. Table only (no split
+view, no NCP filter). Filter by Platform, Country, Geographical Region,
+Status, Sort.</p>
+<p>Lifecycle you control: - <strong>Open</strong> → <strong>In
+Review</strong> (you are working on it) - <strong>In Review</strong> or
+<strong>Open</strong> → <strong>Matched</strong> (<strong>Mark as
+Matched</strong> / <strong>Confirm Match</strong>, optionally record the
+NCP, NCP region and a comment) - → <strong>Unserviceable</strong>
+(<strong>Close as Unserviceable</strong>) - Customers alone can
+<strong>Cancel</strong> while Open or In Review. - Matched,
+Unserviceable and Cancelled are final; a request never returns to Open.
+The customer is emailed on each change.</p>
+<h2 id="reservation-requests-across-all-ncps">Reservation requests
+across all NCPs</h2>
+<p>The table view shows all requests platform-wide. Use the row action
+menu (⋮) to extend deadlines:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Action</th>
+<th>Applies to</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Extend Acceptance Duration</strong></td>
+<td>Awaiting NCP Acceptance (or recently expired)</td>
+<td>Adds days to the NCP’s acceptance window</td>
+</tr>
+<tr>
+<td><strong>Extend Contract Negotiation Duration</strong></td>
+<td>In Process</td>
+<td>Adds days to the contract window</td>
+</tr>
+</tbody>
+</table>
+<p>Enter 1 to 200 extra days, check the previewed new expiry date, and
+click <strong>Confirm</strong>. Extending can revive an Expired offering
+back to its prior active status.</p>
+<h2 id="user-operations">User operations</h2>
+<p>Operations users (<code>operations</code> role) can activate pending
+users, list users, resend activation magic links and delete users
+through the Operations APIs (<code>/api/v1/...</code> under the
+Operations tag).</p>
+<h2 id="daily-alert-email">Daily alert email</h2>
+<p>Every day at 09:00 UTC a Temporal schedule
+(<code>in-process-requests-alert-daily</code>) emails Platform Admins a
+digest of In Process offerings approaching their contract deadline.</p>
+<h2 id="analytics">Analytics</h2>
+<p>The external <strong>Dashboard</strong> link opens Superset. See the
+analytics document for the dashboards (Marketplace metrics and
+Feedback).</p>
+<h1 id="compute-match-reservation-request-lifecycle-and-status-reference">Compute
+Match — Reservation Request Lifecycle and Status Reference</h1>
+<p>This document explains, end to end, how a reservation request moves
+through statuses, who triggers each change, and which timers apply.</p>
+<h2 id="two-levels-of-status">Two levels of status</h2>
+<ol type="1">
+<li><strong>Reservation request status</strong> — the status of the
+whole customer request.</li>
+<li><strong>Offering status</strong> — the status of each NCP’s slice
+(<code>ReservationRequestOffering</code>). A request sent to 3 NCPs has
+3 offerings.</li>
+</ol>
+<p>Do not confuse these with <strong>GPU offering status</strong>
+(inventory listing status: <code>ACTIVE</code>,
+<code>PENDING_REVIEW</code>, <code>REJECTED</code>).</p>
+<h2 id="reservation-request-statuses">Reservation request statuses</h2>
+<p>Backend enum <code>ReservationRequestStatus</code>
+(<code>backend/core/reservation_request/reservation_request_status.py</code>):</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Backend value</th>
+<th>UI label</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Open</code></td>
+<td>Open</td>
+<td>Submitted; not yet routed (custom requests start and may stay
+here)</td>
+</tr>
+<tr>
+<td><code>AwaitingProviderAcceptance</code></td>
+<td>Awaiting NCP Acceptance</td>
+<td>Routed to one or more NCPs, waiting for a response</td>
+</tr>
+<tr>
+<td><code>InProcess</code></td>
+<td>In Process</td>
+<td>At least one NCP accepted; negotiation under way</td>
+</tr>
+<tr>
+<td><code>Contracted</code></td>
+<td>Contracted</td>
+<td>An NCP confirmed the contract (legacy <code>Approved</code> also
+shows as Contracted)</td>
+</tr>
+<tr>
+<td><code>Rejected</code></td>
+<td>Rejected</td>
+<td>All NCPs rejected</td>
+</tr>
+<tr>
+<td><code>Expired</code></td>
+<td>Expired</td>
+<td>Deadlines passed without action</td>
+</tr>
+<tr>
+<td><code>Cancelled</code></td>
+<td>Cancelled</td>
+<td>Cancelled by the customer</td>
+</tr>
+<tr>
+<td><code>InReview</code></td>
+<td>In Review</td>
+<td>Custom request being worked on by admins</td>
+</tr>
+<tr>
+<td><code>Matched</code></td>
+<td>Matched</td>
+<td>Custom request matched to an NCP by admins</td>
+</tr>
+<tr>
+<td><code>Unserviceable</code></td>
+<td>Unserviceable</td>
+<td>Custom request closed as not serviceable</td>
+</tr>
+</tbody>
+</table>
+<p>The UI also shows <strong>Awaiting Provider Approval</strong> and
+<strong>Awaiting Customer Approval</strong> for older
+proposal/counteroffer flows.</p>
+<h2 id="offering-statuses-per-ncp">Offering statuses (per NCP)</h2>
+<p><code>OfferingStatus</code>: <code>AwaitingProviderAcceptance</code>,
+<code>InProcess</code>, <code>Contracted</code>, <code>Expired</code>,
+<code>Rejected</code>, <code>Cancelled</code>.</p>
+<h2 id="catalog-multi-ncp-flow-step-by-step">Catalog / multi-NCP flow,
+step by step</h2>
+<ol type="1">
+<li><strong>Customer submits</strong>
+(<code>POST /api/v1/reservation-request</code>). The backend creates the
+request and the customer’s first proposal, then routes it: one offering
+per selected cluster (backend limit 10, UI limit 3 by default).</li>
+<li>Each offering starts as <strong>AwaitingProviderAcceptance</strong>
+with <code>acceptance_expiry_date = now + 7 days</code>. The request
+becomes <strong>AwaitingProviderAcceptance</strong>.</li>
+<li>Temporal starts a parent <code>ReservationRequestWorkflow</code> and
+one child <code>OfferingLifecycleWorkflow</code> per offering. The
+customer gets a “request received” email; each NCP gets a magic-link
+email.</li>
+<li><strong>NCP accepts</strong> → offering <strong>InProcess</strong>,
+<code>contract_expiry_date = now + 45 days</code>, NCP and customer
+receive an introduction email. The first acceptance moves the request to
+<strong>InProcess</strong>.</li>
+<li><strong>NCP counteroffers</strong> → a new proposal is recorded
+(price-only changes update in place; material changes create a new
+proposal in history).</li>
+<li><strong>NCP confirms contract</strong> → offering
+<strong>Contracted</strong>, an <strong>Allocation</strong> is created
+(status <code>scheduled</code>), the request becomes
+<strong>Contracted</strong>, and sibling offerings are
+<strong>Cancelled</strong> with “superseded” emails.</li>
+<li><strong>NCP rejects</strong> (remarks required) → offering
+<strong>Rejected</strong>. If all offerings are rejected, the request is
+<strong>Rejected</strong>.</li>
+<li><strong>Timers</strong>: if an NCP does not accept in 7 days →
+offering <strong>Expired</strong>. If no contract in 45 days → offering
+<strong>Expired</strong>. When every offering has expired, the customer
+gets one consolidated expiry email and the request becomes
+<strong>Expired</strong>. Reminders go out 3 days before each
+deadline.</li>
+<li><strong>Customer cancels</strong> → request
+<strong>Cancelled</strong>; NCPs are notified.</li>
+<li><strong>Extensions</strong>: a Platform Admin (scope
+<code>accept_contract_extension</code>) can extend acceptance or
+contract deadlines by 1–200 days; this can revive an Expired
+offering.</li>
+</ol>
+<pre class="text"><code>                 accept               confirm contract
+AwaitingProviderAcceptance ──────▶ InProcess ──────────▶ Contracted
+        │   │                         │  │
+  7 days│   │reject            45 days│  │reject
+        ▼   ▼                         ▼  ▼
+     Expired Rejected              Expired Rejected
+(any non-final state) ── customer cancel / sibling contracted ──▶ Cancelled</code></pre>
+<h2 id="custom-request-flow">Custom request flow</h2>
+<p>A custom request has no selected cluster
+(<code>gpu_offering_id</code> is empty and there are no offerings).</p>
+<pre class="text"><code>Open ──▶ InReview ──▶ Matched
+  │          │──────▶ Unserviceable
+  │──────────────────▶ Matched / Unserviceable
+  └── customer cancel (from Open or InReview) ──▶ Cancelled</code></pre>
+<ul>
+<li>Only admins with
+<code>approver_manage_custom_reservation_request</code> move it
+forward.</li>
+<li>Only the customer cancels.</li>
+<li>Never returns to Open; Matched, Unserviceable and Cancelled are
+final.</li>
+<li>Custom requests never expire.</li>
+<li>Each transition records a timestamp and optional NCP name, NCP
+region and comment, and emails the customer.</li>
+</ul>
+<h2 id="capacity-rules-that-affect-requests">Capacity rules that affect
+requests</h2>
+<ul>
+<li>Capacity windows of the same type (AVAILABLE or FUTURE) cannot
+partially overlap; at most one open-ended window per type.</li>
+<li>Availability checks use the <strong>upper bound</strong> of the
+tenure band (for example <code>2-3</code> years is checked as 3 years)
+to be conservative.</li>
+<li>Allocations only subtract from the matching capacity type.</li>
+<li>An optional cap
+(<code>MAX_PENDING_REQUESTS_PER_REGIONAL_CAPACITY</code>, default 0 =
+unlimited) hides clusters with too many pending requests and rejects new
+requests against them.</li>
+<li>GPU count per request must be between 1 and 100,000.</li>
+<li>Contracted price must be zero or positive and is only visible to
+NCPs and NVIDIA admins.</li>
+</ul>
+<h2 id="configuration-defaults">Configuration defaults</h2>
+<p>From <code>backend/multi_provider_config.py</code> (environment
+prefix <code>MULTI_PROVIDER_</code>):</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ACCEPTANCE_EXPIRY_DAYS</code></td>
+<td>7</td>
+<td>NCP acceptance window</td>
+</tr>
+<tr>
+<td><code>IN_PROCESS_EXPIRY_DAYS</code></td>
+<td>45</td>
+<td>Contract negotiation window</td>
+</tr>
+<tr>
+<td><code>MAX_GPU_OFFERINGS_PER_REQUEST</code></td>
+<td>10</td>
+<td>Backend cap on offerings per request (UI default is 3,
+<code>NEXT_PUBLIC_MAX_MULTI_NCP_SELECTION_COUNT</code>)</td>
+</tr>
+<tr>
+<td><code>MAX_PENDING_REQUESTS_PER_REGIONAL_CAPACITY</code></td>
+<td>0</td>
+<td>0 means unlimited</td>
+</tr>
+<tr>
+<td><code>MAGIC_LINK_EXPIRY_SECONDS</code></td>
+<td>3600</td>
+<td>Magic link valid for 1 hour</td>
+</tr>
+<tr>
+<td><code>MAGIC_LINK_REGENERATION_WINDOW_DAYS</code></td>
+<td>7</td>
+<td>Resend allowed for 7 days after routing</td>
+</tr>
+</tbody>
+</table>
+<p>Reminder lead time is <code>EXPIRY_REMINDER_LEAD_DAYS = 3</code> in
+the Temporal workflow.</p>
+<h2 id="allocation-statuses">Allocation statuses</h2>
+<p><code>scheduled</code>, <code>provisioning</code>,
+<code>running</code>, <code>stopping</code>, <code>complete</code>.</p>
+<h1 id="compute-match-gpu-capacity-model-and-csv-import-workflow">Compute
+Match — GPU Capacity Model and CSV Import Workflow</h1>
+<h2 id="gpu-offering-data-model">GPU offering data model</h2>
+<p>A <strong>GPU offering</strong>
+(<code>backend/core/gpu_offering/gpu_offering.py</code>) represents a
+GPU cluster type an NCP offers:</p>
+<ul>
+<li>GPU model / platform (for example H100, H200, B200, GB200)</li>
+<li>Provider organization and <strong>hosting provider</strong> (the
+NCP’s data-center brand)</li>
+<li>Description, product link (must be HTTP(S)), VRAM (positive if
+set)</li>
+<li>Interconnect: <code>InfiniBand</code> or
+<code>Spectrum-X</code></li>
+<li>Status: <code>ACTIVE</code> (listed to customers),
+<code>PENDING_REVIEW</code> (awaiting admin review),
+<code>REJECTED</code></li>
+<li>One or more <strong>regional capacities</strong></li>
+</ul>
+<p>A <strong>regional capacity</strong> ties the offering to a location:
+geographical region, country, address and latitude/longitude, with a
+list of <strong>capacity windows</strong>.</p>
+<p>A <strong>capacity window</strong> has a date range (finite or
+open-ended), GPU count, delivery id, block location, a <strong>capacity
+type</strong> (<code>AVAILABLE</code> or <code>FUTURE</code>) and an
+AI-compute flag.</p>
+<p>Reference data: - <strong>Region</strong> — a data-center location
+belonging to a hosting provider and a geographical region. -
+<strong>Geographical region</strong> — a broad area with a code, display
+name and list of ISO country codes. - <strong>GPU model</strong> —
+catalog of platform names.</p>
+<h2 id="csv-capacity-import-end-to-end-flow">CSV capacity import —
+end-to-end flow</h2>
+<ol type="1">
+<li><strong>Upload.</strong> An NCP with <code>manage_inventory</code>
+uploads a CSV on <strong>Upload Capacities</strong>
+(<code>POST /api/v1/provider/gpu-offerings/import</code>, returns 202
+Accepted). The backend checks size (10 MB) and row count (10,000).</li>
+<li><strong>Job created.</strong> An <code>ImportJob</code> is stored
+with status <code>QUEUED</code>, and Temporal workflow
+<code>CsvImportWorkflow</code> starts with id
+<code>csv-import-{job_id}</code>.</li>
+<li><strong>Validate.</strong> The worker validates columns and rows
+(<code>VALIDATING</code>). If nothing is valid →
+<code>VALIDATION_FAILED</code>.</li>
+<li><strong>Import.</strong> Valid rows are imported atomically
+(<code>IMPORTING</code>). Failures here →
+<code>IMPORT_FAILED</code>.</li>
+<li><strong>Classify.</strong> Rows starting within 90 days of upload
+become <code>AVAILABLE</code> and are published immediately. Rows
+starting later become <code>FUTURE</code>.</li>
+<li><strong>Review (future only).</strong> If there are new future rows,
+the job moves to <code>PENDING_REVIEW</code>, admins are emailed, and
+the workflow waits for an <code>approve_import</code> or
+<code>reject_import</code> signal.</li>
+<li><strong>Decision.</strong> A Platform Admin with
+<code>review_capacity</code> accepts (<code>APPROVED</code> then
+<code>COMPLETED</code>, offerings activated) or rejects
+(<code>REJECTED</code> / <code>FUTURE_CAPACITY_REJECTED</code>, with
+reason).</li>
+<li><strong>Notify.</strong> The NCP is emailed the result.</li>
+</ol>
+<h3 id="import-job-statuses">Import job statuses</h3>
+<p><code>QUEUED</code>, <code>VALIDATING</code>,
+<code>VALIDATION_FAILED</code>, <code>IMPORTING</code>,
+<code>IMPORT_FAILED</code>, <code>PENDING_REVIEW</code>,
+<code>APPROVED</code>, <code>REJECTED</code>,
+<code>FUTURE_CAPACITY_REJECTED</code>, <code>COMPLETED</code>.</p>
+<p>UI labels: Processing, Pending Review, Completed, Rejected,
+Validation Failed.</p>
+<h3 id="retry-behaviour">Retry behaviour</h3>
+<ul>
+<li>Import activities retry up to 3 times; validation and CSV-format
+errors are not retried.</li>
+<li>The workflow itself runs at most once, so users never get duplicate
+emails from replays.</li>
+</ul>
+<h2 id="csv-columns">CSV columns</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Column</th>
+<th>Required</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPU Platform Type</td>
+<td>Yes</td>
+<td>Vendor prefix such as “NVIDIA” tolerated</td>
+</tr>
+<tr>
+<td>Number of GPUs Available</td>
+<td>Yes</td>
+<td>Positive integer</td>
+</tr>
+<tr>
+<td>Live Token Date</td>
+<td>Yes</td>
+<td>Start of availability; decides AVAILABLE vs FUTURE</td>
+</tr>
+<tr>
+<td>Country</td>
+<td>Yes</td>
+<td>Names normalized (“USA” → United States, “Holland” →
+Netherlands)</td>
+</tr>
+<tr>
+<td>City</td>
+<td>Yes</td>
+<td>Matched against a city index with alternate names</td>
+</tr>
+<tr>
+<td>Region</td>
+<td>No</td>
+<td></td>
+</tr>
+<tr>
+<td>end_datetime</td>
+<td>No</td>
+<td>End of availability; open-ended if blank</td>
+</tr>
+<tr>
+<td>NCP Name, RA/RD, Exemplar Cluster, aaS Capability, State</td>
+<td>No</td>
+<td>Metadata, ignored on import</td>
+</tr>
+</tbody>
+</table>
+<p>Limits: UTF-8, 10 MB, 10,000 rows, 500 characters per cell.
+Formula-like cells (<code>=</code>, <code>+</code>, <code>-</code>,
+<code>@</code>) are neutralized.</p>
+<p>Note: the in-app User Manual still says 1,000 rows; the backend
+enforces 10,000 (<code>MAX_CSV_ROWS</code> in
+<code>backend/core/gpu_offering/gpu_offering_csv_import_fields.py</code>).</p>
+<h2 id="ncp-onboarding-csv">NCP onboarding CSV</h2>
+<p>Admins with <code>manage_ncp</code> upload an onboarding CSV
+(<code>POST /api/v1/provider/onboard-providers</code>).
+<code>ProviderOnboardingWorkflow</code> validates it, creates Keycloak
+organizations, users, roles and group memberships (30-minute timeout),
+then emails the initiator. Statuses: <code>QUEUED</code>,
+<code>VALIDATING</code>, <code>VALIDATION_FAILED</code>,
+<code>ONBOARDING</code>, <code>COMPLETED</code>,
+<code>FAILED</code>.</p>
+<h2 id="legacy-bootstrap-importers">Legacy bootstrap importers</h2>
+<p>For seeding environments there are offline scripts in
+<code>backend/</code>: <code>import_excel_gpu_data.py</code> (see
+<code>EXCEL_IMPORT_README.md</code>), <code>csv_data_importer.py</code>,
+<code>csv_gpu_importer.py</code>, <code>generate_seed_data.py</code>.
+They use an older column layout and are separate from the production
+Temporal import path.</p>
+<h1 id="compute-match-email-notifications">Compute Match — Email
+Notifications</h1>
+<p>Emails are rendered by the backend
+(<code>backend/infrastructure/driven/email/</code>, templates in
+<code>templates/*.html</code>, subjects in <code>subjects.json</code>).
+Most are triggered by Temporal workflow activities calling the backend’s
+System notification APIs (<code>/api/v1/notification/*</code>, scope
+<code>notification:send</code>).</p>
+<h2 id="customer-emails">Customer emails</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Email</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reservation request received</td>
+<td>Right after you submit</td>
+</tr>
+<tr>
+<td>Custom request received / in review / matched / unserviceable</td>
+<td>Each custom-request step</td>
+</tr>
+<tr>
+<td>Offering introduction</td>
+<td>An NCP accepted; introduces you to the NCP</td>
+</tr>
+<tr>
+<td>NCP proposed changes</td>
+<td>An NCP counteroffered</td>
+</tr>
+<tr>
+<td>Offering rejected</td>
+<td>An NCP rejected your request (with remarks)</td>
+</tr>
+<tr>
+<td>Reservation approved / contracted</td>
+<td>An NCP confirmed the contract</td>
+</tr>
+<tr>
+<td>Acceptance / contract expired (customer variant)</td>
+<td>All offerings expired — one consolidated email</td>
+</tr>
+<tr>
+<td>Reservation rejected / cancelled</td>
+<td>Final outcomes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ncp-emails">NCP emails</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Email</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Offering magic link (and grouped variant)</td>
+<td>A request was routed to your organization</td>
+</tr>
+<tr>
+<td>Magic link resend</td>
+<td>Someone requested a new link</td>
+</tr>
+<tr>
+<td>Offering introduction</td>
+<td>You accepted</td>
+</tr>
+<tr>
+<td>Expiry reminder</td>
+<td>3 days before acceptance deadline</td>
+</tr>
+<tr>
+<td>Contract expiry reminder</td>
+<td>3 days before contract deadline</td>
+</tr>
+<tr>
+<td>Offering expired / acceptance expired</td>
+<td>Deadline passed</td>
+</tr>
+<tr>
+<td>Offering contracted</td>
+<td>You won the contract</td>
+</tr>
+<tr>
+<td>Offering superseded</td>
+<td>Another NCP contracted the same request</td>
+</tr>
+<tr>
+<td>Reservation cancelled by customer</td>
+<td>Customer cancelled</td>
+</tr>
+<tr>
+<td>Future capacity approved / rejected</td>
+<td>Admin decision on your upload</td>
+</tr>
+<tr>
+<td>Provider welcome</td>
+<td>You were onboarded</td>
+</tr>
+</tbody>
+</table>
+<h2 id="admin-and-operations-emails">Admin and operations emails</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Email</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Future capacity pending review</td>
+<td>An upload has future capacity to review</td>
+</tr>
+<tr>
+<td>Custom request received</td>
+<td>A customer submitted a custom request</td>
+</tr>
+<tr>
+<td>In-process requests alert</td>
+<td>Daily 09:00 UTC digest of In Process offerings nearing deadline</td>
+</tr>
+<tr>
+<td>Access request submitted / notify admin</td>
+<td>A partner is waiting for NCP access</td>
+</tr>
+<tr>
+<td>Salesforce sync failure summary</td>
+<td>Offtake sync failures (when sync is enabled)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="account-emails">Account emails</h2>
+<p>User activated, user pending activation, access request approved or
+rejected.</p>
+<h2 id="magic-links-in-detail">Magic links in detail</h2>
+<ul>
+<li>Recipients: users of the NCP organization with role
+<code>provider_business_user</code> <strong>and</strong> in group
+<code>offering-validator</code>. Basic users never receive them.</li>
+<li>The backend asks the Keycloak extension endpoint
+<code>POST /realms/{realm}/clustruffle/create-action-token</code> to
+mint an action token containing the offering id and a nonce.</li>
+<li>When clicked, Keycloak validates the nonce with the backend, logs
+the user in and redirects with <code>from=magic-link</code>.</li>
+<li>Valid 1 hour; resend possible for 7 days after routing.</li>
+<li>Magic-link emails use the critical retry policy (10 attempts over
+about 25 minutes) because they are the only way an NCP learns about a
+request.</li>
+</ul>
+<h2 id="reliability">Reliability</h2>
+<ul>
+<li>Ordinary notifications retry 5 times over about 2.5 minutes.</li>
+<li>Permanent failures are absorbed (and counted in metric
+<code>clustruffle_workflow_activity_abandoned</code>) so a workflow
+replay never re-sends email to users.</li>
+</ul>
+<h1 id="compute-match-system-architecture">Compute Match — System
+Architecture</h1>
+<h2 id="runtime-components">Runtime components</h2>
+<pre class="text"><code>Customer / NCP / Admin browser
+          │
+   Regional Gateway (GCP load balancer + Cloud Armor)
+     ├── Frontend (Next.js)  ──▶ Backend API, Keycloak
+     ├── Backend API (FastAPI) ──▶ Cloud SQL PostgreSQL, Memorystore Redis, Temporal Cloud, Keycloak, Salesforce, email
+     ├── Keycloak (identity, Starfleet SSO broker) ──▶ PostgreSQL
+     └── Superset (analytics) ──▶ PostgreSQL (analytics schema)
+Workflow worker (Temporal) ──▶ Backend System APIs, PostgreSQL, Temporal</code></pre>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Component</th>
+<th>Source folder</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend</td>
+<td><code>backend/</code></td>
+<td>REST API, domain logic, migrations, email, persistence,
+integrations</td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td><code>frontend/</code></td>
+<td>Browser application and authentication client</td>
+</tr>
+<tr>
+<td>Shared workflows</td>
+<td><code>shared/workflows/</code></td>
+<td>Temporal workflow and activity definitions</td>
+</tr>
+<tr>
+<td>Workflow worker</td>
+<td><code>workflow_worker/</code></td>
+<td>Runs Temporal workflows, activities and schedules</td>
+</tr>
+<tr>
+<td>Keycloak</td>
+<td><code>keycloak/</code>, <code>keycloak-extensions/</code></td>
+<td>Identity provider, themes, realm config, custom Java extensions</td>
+</tr>
+<tr>
+<td>Superset</td>
+<td><code>superset/</code></td>
+<td>Dashboards and reports</td>
+</tr>
+<tr>
+<td>E2E tests</td>
+<td><code>e2e_playwright/</code></td>
+<td>Playwright + Cucumber browser tests</td>
+</tr>
+<tr>
+<td>Local setup</td>
+<td><code>local-setup/</code></td>
+<td>Docker Compose development stack</td>
+</tr>
+<tr>
+<td>Infrastructure</td>
+<td><code>infrastructure/</code></td>
+<td>Terraform, Helm charts, environment values</td>
+</tr>
+<tr>
+<td>Tools</td>
+<td><code>tools/</code></td>
+<td>Maintenance and developer helpers</td>
+</tr>
+<tr>
+<td>Python SDK</td>
+<td><code>backend-sdk-python/</code></td>
+<td>Generated OpenAPI client used by the worker</td>
+</tr>
+</tbody>
+</table>
+<h2 id="backend-architecture-ddd-hexagonal">Backend architecture (DDD +
+hexagonal)</h2>
+<ul>
+<li><code>backend/core/</code> — the domain. Bounded contexts:
+<code>gpu_offering</code>, <code>reservation_request</code>,
+<code>hosting_provider</code>, <code>geographical_region</code>,
+<code>gpu_model</code>, <code>organization</code>, <code>user</code>,
+<code>allocation</code>, <code>access_request</code>,
+<code>provider_onboarding</code>, <code>feedback</code>,
+<code>audit</code>, <code>authorization</code>,
+<code>partner_domain</code>, <code>salesforce</code>. Ports (interfaces)
+and domain services live here; <code>kernels/</code> holds shared ids,
+enums and errors.</li>
+<li><code>backend/infrastructure/driving/http/</code> — the driving
+adapter: FastAPI app factory (<code>main.py</code>), routers, auth
+middleware, request schemas, rate limiting.</li>
+<li><code>backend/infrastructure/driven/</code> — driven adapters:
+SQLAlchemy database models and repositories with Alembic migrations,
+email, Keycloak admin, Temporal clients, Salesforce, feedback.</li>
+<li>The domain never imports infrastructure; adapters implement the core
+ports.</li>
+</ul>
+<h2 id="division-of-labour-between-backend-and-worker">Division of
+labour between backend and worker</h2>
+<ul>
+<li>The <strong>backend owns all domain changes</strong> (status
+transitions, imports, emails rendering).</li>
+<li>The <strong>worker owns time</strong>: timers, schedules, retries,
+fan-out. Its activities call back into backend System APIs using a
+Keycloak service account (<code>workflow-worker</code> client) with
+scopes <code>notification:send</code>, <code>capacity:sync</code>,
+<code>reservation-request:write</code>.</li>
+</ul>
+<h2 id="data-stores">Data stores</h2>
+<ul>
+<li><strong>PostgreSQL</strong> (Cloud SQL in GCP) — application data,
+Keycloak data, analytics views (<code>analytics</code> schema for
+Superset), audit log (purged after about 13 months).</li>
+<li><strong>Redis</strong> (Memorystore) — rate limiting buckets
+(default, mutate, auth, import, availability, feedback), optional cache,
+role-sync budgets.</li>
+<li><strong>Temporal</strong> — workflow state (Temporal Cloud in shared
+environments, local Temporal in Docker for development).</li>
+</ul>
+<h2 id="frontend-architecture">Frontend architecture</h2>
+<ul>
+<li>Next.js 15 App Router (<code>frontend/src/app/**/page.tsx</code>),
+React 19, Ant Design 6, Tailwind CSS 4, Roboto font.</li>
+<li>Authentication with NextAuth 5 + Keycloak; middleware
+(<code>frontend/src/middleware.ts</code>,
+<code>frontend/src/services/auth/config.ts</code>) protects
+<code>/customer</code> and <code>/provider</code> routes and enforces
+status gates and scopes.</li>
+<li>State: Zustand stores (marketplace, inventory, What’s New) and SWR
+for server data; Axios for backend calls
+(<code>frontend/src/services/backend/*.ts</code>).</li>
+<li>Maps and charts with D3 and topojson; react-markdown for the in-app
+User Manual (<code>frontend/src/content/USER_MANUAL.md</code>).</li>
+<li>What’s New content lives in
+<code>frontend/src/content/whats-new.json</code>.</li>
+<li>UI rules: <code>frontend/UI_STANDARDS.md</code> (page headers,
+filters, chips, Title Case buttons, WCAG 2.2 AA).</li>
+</ul>
+<h2 id="cloud-platform">Cloud platform</h2>
+<p>Private <strong>GKE Autopilot</strong> clusters on Google Cloud,
+Cloud SQL PostgreSQL, Memorystore Redis, Secret Manager, regional
+Gateway load balancing, Cloud Armor, network policies. Temporal Cloud
+for orchestration. Terraform owns cloud resources; Helm owns workloads;
+GitLab CI builds and promotes immutable images.</p>
+<h1 id="compute-match-backend-api-reference-summary">Compute Match —
+Backend API Reference (Summary)</h1>
+<p>Interactive documentation runs at
+<code>http://localhost:8082/docs</code> locally. A snapshot is in
+<code>backend/openapi.json</code> (it omits Access Request and internal
+routes). Routers are in
+<code>backend/infrastructure/driving/http/routers/</code> and are
+mounted in <code>main.py</code>. All business APIs are under
+<code>/api/v1</code> (one v2 endpoint).</p>
+<h2 id="public">Public</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/health</code></td>
+<td>Liveness check, no auth</td>
+</tr>
+</tbody>
+</table>
+<h2 id="customers-apis">Customers APIs</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/reservation-request</code></td>
+<td>Create a reservation or custom request</td>
+<td><code>create_reservation_request</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/customer/reservation-requests</code></td>
+<td>List my requests</td>
+<td><code>requester_view_reservation_request</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/customer/reservation-request/{id}</code></td>
+<td>Request detail</td>
+<td>same</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/reservation-request/{id}/cancel</code></td>
+<td>Cancel</td>
+<td><code>requester_manage_reservation_request</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/reservation-request/{id}/offering/{oid}/extend-acceptance-expiry</code></td>
+<td>Extend acceptance window</td>
+<td><code>accept_contract_extension</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/reservation-request/{id}/offering/{oid}/extend-contract-expiry</code></td>
+<td>Extend contract window</td>
+<td><code>accept_contract_extension</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/gpu-offerings</code></td>
+<td>Browse offerings</td>
+<td><code>view_capacity</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/gpu-offerings/availability</code></td>
+<td>Availability</td>
+<td><code>view_capacity</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/gpu-offerings/capacity-overview</code></td>
+<td>Capacity overview</td>
+<td><code>view_capacity</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v2/gpu-offerings/availability-by-filters</code></td>
+<td>Filtered availability</td>
+<td><code>view_capacity</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/organizations/suggest</code></td>
+<td>Organization name suggestions</td>
+<td>authenticated</td>
+</tr>
+</tbody>
+</table>
+<h2 id="providers-apis-ncp-and-admin">Providers APIs (NCP and
+admin)</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/reservation-requests</code></td>
+<td>List requests for my NCP (all for admins)</td>
+<td><code>approver_view_reservation_request</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/reservation-request/{id}</code></td>
+<td>Detail</td>
+<td>same</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/offering/{id}/accept</code></td>
+<td>Accept offering</td>
+<td><code>approver_manage_reservation_request</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/offering/{id}/reject</code></td>
+<td>Reject (remarks required)</td>
+<td>same</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/offering/{id}/contract</code></td>
+<td>Confirm contract</td>
+<td>same</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/offering/{id}/resend-magic-link</code></td>
+<td>Resend magic link</td>
+<td>provider/admin</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/custom-demand-requests</code></td>
+<td>List custom requests</td>
+<td><code>approver_view_custom_reservation_request</code></td>
+</tr>
+<tr>
+<td>(status update)</td>
+<td>custom demand transition endpoints</td>
+<td>In Review / Matched / Unserviceable</td>
+<td><code>approver_manage_custom_reservation_request</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/gpu-offerings</code></td>
+<td>My inventory</td>
+<td><code>view_provider_inventory</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/gpu-offerings/import</code></td>
+<td>Upload capacity CSV (202)</td>
+<td><code>manage_inventory</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/gpu-offerings/import/history</code></td>
+<td>Upload history</td>
+<td><code>manage_inventory</code> / admin</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/gpu-offerings/import/{id}/approve</code></td>
+<td>Accept future capacity</td>
+<td><code>review_capacity</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/gpu-offerings/import/{id}/reject</code></td>
+<td>Reject future capacity</td>
+<td><code>review_capacity</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/onboard-providers</code></td>
+<td>Bulk onboard NCPs (CSV)</td>
+<td><code>manage_ncp</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/global-capacity-map</code></td>
+<td>Global capacity</td>
+<td><code>global_capacity_view</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="access-request-apis-only-when-npn-integration-is-enabled-otherwise-404">Access
+Request APIs (only when NPN integration is enabled, otherwise 404)</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/access-requests</code></td>
+<td><code>manage_ncp</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/provider/access-requests/{id}</code></td>
+<td><code>manage_ncp</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/access-requests/{id}/approve</code></td>
+<td><code>manage_ncp</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/provider/access-requests/{id}/reject</code></td>
+<td><code>manage_ncp</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="inventory-apis-reference-data">Inventory APIs (reference
+data)</h2>
+<p>Countries, geographical regions, GPU models, hosting providers,
+interconnect types, regions — read with <code>view_capacity</code>;
+create geographical region or GPU model with
+<code>manage_inventory</code>.</p>
+<h2 id="users-apis">Users APIs</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/user</code></td>
+<td>Provision the signed-in user from JWT claims (organization, partner
+domain checks; may create an access request)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/user</code></td>
+<td>Current user</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/users/me/terms-acceptance</code></td>
+<td>Record Terms and Conditions acceptance</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/auth/logout</code></td>
+<td>Logout</td>
+</tr>
+</tbody>
+</table>
+<h2 id="operations-apis-role-operations">Operations APIs (role
+<code>operations</code>)</h2>
+<p>Activate user, list users, resend activation magic link, delete
+user.</p>
+<h2 id="feedback-apis">Feedback APIs</h2>
+<p>Submit feedback, check eligibility
+(<code>/api/v1/feedback/eligibility</code>), record prompt state
+(<code>/api/v1/feedback/prompt</code>). Feedback kinds:
+<code>POST_TASK</code>, <code>GENERAL</code>, <code>CANCELLATION</code>,
+<code>DROP_OFF</code>. Journeys: <code>capacity_upload</code>,
+<code>reservation_request</code>, <code>app_general</code>. Categories:
+<code>suggest_feature</code>, <code>report_problem</code>,
+<code>general</code>. Prompt states: <code>SHOWN</code>,
+<code>SUBMITTED</code>, <code>SKIPPED</code>,
+<code>DISMISSED</code>.</p>
+<h2 id="system-apis-temporal-worker-service-account">System APIs
+(Temporal worker service account)</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Group</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/v1/notification/*</code> (all emails, reminders, magic
+links)</td>
+<td><code>notification:send</code></td>
+</tr>
+<tr>
+<td><code>/api/v1/multi-provider/expire-acceptance</code>,
+<code>/expire-contract</code></td>
+<td><code>notification:send</code></td>
+</tr>
+<tr>
+<td><code>/api/v1/reservation-request/expire</code></td>
+<td><code>reservation-request:write</code></td>
+</tr>
+<tr>
+<td><code>/api/v1/offering/validate-nonce</code></td>
+<td>Keycloak extension</td>
+</tr>
+<tr>
+<td><code>/api/v1/system/csv-import/*</code>,
+<code>/api/v1/system/provider-onboarding/process</code></td>
+<td><code>capacity:sync</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="internal-apis-hidden-from-schema">Internal APIs (hidden from
+schema)</h2>
+<ul>
+<li><code>POST /api/v1/internal/salesforce/offtake-sync</code>,
+<code>/notify-failure</code>, <code>/partner-domain-sync</code> — caller
+<code>client_id</code> must equal
+<code>SFDC_SYNC_CALLER_CLIENT_ID</code>.</li>
+<li><code>POST /api/v1/internal/audit/keycloak-event</code> — Keycloak
+audit listener ingest.</li>
+</ul>
+<h2 id="cross-cutting-behaviour">Cross-cutting behaviour</h2>
+<ul>
+<li>JWT validation against Keycloak; permissions from
+<code>scope</code>, <code>realm_access.roles</code> and
+<code>resource_access.*.roles</code> claims.</li>
+<li>Middleware blocks users who are PENDING or have not accepted terms
+(with an allowlist for the endpoints needed to finish setup).</li>
+<li>Request body limit 15 MB; CSV upload limit 10 MB.</li>
+<li>Redis-backed rate limiting per bucket.</li>
+</ul>
+<h1 id="compute-match-temporal-workflows-and-schedules">Compute Match —
+Temporal Workflows and Schedules</h1>
+<p>Workflows are defined in <code>shared/workflows/</code> and run by
+the worker in <code>workflow_worker/</code> (<code>main.py</code>
+registers workflows, activities and schedules). Activities call the
+backend System APIs; the backend owns the domain logic.</p>
+<h2 id="summary">Summary</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Workflow</th>
+<th>Trigger</th>
+<th>Business purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ReservationRequestWorkflow</code></td>
+<td>Backend, when a request is created (workflow id = request id)</td>
+<td>Orchestrates a reservation request end to end</td>
+</tr>
+<tr>
+<td><code>OfferingLifecycleWorkflow</code></td>
+<td>Child of the above, one per routed NCP offering</td>
+<td>Magic link, acceptance window, contract window, reminders</td>
+</tr>
+<tr>
+<td><code>CsvImportWorkflow</code></td>
+<td>Backend, on capacity CSV upload
+(<code>csv-import-{job_id}</code>)</td>
+<td>Validate, import, wait for admin review of future capacity</td>
+</tr>
+<tr>
+<td><code>ProviderOnboardingWorkflow</code></td>
+<td>Backend, on NCP onboarding CSV upload</td>
+<td>Create NCP organizations and users</td>
+</tr>
+<tr>
+<td><code>InProcessAlertWorkflow</code></td>
+<td>Schedule <code>in-process-requests-alert-daily</code>, cron
+<code>0 9 * * *</code> UTC</td>
+<td>Daily admin digest of In Process offerings near deadline</td>
+</tr>
+<tr>
+<td><code>AuditRetentionWorkflow</code></td>
+<td>Schedule <code>audit-retention-daily</code>, cron
+<code>30 3 * * *</code> UTC</td>
+<td>Delete audit log rows older than about 395 days</td>
+</tr>
+<tr>
+<td><code>SfdcCreateBatchWorkflow</code> (mode <code>create</code>)</td>
+<td>Schedule, default <code>0 5 * * *</code> UTC</td>
+<td>Create Salesforce Offtake records from the outbox</td>
+</tr>
+<tr>
+<td><code>SfdcCreateBatchWorkflow</code> (mode <code>status</code>)</td>
+<td>Schedule, every 2 minutes</td>
+<td>Push status updates to existing Offtakes</td>
+</tr>
+<tr>
+<td><code>SfdcPartnerDomainSyncWorkflow</code></td>
+<td>Schedule <code>20 2,14 * * *</code> (twice daily)</td>
+<td>Refresh partner email domains from Salesforce</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reservationrequestworkflow">ReservationRequestWorkflow</h2>
+<ol type="1">
+<li>Send “request received” email to the customer.</li>
+<li>Wait for signal <code>routed_to_providers</code> or
+<code>reservation_request_closed</code>. Open/custom requests wait
+indefinitely.</li>
+<li>On routing, start one child <code>OfferingLifecycleWorkflow</code>
+per offering.</li>
+<li>Wait until any child is Contracted, all children finish, or the
+parent is closed.</li>
+<li>If one contracts: cancel siblings (superseded) and approve the
+request.</li>
+<li>If all expire: send one consolidated customer expiry email and
+expire the request.</li>
+<li>Closure reasons send emails: Cancelled (customer + NCPs), Rejected,
+Matched, Unserviceable.</li>
+</ol>
+<p>Signals: <code>routed_to_providers</code>,
+<code>reservation_request_closed</code>. Child workflow retry up to 100
+attempts; expire activity 20 attempts over about 75 minutes.</p>
+<h2 id="offeringlifecycleworkflow">OfferingLifecycleWorkflow</h2>
+<ol type="1">
+<li>Send the magic-link email (critical retry policy).</li>
+<li>Acceptance phase (7 days by default): reminder 3 days before; on
+timeout expire the offering and email the NCP.</li>
+<li>On <code>provider_accepted</code>: send the introduction email;
+start the contract phase (45 days).</li>
+<li>Reminder 3 days before contract expiry; on timeout expire and
+email.</li>
+<li>On <code>offering_contracted</code>: send contracted email. On
+reject or cancel: handle and email (superseded if a sibling won).</li>
+</ol>
+<p>Signals: <code>provider_accepted</code>,
+<code>acceptance_expiry_extended</code>,
+<code>contract_expiry_extended</code>, <code>offering_contracted</code>,
+<code>offering_rejected</code>, <code>offering_cancelled</code>.</p>
+<h2 id="csvimportworkflow">CsvImportWorkflow</h2>
+<p>VALIDATING → IMPORTING → (if future rows) PENDING_REVIEW: email
+admins and wait for <code>approve_import</code> /
+<code>reject_import</code> → activate or reject offerings → email the
+NCP. Activities: <code>validate_csv</code>,
+<code>execute_atomic_import</code>, <code>activate_offerings</code>,
+<code>reject_offerings</code>, <code>update_import_job_status</code>,
+<code>notify_admin_for_review</code>,
+<code>notify_provider_result</code>. Workflow max attempts 1; import
+activities 3 attempts.</p>
+<h2 id="provideronboardingworkflow">ProviderOnboardingWorkflow</h2>
+<p><code>validate_provider_csv</code> →
+<code>execute_provider_onboarding</code> (30-minute timeout) →
+<code>notify_onboarding_complete</code> (sent even on failure). 3
+attempts; validation errors are not retried.</p>
+<h2 id="salesforce-workflows">Salesforce workflows</h2>
+<ul>
+<li><code>SfdcCreateBatchWorkflow</code> drains the
+<code>salesforce_create_sync</code> outbox. <strong>Create</strong> mode
+retries 13 times every 5 minutes; <strong>status</strong> mode runs once
+per tick. Gated by <code>SFDC_SYNC_ENABLED</code>; when false, schedules
+are deleted and the workflow is not registered.</li>
+<li><code>SfdcPartnerDomainSyncWorkflow</code> is gated by
+<code>SFDC_PARTNER_DOMAIN_SYNC_ENABLED</code>. It refuses empty or
+suspiciously shrunk snapshots so partners are not mass-demoted.</li>
+</ul>
+<h2 id="retry-policies-sharedworkflowsworkflow_commonretry.py">Retry
+policies (<code>shared/workflows/workflow_common/retry.py</code>)</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Budget</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NOTIFICATION_RETRY_POLICY</code></td>
+<td>5 attempts, ~2.5 min</td>
+<td>Ordinary email</td>
+</tr>
+<tr>
+<td><code>CRITICAL_NOTIFICATION_RETRY_POLICY</code></td>
+<td>10 attempts, ~25 min</td>
+<td>Magic-link email</td>
+</tr>
+<tr>
+<td><code>STATUS_UPDATE_RETRY_POLICY</code></td>
+<td>5 attempts, ~1 min</td>
+<td>Intermediate import status</td>
+</tr>
+<tr>
+<td><code>TERMINAL_STATUS_UPDATE_RETRY_POLICY</code></td>
+<td>8 attempts, ~20 min</td>
+<td>Final import status</td>
+</tr>
+</tbody>
+</table>
+<p>Abandoned steps increment
+<code>clustruffle_workflow_activity_abandoned</code> and can be queried
+with <code>get_abandoned_steps</code>.</p>
+<h2 id="viewing-workflows-locally">Viewing workflows locally</h2>
+<p>Temporal UI: <code>http://localhost:7600</code>. Temporal gRPC:
+<code>localhost:7233</code>. Run the worker on your laptop with
+<code>make worker</code>.</p>
+<h1 id="compute-match-identity-and-keycloak">Compute Match — Identity
+and Keycloak</h1>
+<h2 id="realm-and-clients">Realm and clients</h2>
+<ul>
+<li>Single realm: <strong><code>customer</code></strong> (organizations
+enabled). Older provider/operations realm files exist but the
+application uses one unified realm.</li>
+<li>Local realm export:
+<code>keycloak/realms/local-realm-customer.json</code>.</li>
+<li>Main clients: <code>customer-web</code> (frontend OIDC),
+<code>workflow-worker</code> (Temporal service account),
+<code>audit-listener</code>, <code>superset</code>,
+<code>swagger</code>, <code>temporal-ui</code>.</li>
+<li>Identity broker <strong>Starfleet</strong> (NVIDIA SSO) with a
+<code>starfleet-roles</code> mapper. The frontend sends
+<code>kc_idp_hint=starfleet</code>.</li>
+</ul>
+<h2 id="roles">Roles</h2>
+<p><code>customer</code>, <code>provider</code>,
+<code>provider_business_user</code>, <code>provider_basic_user</code>,
+<code>platform_business_admin</code>,
+<code>platform_business_admin_super_user</code>,
+<code>platform_business_admin_ops_user</code>,
+<code>account_manager_consumer</code>,
+<code>account_manager_provider</code>, <code>superset_users</code>,
+<code>superset_admins</code>, <code>superset_dashboard_viewers</code>,
+plus the composite <code>default-roles-customer</code>.</p>
+<p>Groups used by the app: <code>offering-validator</code> (magic-link
+recipients), <code>mailing-list</code>.</p>
+<h2 id="custom-extensions-keycloak-extensions">Custom extensions
+(<code>keycloak-extensions/</code>)</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Extension</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>accept-reservation-token</code></td>
+<td>Custom action token for magic links: validates the JWT, blocks a
+different logged-in user, validates the nonce with the backend, creates
+the session and redirects. Exposes the token-minting REST endpoint with
+a rate limiter</td>
+</tr>
+<tr>
+<td><code>audit-event-listener</code></td>
+<td>Sends LOGIN and LOGOUT events (and errors) to the backend
+<code>/api/v1/internal/audit/keycloak-event</code></td>
+</tr>
+<tr>
+<td><code>default-role-restriction</code></td>
+<td>Self-signup users keep <code>default-roles-customer</code>;
+admin-created users have defaults stripped</td>
+</tr>
+<tr>
+<td><code>multi-org-policy</code></td>
+<td>Only account-manager roles may belong to more than one
+organization</td>
+</tr>
+</tbody>
+</table>
+<p>Build with <code>keycloak-extensions/build.sh</code>; images from
+<code>keycloak/Dockerfile</code> and
+<code>keycloak/Dockerfile-local</code>.</p>
+<h2 id="themes">Themes</h2>
+<p>The NVIDIA theme lives in <code>keycloak/themes/nvidia/</code>
+(login, account, admin, email). The login theme extends
+<code>keycloak.v2</code> and adds organization-type registration fields
+(enterprise, government, sme_msme, startup).</p>
+<h2 id="organizations">Organizations</h2>
+<ul>
+<li>Keycloak Organizations model NCP and customer companies.</li>
+<li>NCP organization names come from the Salesforce account name; one
+organization per Salesforce account.</li>
+<li>The <code>organization</code> JWT claim carries the user’s
+organization; the backend stores matching organization records.</li>
+</ul>
+<h2 id="local-keycloak">Local Keycloak</h2>
+<ul>
+<li>Admin console: <code>http://localhost:8080/admin</code>, realm
+<code>customer</code>.</li>
+<li>Management/health port: host 9001.</li>
+<li>Admin credentials are generated into
+<code>local-setup/.onboarding/credentials.json</code>.</li>
+</ul>
+<h1 id="compute-match-analytics-with-superset">Compute Match — Analytics
+with Superset</h1>
+<p>Apache Superset (<code>superset/</code>) provides dashboards for
+Platform Admins. Locally, start it with
+<code>make onboard ONBOARD_ARGS=&quot;--with-analytics&quot;</code> and open
+<code>http://localhost:8088</code> with the operations demo account.</p>
+<h2 id="access">Access</h2>
+<ul>
+<li>Custom role <strong>DashboardViewer</strong>: can view dashboards,
+charts and datasets in the <code>analytics</code> schema only; no SQL
+Lab, no query editing, no database admin.</li>
+<li>Keycloak role <code>superset_dashboard_viewers</code> (part of the
+Platform Admin composite) maps to DashboardViewer
+(<code>superset/superset_config.py</code>,
+<code>superset/custom_roles.py</code>).</li>
+<li>In the app, Platform Admins open it via the external
+<strong>Dashboard</strong> menu item.</li>
+</ul>
+<h2 id="dashboard-1-compute-matchmake-system-metrics-marketplace">Dashboard
+1 — Compute MatchMake System Metrics (marketplace)</h2>
+<p>Defined in
+<code>superset/dashboards/marketplace_metrics.py</code>.</p>
+<ul>
+<li><strong>Request analytics</strong>: total requests, requests per
+week, average time to contract (overall and by NCP), conversion rate
+(overall and by GPU), acceptance and rejection by NCP, custom-request
+percentage, contracted GPUs by month and platform.</li>
+<li><strong>User analytics</strong>: NCP and customer activity tiers
+with detail tables, new sign-ups in the last 4 weeks, logins per user
+over 90 days.</li>
+<li><strong>Capacity analytics</strong>: available, reserved and future
+GPUs, NCPs with capacity, capacity by platform and region, future
+pipeline by month.</li>
+</ul>
+<p>Sources: views such as
+<code>analytics.v_reservation_request_*</code>,
+<code>v_ncp_activity</code>, <code>v_customer_activity</code>,
+<code>v_user_actions</code>, <code>v_ncp_capacity_overview</code>,
+<code>v_future_pipeline_by_month</code>.</p>
+<h2 id="dashboard-2-feedback">Dashboard 2 — Feedback</h2>
+<p>Defined in <code>superset/dashboards/feedback_metrics.py</code>.
+KPIs: average rating, number of responses, satisfied versus
+dissatisfied, rating distribution, top reasons, journey summary, recent
+feedback. Filters: time, persona, journey. Source:
+<code>analytics.v_feedback</code> and a funnel view.</p>
+<h1 id="compute-match-local-development-guide">Compute Match — Local
+Development Guide</h1>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Git, Bash, Make, Docker Desktop with Compose v2, and NVIDIA
+network/VPN access.</li>
+<li>Either <strong>Devbox</strong> 0.18.3 or newer (supplies all tools)
+or installed tools: Node 22 (frontend), Python 3.13 and <code>uv</code>
+(backend and worker).</li>
+<li>Docker-only mode (<code>make onboard</code>,
+<code>make start</code>) needs no Node or Python on your laptop.</li>
+</ul>
+<h2 id="first-run">First run</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> onboard      <span class="co"># build containers, prepare databases and identity, create demo accounts and inventory</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> verify       <span class="co"># should finish with &quot;status&quot;: &quot;ready&quot;</span></span></code></pre></div>
+<p>The first build can take 10–20 minutes. Without Make, run
+<code>./local-setup/onboard.sh</code>. If it fails, read
+<code>local-setup/.onboarding/setup.log</code>, fix the problem and
+rerun.</p>
+<p>Open <code>http://localhost:3000</code>, click
+<strong>Login</strong>, enter a demo account email, then its generated
+password.</p>
+<h2 id="demo-accounts">Demo accounts</h2>
+<p>Passwords are generated into
+<code>local-setup/.onboarding/accounts.md</code> (human guide) and
+<code>credentials.json</code> (machine-readable, includes the Keycloak
+admin login). These files are Git-ignored.</p>
+<table>
+<thead>
+<tr>
+<th>Experience</th>
+<th>Account</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Customer</td>
+<td><code>developer@customer-a.example.org</code></td>
+</tr>
+<tr>
+<td>Provider (NCP)</td>
+<td><code>seed@singtel.example.org</code></td>
+</tr>
+<tr>
+<td>Platform business admin</td>
+<td><code>business-admin@platform.example.org</code></td>
+</tr>
+<tr>
+<td>Operations</td>
+<td><code>ops@platform.example.org</code></td>
+</tr>
+</tbody>
+</table>
+<p>Normal onboarding creates 17 accounts; Singtel and Firmus provider
+accounts test isolation between NCPs, and colleague accounts test shared
+inventory inside one NCP.
+<code>make onboard ONBOARD_ARGS=&quot;--with-scenarios&quot;</code> adds
+22-account regression personas, including
+<code>pending@scenarios.example.org</code> (pending activation),
+<code>terms@scenarios.example.org</code> (terms not accepted),
+<code>restricted@scenarios.example.org</code> (active, no business
+role), <code>infra-manager@customer-a.example.org</code> and
+<code>tech-admin@customer-b.example.org</code>.</p>
+<p>Test sign-ups with addresses such as <code>you@example.com</code>;
+<code>example.com</code> and <code>nvidia.com</code> auto-activate,
+personal domains are blocked, and local email delivery is disabled. A
+new sign-up may need a role assigned in Keycloak
+(<strong>customer</strong> realm → user → <strong>Role
+mapping</strong>), then sign out and in again.</p>
+<p><code>make onboard ONBOARD_ARGS=&quot;--no-seed&quot;</code> creates accounts
+without demo inventory. Sample CSVs for upload testing are in
+<code>local-setup/fixtures/</code>.</p>
+<h2 id="development-modes">Development modes</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Runs on your laptop</th>
+<th>Runs in Docker</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>make start</code></td>
+<td>nothing</td>
+<td>frontend, backend, worker</td>
+</tr>
+<tr>
+<td><code>make frontend</code></td>
+<td>frontend</td>
+<td>backend, worker</td>
+</tr>
+<tr>
+<td><code>make backend</code></td>
+<td>backend</td>
+<td>frontend, worker</td>
+</tr>
+<tr>
+<td><code>make worker</code></td>
+<td>worker</td>
+<td>frontend, backend</td>
+</tr>
+<tr>
+<td><code>make dev</code> (fullstack)</td>
+<td>all three</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<p>PostgreSQL, Keycloak, Temporal and Redis always stay in Docker.
+Install dependencies for a mode with <code>make deps MODE=backend</code>
+(or <code>frontend</code>, <code>worker</code>).</p>
+<h2 id="make-targets">Make targets</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Target</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>make help</code></td>
+<td>List commands</td>
+</tr>
+<tr>
+<td><code>make onboard</code></td>
+<td>Configure, start and seed (<code>ONBOARD_ARGS</code> for
+options)</td>
+</tr>
+<tr>
+<td><code>make doctor</code></td>
+<td>Check prerequisites and configuration only</td>
+</tr>
+<tr>
+<td><code>make deps</code></td>
+<td>Install locked dependencies for a <code>MODE</code></td>
+</tr>
+<tr>
+<td><code>make build</code></td>
+<td>Build local images</td>
+</tr>
+<tr>
+<td><code>make start</code> / <code>make stop</code></td>
+<td>Start all in Docker / stop everything but keep data</td>
+</tr>
+<tr>
+<td><code>make start-infra</code></td>
+<td>Start only supporting containers</td>
+</tr>
+<tr>
+<td><code>make status</code></td>
+<td>Show mode, processes and URLs</td>
+</tr>
+<tr>
+<td><code>make logs SERVICE=backend</code></td>
+<td>Follow logs (frontend, backend or worker)</td>
+</tr>
+<tr>
+<td><code>make verify</code></td>
+<td>Check accounts, permissions, inventory, login routing and worker
+polling</td>
+</tr>
+<tr>
+<td><code>make test</code>, <code>make test-backend</code>,
+<code>make test-frontend</code>, …</td>
+<td>Unit tests</td>
+</tr>
+<tr>
+<td><code>make quality</code></td>
+<td>Lint, type checks and tests</td>
+</tr>
+<tr>
+<td><code>make clean</code></td>
+<td>Remove containers, volumes and images</td>
+</tr>
+<tr>
+<td><code>make obs-start</code> / <code>obs-stop</code> /
+<code>obs-logs</code></td>
+<td>Optional SigNoz telemetry stack</td>
+</tr>
+</tbody>
+</table>
+<h2 id="local-urls-and-ports">Local URLs and ports</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Service</th>
+<th>Address</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Application</td>
+<td>http://localhost:3000</td>
+</tr>
+<tr>
+<td>Backend API docs (Swagger)</td>
+<td>http://localhost:8082/docs</td>
+</tr>
+<tr>
+<td>Keycloak</td>
+<td>http://localhost:8080 (admin at <code>/admin</code>, realm
+<code>customer</code>)</td>
+</tr>
+<tr>
+<td>Temporal UI</td>
+<td>http://localhost:7600</td>
+</tr>
+<tr>
+<td>Temporal gRPC</td>
+<td>localhost:7233</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>localhost:5432</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>localhost:6379</td>
+</tr>
+<tr>
+<td>Superset (optional)</td>
+<td>http://localhost:8088</td>
+</tr>
+<tr>
+<td>SigNoz (optional)</td>
+<td>http://localhost:3301 (OTLP gRPC 4317, HTTP 4318)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-files">Configuration files</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Location</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>local-setup/.env</code></td>
+<td>Generated service settings and secrets</td>
+</tr>
+<tr>
+<td><code>local-setup/.onboarding/credentials.json</code></td>
+<td>Account credentials</td>
+</tr>
+<tr>
+<td><code>local-setup/.onboarding/accounts.md</code></td>
+<td>Account guide</td>
+</tr>
+<tr>
+<td><code>local-setup/.onboarding/dev/</code></td>
+<td>Host-mode settings, process state and logs</td>
+</tr>
+<tr>
+<td><code>local-setup/.onboarding/setup.log</code></td>
+<td>Onboarding diagnostics</td>
+</tr>
+</tbody>
+</table>
+<p>You do not need to copy <code>.env.sample</code> or create service
+dotenv files.</p>
+<h2 id="everyday-loop">Everyday loop</h2>
+<p><code>make stop</code> at the end of the day keeps your data;
+<code>make start</code> resumes. Use <code>make status</code>, then
+<code>make logs SERVICE=...</code> when something looks wrong.</p>
+<h2 id="common-problems">Common problems</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Image or Maven downloads fail</td>
+<td>Connect to the NVIDIA VPN</td>
+</tr>
+<tr>
+<td>Port already in use</td>
+<td>Stop the other checkout or process using the port</td>
+</tr>
+<tr>
+<td>Wrong Node version</td>
+<td>Use Node 22 or set <code>LOCAL_DEV_NODE</code></td>
+</tr>
+<tr>
+<td>Login redirects to a Docker hostname</td>
+<td>Restore localhost public URLs in the generated settings</td>
+</tr>
+<tr>
+<td>Signed up but see no features</td>
+<td>Assign a realm role in Keycloak and sign in again</td>
+</tr>
+<tr>
+<td>SigNoz shows no data</td>
+<td>Finish SigNoz first-user setup, run <code>make obs-start</code>,
+restart apps with tracing; Docker Engine 25+ for container metrics</td>
+</tr>
+<tr>
+<td>Everything is broken</td>
+<td><code>make clean &amp;&amp; make onboard &amp;&amp; make verify</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="compute-match-environments-infrastructure-delivery-and-ci">Compute
+Match — Environments, Infrastructure, Delivery and CI</h1>
+<h2 id="environments">Environments</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Environment</th>
+<th>How applications are delivered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dev</strong></td>
+<td>Continuously from protected <code>main</code></td>
+</tr>
+<tr>
+<td><strong>QA</strong></td>
+<td>Manual promotion of a qualified Dev snapshot</td>
+</tr>
+<tr>
+<td><strong>Staging (STG)</strong></td>
+<td>Manual promotion of the immutable QA package
+(<code>STG_RELEASE_SNAPSHOT_ID</code>)</td>
+</tr>
+<tr>
+<td><strong>Production</strong></td>
+<td>Not enabled from the pipeline until authorized</td>
+</tr>
+</tbody>
+</table>
+<p>Infrastructure for each environment is applied by a separate
+Terraform pipeline. Environment values live in
+<code>infrastructure/environments/&lt;env&gt;/</code>.</p>
+<h2 id="google-cloud-infrastructure-terraform">Google Cloud
+infrastructure (Terraform)</h2>
+<p>Stacks in <code>infrastructure/terraform/stacks/</code>, applied in
+order: <code>project-bootstrap</code> →
+<code>environment-bootstrap</code> → <code>computematch</code> →
+<code>platform</code> → <code>keycloak</code>.</p>
+<ul>
+<li><strong>computematch</strong> stack: VPC, <strong>GKE
+Autopilot</strong> private cluster, <strong>Cloud SQL
+PostgreSQL</strong>, <strong>Memorystore Redis</strong>, Secret Manager
+metadata, Workload Identity, edge and Cloud Armor.</li>
+<li><strong>platform</strong> stack: namespaces, Kubernetes service
+accounts, RBAC, NetworkPolicy baselines, Gateway resources.</li>
+<li><strong>keycloak</strong> stack: declarative realm and
+identity-provider configuration.</li>
+</ul>
+<p>Terraform owns cloud resources; Helm owns workloads. Runtime secrets
+live only in Google Secret Manager.</p>
+<h2 id="helm">Helm</h2>
+<p>Charts in <code>infrastructure/helm/</code>: workloads
+<code>backend</code>, <code>frontend</code>,
+<code>workflow-worker</code>, <code>keycloak</code>,
+<code>superset</code>; platform <code>db-bootstrap</code>,
+<code>otel-collector</code>; library <code>common</code>. Deployment
+order: db-bootstrap → otel-collector → keycloak → backend → worker →
+frontend → superset. Workloads use SecretSync and Cloud SQL Auth Proxy
+sidecars; image digests are pinned in environment values.</p>
+<h2 id="application-release-train">Application release train</h2>
+<p>“Build once, promote digests.” Components: backend, frontend, worker,
+superset, keycloak.</p>
+<ol type="1">
+<li>Merge to <code>main</code> publishes images tagged by commit SHA and
+mirrors them to Artifact Registry.</li>
+<li>Dev auto-deploys changed components, runs smoke and functional
+checks, and records a snapshot.</li>
+<li>QA promotes the exact digests and creates the package
+<code>computematch-release/&lt;snapshot-id&gt;</code> (manifest plus
+checksum).</li>
+<li>Staging consumes that package without rebuilding.</li>
+<li>Production promotion is not yet enabled.</li>
+</ol>
+<h2 id="gitlab-ci">GitLab CI</h2>
+<p>Stages: test → security → build → publish → sync → plan →
+infrastructure → platform → deploy → verify.</p>
+<ul>
+<li>Merge requests: path-scoped tests, security scans (secret scan, IaC
+SAST), image builds without publishing, read-only Terraform plans.</li>
+<li><code>main</code>: publish images, mirror, Dev release.
+Infrastructure applies are manual on protected <code>main</code> and
+independent of application releases.</li>
+</ul>
+<h2 id="git-workflow-contributing.md">Git workflow
+(CONTRIBUTING.md)</h2>
+<ul>
+<li>Branch:
+<code>NCPMS-&lt;number&gt;/&lt;kebab-case-outcome&gt;</code>, for
+example <code>NCPMS-565/repository-foundation</code>. One Jira issue per
+branch; branch from updated <code>main</code>; no long-lived
+develop/staging branches.</li>
+<li>Commit:
+<code>&lt;type&gt;(&lt;scope&gt;): NCPMS-&lt;number&gt; &lt;imperative description&gt;</code>,
+for example
+<code>fix(backend): NCPMS-855 widen hosting provider name columns</code>.
+Types: feat, fix, docs, test, refactor, perf, build, ci, chore, revert.
+Add <code>!</code> for breaking changes.</li>
+<li>Merge request title:
+<code>NCPMS-&lt;number&gt;: &lt;Capitalized outcome&gt;</code>.
+Description sections: Objective, Changes, Validation, Risk and rollback,
+Tracking.</li>
+<li>Labels: one <code>type::</code>, one <code>risk::</code> (low,
+medium, high), one or more <code>component:</code>; optional
+<code>review:security</code>, <code>review:database</code>,
+<code>review:platform</code>, <code>breaking-change</code>.</li>
+<li>No direct pushes or force pushes to <code>main</code>; pipelines
+must pass and discussions be resolved; fast-forward merges; no whole-MR
+squash.</li>
+<li>Install hooks with <code>pre-commit install</code> and run
+<code>pre-commit run --all-files</code>.</li>
+</ul>
+<h1 id="compute-match-security-observability-salesforce-integration-and-testing">Compute
+Match — Security, Observability, Salesforce Integration and Testing</h1>
+<h2 id="security-model">Security model</h2>
+<ul>
+<li><strong>Delivery identity:</strong> GitLab OIDC with Google Workload
+Identity Federation; separate Google service accounts for plan, apply,
+deploy, verify and Keycloak.</li>
+<li><strong>Runtime identity:</strong> Kubernetes service accounts
+mapped to Google service accounts; secrets from Secret Manager with
+least privilege; Cloud SQL Auth Proxy; separate database roles (for
+example the audit-retention role can only SELECT and DELETE).</li>
+<li><strong>Network:</strong> NetworkPolicies, private Cloud SQL and
+Redis, Cloud Armor and Gateway at the edge.</li>
+<li><strong>Application:</strong> Keycloak JWTs with audiences per
+client (<code>customer-web</code>, <code>workflow-worker</code>,
+<code>audit-listener</code>…). Internal Salesforce and audit endpoints
+only accept a pinned caller <code>client_id</code>. CSV cells are
+sanitized against formula injection. Personal email domains are
+blocked.</li>
+<li><strong>Repository:</strong> protected <code>main</code>,
+CODEOWNERS, secret scanning (gitleaks, trufflehog, talisman), no secrets
+in manifests or docs.</li>
+<li><strong>Audit:</strong> Keycloak login/logout events and domain
+actions are written to an audit log, kept about 13 months then purged by
+<code>AuditRetentionWorkflow</code>.</li>
+</ul>
+<h2 id="observability">Observability</h2>
+<ul>
+<li><strong>Logs:</strong> every owned service writes JSON Lines to
+stdout using <strong>Log Record v2</strong>
+(<code>docs/architecture/logging/log-record-v2.md</code>):
+<code>log_schema_version: 2</code>, severity, <code>event_name</code>,
+resource, source, optional trace context, attributes and exception.
+Unsafe fields are redacted; no PII or secrets in attributes.</li>
+<li><strong>Event catalog</strong>
+(<code>docs/architecture/logging/event-catalog.md</code>): for example
+<code>workflow.started</code>, <code>workflow.completed</code>,
+<code>workflow.failed</code>, <code>reservation.request.*</code>,
+<code>csv_import.*</code>, <code>provider_onboarding.*</code>,
+<code>integration.salesforce.failed</code>,
+<code>notification.delivery.failed</code>,
+<code>authorization.denied</code>.</li>
+<li><strong>Traces and metrics:</strong> OpenTelemetry in frontend,
+backend, worker (Temporal TracingInterceptor) and Keycloak. In GCP the
+Helm <code>otel-collector</code> exports to Google Cloud; logs go to
+Cloud Logging. Locally, optional SigNoz (<code>make obs-start</code>, UI
+on port 3301).</li>
+<li>Runbooks: <code>docs/operations/*-observability.md</code> for
+backend, frontend, worker, Keycloak, Superset and gateway.</li>
+</ul>
+<h2 id="salesforce-integration-adr-001">Salesforce integration
+(ADR-001)</h2>
+<ul>
+<li><strong>Direction:</strong> one-way, Compute Match → Salesforce
+<strong>Offtake</strong> object (<code>Offtake_Request__c</code>).</li>
+<li><strong>Pattern:</strong> transactional outbox table
+<code>salesforce_create_sync</code>, drained by Temporal
+<code>SfdcCreateBatchWorkflow</code> which calls backend internal APIs
+(domain stays in the backend). No Kafka or Pub/Sub.</li>
+<li><strong>Granularity:</strong> one Offtake per NCP offering (external
+id <code>Reservation_Request_Offering_Id__c</code>); open custom
+requests get one create-only Offtake keyed by the request id.</li>
+<li><strong>Jobs:</strong> nightly <strong>create</strong> (05:00 UTC,
+full projection) and <strong>status</strong> every 2 minutes (status
+and, when Contracted, negotiated terms). Upserts use the sObject
+Collections external-id API, up to 200 records per call.</li>
+<li><strong>Reliability:</strong> outbox states PENDING, SYNCED, FAILED;
+retries for Salesforce outages; mandatory failure summary email; audit
+events <code>SFDC_OFFTAKE_SYNCED</code> /
+<code>SFDC_OFFTAKE_SYNC_FAILED</code> written atomically with the
+outbox.</li>
+<li><strong>Toggles:</strong> <code>SFDC_SYNC_ENABLED</code>;
+partner-domain read sync separately with
+<code>SFDC_PARTNER_DOMAIN_SYNC_ENABLED</code>.</li>
+</ul>
+<h2 id="testing">Testing</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Tooling</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend</td>
+<td>pytest, TestContainers</td>
+<td><code>make test-backend</code></td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td>Jest 30, React Testing Library, jest-axe</td>
+<td><code>make test-frontend</code> (<code>npm run test</code>,
+<code>test:a11y</code>, <code>quality-gate</code>)</td>
+</tr>
+<tr>
+<td>Workflows / worker</td>
+<td>pytest</td>
+<td><code>make test</code></td>
+</tr>
+<tr>
+<td>End-to-end</td>
+<td>Playwright + Cucumber (Gherkin) in <code>e2e_playwright/</code></td>
+<td>see its README</td>
+</tr>
+</tbody>
+</table>
+<p>E2E features cover Authentication, CustomerWorkflow, ProviderWorkflow
+and AdminWorkflow, using page objects in <code>src/PageObjects/</code>
+and step definitions in <code>src/Specs/</code>. Choose the target with
+<code>TEST_ENV</code> (<code>local</code>,
+<code>computematch-dev</code>, <code>computematch-qa</code>,
+<code>computematch-stg</code>). Secrets go in a Git-ignored
+<code>.env.local</code>. HTML reports are written to
+<code>reports/</code>. <code>make verify</code> does not run the E2E
+suite.</p>
+<h1 id="compute-match-glossary-faq-and-troubleshooting-for-users">Compute
+Match — Glossary, FAQ and Troubleshooting for Users</h1>
+<h2 id="glossary">Glossary</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Compute Match / Compute MatchMake System</strong></td>
+<td>NVIDIA’s marketplace matching GPU capacity seekers with NVIDIA Cloud
+Providers</td>
+</tr>
+<tr>
+<td><strong>NCPMS</strong></td>
+<td>Jira project key and internal name</td>
+</tr>
+<tr>
+<td><strong>Clustruffle</strong></td>
+<td>Internal code name seen in metrics and Keycloak endpoints</td>
+</tr>
+<tr>
+<td><strong>NCP</strong></td>
+<td>NVIDIA Cloud Provider (GPU Compute Provider) that publishes
+capacity</td>
+</tr>
+<tr>
+<td><strong>Customer / Offtaker</strong></td>
+<td>Organization reserving GPU capacity</td>
+</tr>
+<tr>
+<td><strong>Platform Admin</strong></td>
+<td>NVIDIA admin who reviews capacity, onboards NCPs, brokers custom
+requests</td>
+</tr>
+<tr>
+<td><strong>NPN</strong></td>
+<td>NVIDIA Partner Network; NPN portal members can sign in directly</td>
+</tr>
+<tr>
+<td><strong>Starfleet</strong></td>
+<td>NVIDIA single sign-on service</td>
+</tr>
+<tr>
+<td><strong>Platform</strong></td>
+<td>GPU model, for example H100 or B200</td>
+</tr>
+<tr>
+<td><strong>GPU Offering / GPU Capacity</strong></td>
+<td>A cluster published by an NCP</td>
+</tr>
+<tr>
+<td><strong>Hosting provider</strong></td>
+<td>The NCP’s data-center brand that hosts the offering</td>
+</tr>
+<tr>
+<td><strong>Region</strong></td>
+<td>A specific data-center location</td>
+</tr>
+<tr>
+<td><strong>Geographical Region</strong></td>
+<td>A broad area like North America or Europe</td>
+</tr>
+<tr>
+<td><strong>Current capacity (AVAILABLE)</strong></td>
+<td>Capacity starting within 90 days of upload; goes live
+immediately</td>
+</tr>
+<tr>
+<td><strong>Future capacity (FUTURE)</strong></td>
+<td>Capacity starting more than 90 days out; needs admin review</td>
+</tr>
+<tr>
+<td><strong>Live Token Date</strong></td>
+<td>CSV column for when capacity becomes available</td>
+</tr>
+<tr>
+<td><strong>Earliest Available Date</strong></td>
+<td>First date a cluster can be reserved from</td>
+</tr>
+<tr>
+<td><strong>Tenure</strong></td>
+<td>Reservation length band in years: 0-1, 1-2, 2-3, 3-4, 4-5, 5-6,
+6+</td>
+</tr>
+<tr>
+<td><strong>Reservation Request</strong></td>
+<td>Customer’s request to reserve capacity</td>
+</tr>
+<tr>
+<td><strong>Multi-NCP request</strong></td>
+<td>One request sent to several NCPs as alternatives; first to contract
+wins</td>
+</tr>
+<tr>
+<td><strong>Custom Request</strong></td>
+<td>Request with no specific cluster, brokered by admins</td>
+</tr>
+<tr>
+<td><strong>Offering (in a request)</strong></td>
+<td>One NCP’s slice of a reservation request</td>
+</tr>
+<tr>
+<td><strong>Proposal</strong></td>
+<td>A version of the reservation terms; counteroffers add proposals</td>
+</tr>
+<tr>
+<td><strong>Counteroffer</strong></td>
+<td>NCP proposes different dates, GPU count, platform or region</td>
+</tr>
+<tr>
+<td><strong>Magic link</strong></td>
+<td>Secure one-click email link letting an NCP open and accept a
+request</td>
+</tr>
+<tr>
+<td><strong>Acceptance window</strong></td>
+<td>7 days for an NCP to accept</td>
+</tr>
+<tr>
+<td><strong>Contract negotiation window</strong></td>
+<td>45 days from acceptance to confirm the contract</td>
+</tr>
+<tr>
+<td><strong>Superseded</strong></td>
+<td>Another NCP contracted the same request, so yours was cancelled</td>
+</tr>
+<tr>
+<td><strong>Allocation</strong></td>
+<td>Capacity consumed by a contracted request</td>
+</tr>
+<tr>
+<td><strong>Offtake</strong></td>
+<td>Salesforce record for a deal synced from Compute Match</td>
+</tr>
+<tr>
+<td><strong>Access request</strong></td>
+<td>A partner’s pending request for NCP access</td>
+</tr>
+<tr>
+<td><strong>offering-validator</strong></td>
+<td>Keycloak group whose members receive magic links</td>
+</tr>
+<tr>
+<td><strong>Confidential</strong></td>
+<td>Label shown when a customer’s name is hidden from an NCP</td>
+</tr>
+</tbody>
+</table>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<p><strong>How do I sign up?</strong> Click Sign up or Login, enter your
+work email, and sign in through Starfleet. Personal emails are not
+allowed.</p>
+<p><strong>Why do I see “Access denied”?</strong> Your identity was
+verified but your account is not authorized under current policies.
+Contact computematchmake@nvidia.com or sign in with another work
+account.</p>
+<p><strong>Why do I see “Your access is being reviewed”?</strong> Your
+company is an NVIDIA partner but its NCP organization is not on the
+platform yet. A Platform Admin must approve your access request.</p>
+<p><strong>How many NCPs can I send one request to?</strong> Up to 3 in
+the UI by default (backend allows up to 10), if you have the multi-NCP
+permission.</p>
+<p><strong>Will I get several contracts if I send to several
+NCPs?</strong> No. The options are alternatives; the first NCP to
+confirm the contract wins and the others are cancelled.</p>
+<p><strong>How long does an NCP have to respond?</strong> 7 days to
+accept, then 45 days to contract. Reminders arrive 3 days before each
+deadline. Admins can extend both.</p>
+<p><strong>My magic link says it expired.</strong> Links last 1 hour.
+Ask for a resend (possible for 7 days after routing) or log in normally
+and open Manage reservation.</p>
+<p><strong>Can I accept an NCP counteroffer as a customer?</strong> The
+customer detail page is view and cancel only; the NCP confirms the
+contract after you agree with them directly.</p>
+<p><strong>When can I cancel?</strong> While the request is Awaiting NCP
+Acceptance, awaiting approval, In Process or Expired; custom requests
+while Open or In Review.</p>
+<p><strong>What if no cluster matches my needs?</strong> Submit a custom
+request. Admins will review and mark it Matched or Unserviceable.</p>
+<p><strong>My CSV upload shows Pending Review.</strong> It contains
+future capacity (starting more than 90 days out); a Platform Admin must
+accept it.</p>
+<p><strong>My CSV upload shows Validation Failed.</strong> Open “See all
+details” for row errors. Check the five required columns, UTF-8
+encoding, 10 MB and 10,000-row limits.</p>
+<p><strong>Why can’t I see Upload Capacities or Manage
+reservation?</strong> You lack the scope (<code>manage_inventory</code>
+or <code>approver_manage_reservation_request</code>). Basic NCP users
+are read-only. Ask your Platform Admin.</p>
+<p><strong>I have customer and NCP access. How do I switch?</strong> Use
+<strong>Switch profile to</strong> at the top of the account menu.</p>
+<p><strong>Where is the user manual?</strong> Click the book icon in the
+header; it opens the manual filtered to your role. The <code>?</code>
+icon shows help for the current page.</p>
+<p><strong>What does What’s New show?</strong> Release highlights for
+your persona. A banner appears on your landing page for about 7 days;
+dismissing it keeps it under the bell icon. Use <strong>Mark All as
+Read</strong> to clear the unread dot.</p>
+<p><strong>How do I give feedback?</strong> Use <strong>Share
+Feedback</strong> in the header, or answer the star rating after
+creating a request or uploading capacity.</p>
+<h2 id="whats-new-october-2026-release-v1.3.0">What’s New — October 2026
+release (v1.3.0)</h2>
+<ul>
+<li>Customers: faster, more compact request submission; real-time
+tracking of custom requests from Open to In Review to Matched.</li>
+<li>NCPs: clearer upload status and errors; sign in directly through the
+NPN portal.</li>
+<li>Admins: complete custom request workflow (Open → In Review → Matched
+or Unserviceable) in the admin view.</li>
+</ul>
+</body>
+</html>

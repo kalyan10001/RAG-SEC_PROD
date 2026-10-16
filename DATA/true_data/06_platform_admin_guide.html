@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Platform Admin Guide</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-platform-admin-guide" id="toc-compute-match-platform-admin-guide">Compute Match — Platform
+Admin Guide</a>
+<ul>
+<li><a href="#admin-menu-in-order" id="toc-admin-menu-in-order">Admin
+menu (in order)</a></li>
+<li><a href="#global-capacity-explorer" id="toc-global-capacity-explorer">Global Capacity Explorer</a></li>
+<li><a href="#review-future-capacities" id="toc-review-future-capacities">Review Future Capacities</a></li>
+<li><a href="#onboard-ncps" id="toc-onboard-ncps">Onboard NCPs</a></li>
+<li><a href="#custom-requests" id="toc-custom-requests">Custom
+requests</a></li>
+<li><a href="#reservation-requests-across-all-ncps" id="toc-reservation-requests-across-all-ncps">Reservation requests
+across all NCPs</a></li>
+<li><a href="#user-operations" id="toc-user-operations">User
+operations</a></li>
+<li><a href="#daily-alert-email" id="toc-daily-alert-email">Daily alert
+email</a></li>
+<li><a href="#analytics" id="toc-analytics">Analytics</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-platform-admin-guide">Compute Match — Platform
+Admin Guide</h1>
+<p>Platform Admins are NVIDIA staff (roles such as
+<code>platform_business_admin</code>,
+<code>platform_business_admin_super_user</code>,
+<code>platform_business_admin_ops_user</code>) who run the marketplace.
+They use the same <code>/provider/*</code> pages as NCPs, with extra
+pages and cross-NCP visibility. The header shows the persona label
+<strong>Platform Admin</strong>.</p>
+<h2 id="admin-menu-in-order">Admin menu (in order)</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Menu item</th>
+<th>Route</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Global Capacity Explorer</td>
+<td><code>/provider/global-capacity</code></td>
+<td><code>global_capacity_view</code></td>
+</tr>
+<tr>
+<td>Upload Capacities</td>
+<td><code>/provider/gpu-capacities-upload</code></td>
+<td><code>manage_inventory</code></td>
+</tr>
+<tr>
+<td>Reservation requests</td>
+<td><code>/provider?view=table</code></td>
+<td>approver view</td>
+</tr>
+<tr>
+<td>Onboard NCPs</td>
+<td><code>/provider/ncp-onboarding</code></td>
+<td><code>manage_ncp</code></td>
+</tr>
+<tr>
+<td>Review Future Capacities</td>
+<td><code>/provider/review-future-capacities</code></td>
+<td><code>review_capacity</code></td>
+</tr>
+<tr>
+<td>Custom requests</td>
+<td><code>/provider/custom-requests</code></td>
+<td>custom request scopes</td>
+</tr>
+<tr>
+<td>Dashboard (external)</td>
+<td>Superset analytics, opens in a new tab</td>
+<td>Superset role</td>
+</tr>
+</tbody>
+</table>
+<h2 id="global-capacity-explorer">Global Capacity Explorer</h2>
+<p>A read-only world view of all GPU capacity across NCPs.</p>
+<ul>
+<li>Filters: Search, <strong>Platform</strong> (required for the chart),
+Geographical Region, <strong>NCP</strong>, Country / Data Centre
+Location, Start Date, End Date.</li>
+<li><strong>Map | List</strong> toggle. The map shows capacity hotspots;
+“No datacenter locations match the current filters.” when empty.</li>
+<li><strong>Available Capacity</strong> chart over time, colour-coded
+per NCP (same colour for current and future). Tooltips show the month’s
+peak-day total, current and future split, and per-city breakdown.</li>
+<li><strong>Export to Excel</strong> and <strong>Export to
+CSV</strong>.</li>
+<li>API: <code>GET /api/v1/provider/global-capacity-map</code>.</li>
+</ul>
+<h2 id="review-future-capacities">Review Future Capacities</h2>
+<p>NCP uploads that include rows starting more than 90 days out wait
+here.</p>
+<ul>
+<li>Tabs: <strong>All</strong>, <strong>Pending</strong>,
+<strong>Accepted</strong>, <strong>Rejected</strong>. Filter by
+<strong>NCP</strong>.</li>
+<li>Columns: NCP, File Name (click for details), Uploaded Date, Status,
+Actions.</li>
+<li><strong>Accept</strong>: confirm in <strong>Approve Future Capacity
+Submission</strong>; status becomes Accepted and capacity goes live for
+customers.</li>
+<li><strong>Reject</strong>: enter a reason (required, up to 500
+characters) and click <strong>Submit Rejection</strong>; the NCP is
+emailed the reason.</li>
+<li>Nothing is accepted or rejected automatically; submissions wait
+until reviewed.</li>
+</ul>
+<h2 id="onboard-ncps">Onboard NCPs</h2>
+<ol type="1">
+<li>Download the NCP onboarding CSV template.</li>
+<li>Fill in the NCP organizations and users.</li>
+<li>Upload. A background Temporal
+<code>ProviderOnboardingWorkflow</code> validates the file, creates
+Keycloak organizations, users, roles and the
+<code>offering-validator</code> group membership, and sends welcome
+emails.</li>
+<li>Watch status in the history table. Onboarding job statuses: QUEUED,
+VALIDATING, VALIDATION_FAILED, ONBOARDING, COMPLETED, FAILED.</li>
+</ol>
+<h3 id="review-onboarding-requests-access-requests">Review Onboarding
+Requests (access requests)</h3>
+<p>When the NPN portal integration is on, partner users whose NCP is not
+onboarded appear here. <strong>Approve</strong> provisions them like a
+CSV onboarding; <strong>Reject</strong> requires a reason and emails it.
+API: <code>/api/v1/provider/access-requests</code> (+
+<code>/approve</code>, <code>/reject</code>).</p>
+<h2 id="custom-requests">Custom requests</h2>
+<p>Route: <code>/provider/custom-requests</code>. Table only (no split
+view, no NCP filter). Filter by Platform, Country, Geographical Region,
+Status, Sort.</p>
+<p>Lifecycle you control: - <strong>Open</strong> → <strong>In
+Review</strong> (you are working on it) - <strong>In Review</strong> or
+<strong>Open</strong> → <strong>Matched</strong> (<strong>Mark as
+Matched</strong> / <strong>Confirm Match</strong>, optionally record the
+NCP, NCP region and a comment) - → <strong>Unserviceable</strong>
+(<strong>Close as Unserviceable</strong>) - Customers alone can
+<strong>Cancel</strong> while Open or In Review. - Matched,
+Unserviceable and Cancelled are final; a request never returns to Open.
+The customer is emailed on each change.</p>
+<h2 id="reservation-requests-across-all-ncps">Reservation requests
+across all NCPs</h2>
+<p>The table view shows all requests platform-wide. Use the row action
+menu (⋮) to extend deadlines:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Action</th>
+<th>Applies to</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Extend Acceptance Duration</strong></td>
+<td>Awaiting NCP Acceptance (or recently expired)</td>
+<td>Adds days to the NCP’s acceptance window</td>
+</tr>
+<tr>
+<td><strong>Extend Contract Negotiation Duration</strong></td>
+<td>In Process</td>
+<td>Adds days to the contract window</td>
+</tr>
+</tbody>
+</table>
+<p>Enter 1 to 200 extra days, check the previewed new expiry date, and
+click <strong>Confirm</strong>. Extending can revive an Expired offering
+back to its prior active status.</p>
+<h2 id="user-operations">User operations</h2>
+<p>Operations users (<code>operations</code> role) can activate pending
+users, list users, resend activation magic links and delete users
+through the Operations APIs (<code>/api/v1/...</code> under the
+Operations tag).</p>
+<h2 id="daily-alert-email">Daily alert email</h2>
+<p>Every day at 09:00 UTC a Temporal schedule
+(<code>in-process-requests-alert-daily</code>) emails Platform Admins a
+digest of In Process offerings approaching their contract deadline.</p>
+<h2 id="analytics">Analytics</h2>
+<p>The external <strong>Dashboard</strong> link opens Superset. See the
+analytics document for the dashboards (Marketplace metrics and
+Feedback).</p>
+</body>
+</html>

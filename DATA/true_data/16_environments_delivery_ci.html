@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Environments, Infrastructure, Delivery and
+CI</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-environments-infrastructure-delivery-and-ci" id="toc-compute-match-environments-infrastructure-delivery-and-ci">Compute
+Match — Environments, Infrastructure, Delivery and CI</a>
+<ul>
+<li><a href="#environments" id="toc-environments">Environments</a></li>
+<li><a href="#google-cloud-infrastructure-terraform" id="toc-google-cloud-infrastructure-terraform">Google Cloud
+infrastructure (Terraform)</a></li>
+<li><a href="#helm" id="toc-helm">Helm</a></li>
+<li><a href="#application-release-train" id="toc-application-release-train">Application release train</a></li>
+<li><a href="#gitlab-ci" id="toc-gitlab-ci">GitLab CI</a></li>
+<li><a href="#git-workflow-contributing.md" id="toc-git-workflow-contributing.md">Git workflow
+(CONTRIBUTING.md)</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-environments-infrastructure-delivery-and-ci">Compute
+Match — Environments, Infrastructure, Delivery and CI</h1>
+<h2 id="environments">Environments</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Environment</th>
+<th>How applications are delivered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dev</strong></td>
+<td>Continuously from protected <code>main</code></td>
+</tr>
+<tr>
+<td><strong>QA</strong></td>
+<td>Manual promotion of a qualified Dev snapshot</td>
+</tr>
+<tr>
+<td><strong>Staging (STG)</strong></td>
+<td>Manual promotion of the immutable QA package
+(<code>STG_RELEASE_SNAPSHOT_ID</code>)</td>
+</tr>
+<tr>
+<td><strong>Production</strong></td>
+<td>Not enabled from the pipeline until authorized</td>
+</tr>
+</tbody>
+</table>
+<p>Infrastructure for each environment is applied by a separate
+Terraform pipeline. Environment values live in
+<code>infrastructure/environments/&lt;env&gt;/</code>.</p>
+<h2 id="google-cloud-infrastructure-terraform">Google Cloud
+infrastructure (Terraform)</h2>
+<p>Stacks in <code>infrastructure/terraform/stacks/</code>, applied in
+order: <code>project-bootstrap</code> →
+<code>environment-bootstrap</code> → <code>computematch</code> →
+<code>platform</code> → <code>keycloak</code>.</p>
+<ul>
+<li><strong>computematch</strong> stack: VPC, <strong>GKE
+Autopilot</strong> private cluster, <strong>Cloud SQL
+PostgreSQL</strong>, <strong>Memorystore Redis</strong>, Secret Manager
+metadata, Workload Identity, edge and Cloud Armor.</li>
+<li><strong>platform</strong> stack: namespaces, Kubernetes service
+accounts, RBAC, NetworkPolicy baselines, Gateway resources.</li>
+<li><strong>keycloak</strong> stack: declarative realm and
+identity-provider configuration.</li>
+</ul>
+<p>Terraform owns cloud resources; Helm owns workloads. Runtime secrets
+live only in Google Secret Manager.</p>
+<h2 id="helm">Helm</h2>
+<p>Charts in <code>infrastructure/helm/</code>: workloads
+<code>backend</code>, <code>frontend</code>,
+<code>workflow-worker</code>, <code>keycloak</code>,
+<code>superset</code>; platform <code>db-bootstrap</code>,
+<code>otel-collector</code>; library <code>common</code>. Deployment
+order: db-bootstrap → otel-collector → keycloak → backend → worker →
+frontend → superset. Workloads use SecretSync and Cloud SQL Auth Proxy
+sidecars; image digests are pinned in environment values.</p>
+<h2 id="application-release-train">Application release train</h2>
+<p>“Build once, promote digests.” Components: backend, frontend, worker,
+superset, keycloak.</p>
+<ol type="1">
+<li>Merge to <code>main</code> publishes images tagged by commit SHA and
+mirrors them to Artifact Registry.</li>
+<li>Dev auto-deploys changed components, runs smoke and functional
+checks, and records a snapshot.</li>
+<li>QA promotes the exact digests and creates the package
+<code>computematch-release/&lt;snapshot-id&gt;</code> (manifest plus
+checksum).</li>
+<li>Staging consumes that package without rebuilding.</li>
+<li>Production promotion is not yet enabled.</li>
+</ol>
+<h2 id="gitlab-ci">GitLab CI</h2>
+<p>Stages: test → security → build → publish → sync → plan →
+infrastructure → platform → deploy → verify.</p>
+<ul>
+<li>Merge requests: path-scoped tests, security scans (secret scan, IaC
+SAST), image builds without publishing, read-only Terraform plans.</li>
+<li><code>main</code>: publish images, mirror, Dev release.
+Infrastructure applies are manual on protected <code>main</code> and
+independent of application releases.</li>
+</ul>
+<h2 id="git-workflow-contributing.md">Git workflow
+(CONTRIBUTING.md)</h2>
+<ul>
+<li>Branch:
+<code>NCPMS-&lt;number&gt;/&lt;kebab-case-outcome&gt;</code>, for
+example <code>NCPMS-565/repository-foundation</code>. One Jira issue per
+branch; branch from updated <code>main</code>; no long-lived
+develop/staging branches.</li>
+<li>Commit:
+<code>&lt;type&gt;(&lt;scope&gt;): NCPMS-&lt;number&gt; &lt;imperative description&gt;</code>,
+for example
+<code>fix(backend): NCPMS-855 widen hosting provider name columns</code>.
+Types: feat, fix, docs, test, refactor, perf, build, ci, chore, revert.
+Add <code>!</code> for breaking changes.</li>
+<li>Merge request title:
+<code>NCPMS-&lt;number&gt;: &lt;Capitalized outcome&gt;</code>.
+Description sections: Objective, Changes, Validation, Risk and rollback,
+Tracking.</li>
+<li>Labels: one <code>type::</code>, one <code>risk::</code> (low,
+medium, high), one or more <code>component:</code>; optional
+<code>review:security</code>, <code>review:database</code>,
+<code>review:platform</code>, <code>breaking-change</code>.</li>
+<li>No direct pushes or force pushes to <code>main</code>; pipelines
+must pass and discussions be resolved; fast-forward merges; no whole-MR
+squash.</li>
+<li>Install hooks with <code>pre-commit install</code> and run
+<code>pre-commit run --all-files</code>.</li>
+</ul>
+</body>
+</html>

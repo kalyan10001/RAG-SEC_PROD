@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Identity and Keycloak</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-identity-and-keycloak" id="toc-compute-match-identity-and-keycloak">Compute Match — Identity
+and Keycloak</a>
+<ul>
+<li><a href="#realm-and-clients" id="toc-realm-and-clients">Realm and
+clients</a></li>
+<li><a href="#roles" id="toc-roles">Roles</a></li>
+<li><a href="#custom-extensions-keycloak-extensions" id="toc-custom-extensions-keycloak-extensions">Custom extensions
+(<code>keycloak-extensions/</code>)</a></li>
+<li><a href="#themes" id="toc-themes">Themes</a></li>
+<li><a href="#organizations" id="toc-organizations">Organizations</a></li>
+<li><a href="#local-keycloak" id="toc-local-keycloak">Local
+Keycloak</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-identity-and-keycloak">Compute Match — Identity
+and Keycloak</h1>
+<h2 id="realm-and-clients">Realm and clients</h2>
+<ul>
+<li>Single realm: <strong><code>customer</code></strong> (organizations
+enabled). Older provider/operations realm files exist but the
+application uses one unified realm.</li>
+<li>Local realm export:
+<code>keycloak/realms/local-realm-customer.json</code>.</li>
+<li>Main clients: <code>customer-web</code> (frontend OIDC),
+<code>workflow-worker</code> (Temporal service account),
+<code>audit-listener</code>, <code>superset</code>,
+<code>swagger</code>, <code>temporal-ui</code>.</li>
+<li>Identity broker <strong>Starfleet</strong> (NVIDIA SSO) with a
+<code>starfleet-roles</code> mapper. The frontend sends
+<code>kc_idp_hint=starfleet</code>.</li>
+</ul>
+<h2 id="roles">Roles</h2>
+<p><code>customer</code>, <code>provider</code>,
+<code>provider_business_user</code>, <code>provider_basic_user</code>,
+<code>platform_business_admin</code>,
+<code>platform_business_admin_super_user</code>,
+<code>platform_business_admin_ops_user</code>,
+<code>account_manager_consumer</code>,
+<code>account_manager_provider</code>, <code>superset_users</code>,
+<code>superset_admins</code>, <code>superset_dashboard_viewers</code>,
+plus the composite <code>default-roles-customer</code>.</p>
+<p>Groups used by the app: <code>offering-validator</code> (magic-link
+recipients), <code>mailing-list</code>.</p>
+<h2 id="custom-extensions-keycloak-extensions">Custom extensions
+(<code>keycloak-extensions/</code>)</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Extension</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>accept-reservation-token</code></td>
+<td>Custom action token for magic links: validates the JWT, blocks a
+different logged-in user, validates the nonce with the backend, creates
+the session and redirects. Exposes the token-minting REST endpoint with
+a rate limiter</td>
+</tr>
+<tr>
+<td><code>audit-event-listener</code></td>
+<td>Sends LOGIN and LOGOUT events (and errors) to the backend
+<code>/api/v1/internal/audit/keycloak-event</code></td>
+</tr>
+<tr>
+<td><code>default-role-restriction</code></td>
+<td>Self-signup users keep <code>default-roles-customer</code>;
+admin-created users have defaults stripped</td>
+</tr>
+<tr>
+<td><code>multi-org-policy</code></td>
+<td>Only account-manager roles may belong to more than one
+organization</td>
+</tr>
+</tbody>
+</table>
+<p>Build with <code>keycloak-extensions/build.sh</code>; images from
+<code>keycloak/Dockerfile</code> and
+<code>keycloak/Dockerfile-local</code>.</p>
+<h2 id="themes">Themes</h2>
+<p>The NVIDIA theme lives in <code>keycloak/themes/nvidia/</code>
+(login, account, admin, email). The login theme extends
+<code>keycloak.v2</code> and adds organization-type registration fields
+(enterprise, government, sme_msme, startup).</p>
+<h2 id="organizations">Organizations</h2>
+<ul>
+<li>Keycloak Organizations model NCP and customer companies.</li>
+<li>NCP organization names come from the Salesforce account name; one
+organization per Salesforce account.</li>
+<li>The <code>organization</code> JWT claim carries the user’s
+organization; the backend stores matching organization records.</li>
+</ul>
+<h2 id="local-keycloak">Local Keycloak</h2>
+<ul>
+<li>Admin console: <code>http://localhost:8080/admin</code>, realm
+<code>customer</code>.</li>
+<li>Management/health port: host 9001.</li>
+<li>Admin credentials are generated into
+<code>local-setup/.onboarding/credentials.json</code>.</li>
+</ul>
+</body>
+</html>

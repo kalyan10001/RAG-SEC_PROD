@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Roles, Permissions and Access Control</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-roles-permissions-and-access-control" id="toc-compute-match-roles-permissions-and-access-control">Compute
+Match — Roles, Permissions and Access Control</a>
+<ul>
+<li><a href="#personas-and-the-roles-behind-them" id="toc-personas-and-the-roles-behind-them">Personas and the roles
+behind them</a></li>
+<li><a href="#feature-scopes" id="toc-feature-scopes">Feature
+scopes</a></li>
+<li><a href="#organization-scoping" id="toc-organization-scoping">Organization scoping</a></li>
+<li><a href="#customer-confidentiality" id="toc-customer-confidentiality">Customer confidentiality</a></li>
+<li><a href="#account-status-gates" id="toc-account-status-gates">Account status gates</a></li>
+<li><a href="#why-is-a-menu-item-missing" id="toc-why-is-a-menu-item-missing">Why is a menu item missing?</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-roles-permissions-and-access-control">Compute
+Match — Roles, Permissions and Access Control</h1>
+<h2 id="personas-and-the-roles-behind-them">Personas and the roles
+behind them</h2>
+<p>Compute Match uses Keycloak realm roles. The frontend turns roles
+into feature <strong>scopes</strong>, and the backend checks scopes on
+each API call.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Keycloak roles (examples)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Customer / Offtaker</td>
+<td><code>customer</code>, <code>customer_account_manager</code>,
+Starfleet variants such as <code>customer_consumer</code>,
+<code>customer_tech_admin</code></td>
+<td>Self sign-up users get <code>default-roles-customer</code></td>
+</tr>
+<tr>
+<td>NCP business user</td>
+<td><code>provider</code>, <code>provider_business_user</code></td>
+<td>Can manage inventory and act on reservations. Members of the
+Keycloak group <code>offering-validator</code> receive magic-link
+emails</td>
+</tr>
+<tr>
+<td>NCP basic user</td>
+<td><code>provider_basic_user</code></td>
+<td>Read-only NCP access; never receives magic links</td>
+</tr>
+<tr>
+<td>Platform Admin</td>
+<td><code>platform_business_admin</code>,
+<code>platform_business_admin_super_user</code>,
+<code>platform_business_admin_ops_user</code>,
+<code>platform_customer_provider_am</code></td>
+<td>Cross-NCP visibility, review and onboarding</td>
+</tr>
+<tr>
+<td>Account managers</td>
+<td><code>account_manager_consumer</code>,
+<code>account_manager_provider</code></td>
+<td>The only roles allowed to belong to more than one organization</td>
+</tr>
+<tr>
+<td>Operations / system</td>
+<td><code>operations</code>, <code>systems</code></td>
+<td>User activation, service accounts</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td><code>superset_users</code>, <code>superset_admins</code>,
+<code>superset_dashboard_viewers</code></td>
+<td>Superset access</td>
+</tr>
+</tbody>
+</table>
+<h2 id="feature-scopes">Feature scopes</h2>
+<p>Scopes are defined in
+<code>backend/infrastructure/driving/http/routers/scopes.py</code> and
+<code>frontend/src/services/auth/accessControl/scopes.ts</code>.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Allows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>view_capacity</code></td>
+<td>Browse GPU offerings and availability, read reference data</td>
+</tr>
+<tr>
+<td><code>create_reservation_request</code></td>
+<td>Submit reservation and custom requests</td>
+</tr>
+<tr>
+<td><code>requester_view_reservation_request</code></td>
+<td>See your own requests (My Requests)</td>
+</tr>
+<tr>
+<td><code>requester_manage_reservation_request</code></td>
+<td>Cancel your own requests</td>
+</tr>
+<tr>
+<td><code>send_request_multiple_provider</code></td>
+<td>Use the <strong>Send request to multiple NCP’s</strong> toggle</td>
+</tr>
+<tr>
+<td><code>view_provider_inventory</code></td>
+<td>NCP views own inventory</td>
+</tr>
+<tr>
+<td><code>manage_inventory</code></td>
+<td>Upload capacities, add or delete offerings (gates
+<code>/provider/gpu-capacities-upload</code>)</td>
+</tr>
+<tr>
+<td><code>approver_view_reservation_request</code></td>
+<td>NCP sees reservation requests</td>
+</tr>
+<tr>
+<td><code>approver_manage_reservation_request</code></td>
+<td>NCP accepts, rejects, contracts (gates the split <strong>Manage
+reservation</strong> view)</td>
+</tr>
+<tr>
+<td><code>approver_view_custom_reservation_request</code> /
+<code>approver_manage_custom_reservation_request</code></td>
+<td>View and move custom requests (Platform Admin)</td>
+</tr>
+<tr>
+<td><code>review_capacity</code></td>
+<td>Accept or reject future capacity uploads (gates
+<code>/provider/review-future-capacities</code>)</td>
+</tr>
+<tr>
+<td><code>manage_ncp</code></td>
+<td>Onboard NCPs and review access requests (gates
+<code>/provider/ncp-onboarding</code>)</td>
+</tr>
+<tr>
+<td><code>global_capacity_view</code></td>
+<td>Global Capacity Explorer (gates
+<code>/provider/global-capacity</code>)</td>
+</tr>
+<tr>
+<td><code>accept_contract_extension</code></td>
+<td>Extend acceptance or contract deadlines</td>
+</tr>
+<tr>
+<td><code>notification:send</code>, <code>capacity:sync</code>,
+<code>reservation-request:write</code></td>
+<td>Service-account scopes used by the Temporal worker</td>
+</tr>
+</tbody>
+</table>
+<h2 id="organization-scoping">Organization scoping</h2>
+<ul>
+<li>Every user belongs to a Keycloak <strong>Organization</strong>. NCP
+offerings carry <code>provider_organization_id</code>, so NCP users only
+see their own organization’s inventory and requests.</li>
+<li>Platform Admins see across all NCPs.</li>
+<li>Only account-manager roles may be in multiple organizations
+(enforced by the <code>multi-org-policy</code> Keycloak extension).</li>
+<li>One organization exists per Salesforce partner account; NCP
+organization names come from the Salesforce account name.</li>
+</ul>
+<h2 id="customer-confidentiality">Customer confidentiality</h2>
+<p>NCPs may see a customer’s organization name blurred and labelled
+<strong>Confidential</strong> until engagement. Contracted prices are
+only visible to NCPs, platform account managers and admins.</p>
+<h2 id="account-status-gates">Account status gates</h2>
+<p>After login, the backend middleware and frontend middleware check, in
+order:</p>
+<ol type="1">
+<li><strong>Access denied</strong> — identity verified but not
+authorized (for example personal email domain, missing role). User is
+pinned to <code>/access-denied</code>.</li>
+<li><strong>Access pending</strong> — the user’s email domain belongs to
+an NVIDIA partner but the NCP has not been onboarded yet. An access
+request is created and the user waits on <code>/access-pending</code>
+until a Platform Admin approves.</li>
+<li><strong>User status PENDING</strong> — account awaiting activation;
+user sees <code>/user-status-pending</code> (“Thanks for Signing
+up”).</li>
+<li><strong>Profile incomplete</strong> — user must fill
+<strong>Complete Your Profile</strong> (first name, last name,
+organization name, phone).</li>
+<li><strong>Terms not accepted</strong> — a blocking modal requires
+scrolling the Terms and Conditions, ticking “I have read and agree to
+the Terms and Conditions” and clicking <strong>Accept &amp;
+Continue</strong>.</li>
+</ol>
+<p>User account statuses are <code>ACTIVE</code> and
+<code>PENDING</code>.</p>
+<h2 id="why-is-a-menu-item-missing">Why is a menu item missing?</h2>
+<p>Menu items appear only when you hold the matching scope. For example,
+<strong>Upload Capacities</strong> needs <code>manage_inventory</code>;
+<strong>Global Capacity Explorer</strong> needs
+<code>global_capacity_view</code>. If something is missing, ask your
+Platform Admin to grant the role. NCP basic users
+(<code>provider_basic_user</code>) are read-only by design and are sent
+to the table view instead of the split Manage reservation view.</p>
+</body>
+</html>

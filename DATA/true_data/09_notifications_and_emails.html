@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Email Notifications</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-email-notifications" id="toc-compute-match-email-notifications">Compute Match — Email
+Notifications</a>
+<ul>
+<li><a href="#customer-emails" id="toc-customer-emails">Customer
+emails</a></li>
+<li><a href="#ncp-emails" id="toc-ncp-emails">NCP emails</a></li>
+<li><a href="#admin-and-operations-emails" id="toc-admin-and-operations-emails">Admin and operations
+emails</a></li>
+<li><a href="#account-emails" id="toc-account-emails">Account
+emails</a></li>
+<li><a href="#magic-links-in-detail" id="toc-magic-links-in-detail">Magic links in detail</a></li>
+<li><a href="#reliability" id="toc-reliability">Reliability</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-email-notifications">Compute Match — Email
+Notifications</h1>
+<p>Emails are rendered by the backend
+(<code>backend/infrastructure/driven/email/</code>, templates in
+<code>templates/*.html</code>, subjects in <code>subjects.json</code>).
+Most are triggered by Temporal workflow activities calling the backend’s
+System notification APIs (<code>/api/v1/notification/*</code>, scope
+<code>notification:send</code>).</p>
+<h2 id="customer-emails">Customer emails</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Email</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reservation request received</td>
+<td>Right after you submit</td>
+</tr>
+<tr>
+<td>Custom request received / in review / matched / unserviceable</td>
+<td>Each custom-request step</td>
+</tr>
+<tr>
+<td>Offering introduction</td>
+<td>An NCP accepted; introduces you to the NCP</td>
+</tr>
+<tr>
+<td>NCP proposed changes</td>
+<td>An NCP counteroffered</td>
+</tr>
+<tr>
+<td>Offering rejected</td>
+<td>An NCP rejected your request (with remarks)</td>
+</tr>
+<tr>
+<td>Reservation approved / contracted</td>
+<td>An NCP confirmed the contract</td>
+</tr>
+<tr>
+<td>Acceptance / contract expired (customer variant)</td>
+<td>All offerings expired — one consolidated email</td>
+</tr>
+<tr>
+<td>Reservation rejected / cancelled</td>
+<td>Final outcomes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ncp-emails">NCP emails</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Email</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Offering magic link (and grouped variant)</td>
+<td>A request was routed to your organization</td>
+</tr>
+<tr>
+<td>Magic link resend</td>
+<td>Someone requested a new link</td>
+</tr>
+<tr>
+<td>Offering introduction</td>
+<td>You accepted</td>
+</tr>
+<tr>
+<td>Expiry reminder</td>
+<td>3 days before acceptance deadline</td>
+</tr>
+<tr>
+<td>Contract expiry reminder</td>
+<td>3 days before contract deadline</td>
+</tr>
+<tr>
+<td>Offering expired / acceptance expired</td>
+<td>Deadline passed</td>
+</tr>
+<tr>
+<td>Offering contracted</td>
+<td>You won the contract</td>
+</tr>
+<tr>
+<td>Offering superseded</td>
+<td>Another NCP contracted the same request</td>
+</tr>
+<tr>
+<td>Reservation cancelled by customer</td>
+<td>Customer cancelled</td>
+</tr>
+<tr>
+<td>Future capacity approved / rejected</td>
+<td>Admin decision on your upload</td>
+</tr>
+<tr>
+<td>Provider welcome</td>
+<td>You were onboarded</td>
+</tr>
+</tbody>
+</table>
+<h2 id="admin-and-operations-emails">Admin and operations emails</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Email</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Future capacity pending review</td>
+<td>An upload has future capacity to review</td>
+</tr>
+<tr>
+<td>Custom request received</td>
+<td>A customer submitted a custom request</td>
+</tr>
+<tr>
+<td>In-process requests alert</td>
+<td>Daily 09:00 UTC digest of In Process offerings nearing deadline</td>
+</tr>
+<tr>
+<td>Access request submitted / notify admin</td>
+<td>A partner is waiting for NCP access</td>
+</tr>
+<tr>
+<td>Salesforce sync failure summary</td>
+<td>Offtake sync failures (when sync is enabled)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="account-emails">Account emails</h2>
+<p>User activated, user pending activation, access request approved or
+rejected.</p>
+<h2 id="magic-links-in-detail">Magic links in detail</h2>
+<ul>
+<li>Recipients: users of the NCP organization with role
+<code>provider_business_user</code> <strong>and</strong> in group
+<code>offering-validator</code>. Basic users never receive them.</li>
+<li>The backend asks the Keycloak extension endpoint
+<code>POST /realms/{realm}/clustruffle/create-action-token</code> to
+mint an action token containing the offering id and a nonce.</li>
+<li>When clicked, Keycloak validates the nonce with the backend, logs
+the user in and redirects with <code>from=magic-link</code>.</li>
+<li>Valid 1 hour; resend possible for 7 days after routing.</li>
+<li>Magic-link emails use the critical retry policy (10 attempts over
+about 25 minutes) because they are the only way an NCP learns about a
+request.</li>
+</ul>
+<h2 id="reliability">Reliability</h2>
+<ul>
+<li>Ordinary notifications retry 5 times over about 2.5 minutes.</li>
+<li>Permanent failures are absorbed (and counted in metric
+<code>clustruffle_workflow_activity_abandoned</code>) so a workflow
+replay never re-sends email to users.</li>
+</ul>
+</body>
+</html>

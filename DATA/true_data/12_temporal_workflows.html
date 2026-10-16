@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Compute Match — Temporal Workflows and Schedules</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;line-height:1.55;color:#1a1a1a}
+h1{border-bottom:3px solid #76b900;padding-bottom:.3rem;margin-top:3rem}
+h2{border-bottom:1px solid #ddd;padding-bottom:.2rem;margin-top:2rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid #ccc;padding:.4rem .6rem;text-align:left;vertical-align:top}
+th{background:#f3f7ea}
+code{background:#f4f4f4;padding:.1rem .3rem;border-radius:3px;font-size:.9em}
+pre{background:#f4f4f4;padding:.8rem;overflow-x:auto;border-radius:4px}
+pre code{background:none;padding:0}
+#TOC{background:#fafafa;border:1px solid #e5e5e5;padding:1rem 1.5rem}
+@media print{h1{page-break-before:always}h1:first-of-type{page-break-before:avoid}}
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#compute-match-temporal-workflows-and-schedules" id="toc-compute-match-temporal-workflows-and-schedules">Compute Match —
+Temporal Workflows and Schedules</a>
+<ul>
+<li><a href="#summary" id="toc-summary">Summary</a></li>
+<li><a href="#reservationrequestworkflow" id="toc-reservationrequestworkflow">ReservationRequestWorkflow</a></li>
+<li><a href="#offeringlifecycleworkflow" id="toc-offeringlifecycleworkflow">OfferingLifecycleWorkflow</a></li>
+<li><a href="#csvimportworkflow" id="toc-csvimportworkflow">CsvImportWorkflow</a></li>
+<li><a href="#provideronboardingworkflow" id="toc-provideronboardingworkflow">ProviderOnboardingWorkflow</a></li>
+<li><a href="#salesforce-workflows" id="toc-salesforce-workflows">Salesforce workflows</a></li>
+<li><a href="#retry-policies-sharedworkflowsworkflow_commonretry.py" id="toc-retry-policies-sharedworkflowsworkflow_commonretry.py">Retry
+policies
+(<code>shared/workflows/workflow_common/retry.py</code>)</a></li>
+<li><a href="#viewing-workflows-locally" id="toc-viewing-workflows-locally">Viewing workflows locally</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="compute-match-temporal-workflows-and-schedules">Compute Match —
+Temporal Workflows and Schedules</h1>
+<p>Workflows are defined in <code>shared/workflows/</code> and run by
+the worker in <code>workflow_worker/</code> (<code>main.py</code>
+registers workflows, activities and schedules). Activities call the
+backend System APIs; the backend owns the domain logic.</p>
+<h2 id="summary">Summary</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Workflow</th>
+<th>Trigger</th>
+<th>Business purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ReservationRequestWorkflow</code></td>
+<td>Backend, when a request is created (workflow id = request id)</td>
+<td>Orchestrates a reservation request end to end</td>
+</tr>
+<tr>
+<td><code>OfferingLifecycleWorkflow</code></td>
+<td>Child of the above, one per routed NCP offering</td>
+<td>Magic link, acceptance window, contract window, reminders</td>
+</tr>
+<tr>
+<td><code>CsvImportWorkflow</code></td>
+<td>Backend, on capacity CSV upload
+(<code>csv-import-{job_id}</code>)</td>
+<td>Validate, import, wait for admin review of future capacity</td>
+</tr>
+<tr>
+<td><code>ProviderOnboardingWorkflow</code></td>
+<td>Backend, on NCP onboarding CSV upload</td>
+<td>Create NCP organizations and users</td>
+</tr>
+<tr>
+<td><code>InProcessAlertWorkflow</code></td>
+<td>Schedule <code>in-process-requests-alert-daily</code>, cron
+<code>0 9 * * *</code> UTC</td>
+<td>Daily admin digest of In Process offerings near deadline</td>
+</tr>
+<tr>
+<td><code>AuditRetentionWorkflow</code></td>
+<td>Schedule <code>audit-retention-daily</code>, cron
+<code>30 3 * * *</code> UTC</td>
+<td>Delete audit log rows older than about 395 days</td>
+</tr>
+<tr>
+<td><code>SfdcCreateBatchWorkflow</code> (mode <code>create</code>)</td>
+<td>Schedule, default <code>0 5 * * *</code> UTC</td>
+<td>Create Salesforce Offtake records from the outbox</td>
+</tr>
+<tr>
+<td><code>SfdcCreateBatchWorkflow</code> (mode <code>status</code>)</td>
+<td>Schedule, every 2 minutes</td>
+<td>Push status updates to existing Offtakes</td>
+</tr>
+<tr>
+<td><code>SfdcPartnerDomainSyncWorkflow</code></td>
+<td>Schedule <code>20 2,14 * * *</code> (twice daily)</td>
+<td>Refresh partner email domains from Salesforce</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reservationrequestworkflow">ReservationRequestWorkflow</h2>
+<ol type="1">
+<li>Send “request received” email to the customer.</li>
+<li>Wait for signal <code>routed_to_providers</code> or
+<code>reservation_request_closed</code>. Open/custom requests wait
+indefinitely.</li>
+<li>On routing, start one child <code>OfferingLifecycleWorkflow</code>
+per offering.</li>
+<li>Wait until any child is Contracted, all children finish, or the
+parent is closed.</li>
+<li>If one contracts: cancel siblings (superseded) and approve the
+request.</li>
+<li>If all expire: send one consolidated customer expiry email and
+expire the request.</li>
+<li>Closure reasons send emails: Cancelled (customer + NCPs), Rejected,
+Matched, Unserviceable.</li>
+</ol>
+<p>Signals: <code>routed_to_providers</code>,
+<code>reservation_request_closed</code>. Child workflow retry up to 100
+attempts; expire activity 20 attempts over about 75 minutes.</p>
+<h2 id="offeringlifecycleworkflow">OfferingLifecycleWorkflow</h2>
+<ol type="1">
+<li>Send the magic-link email (critical retry policy).</li>
+<li>Acceptance phase (7 days by default): reminder 3 days before; on
+timeout expire the offering and email the NCP.</li>
+<li>On <code>provider_accepted</code>: send the introduction email;
+start the contract phase (45 days).</li>
+<li>Reminder 3 days before contract expiry; on timeout expire and
+email.</li>
+<li>On <code>offering_contracted</code>: send contracted email. On
+reject or cancel: handle and email (superseded if a sibling won).</li>
+</ol>
+<p>Signals: <code>provider_accepted</code>,
+<code>acceptance_expiry_extended</code>,
+<code>contract_expiry_extended</code>, <code>offering_contracted</code>,
+<code>offering_rejected</code>, <code>offering_cancelled</code>.</p>
+<h2 id="csvimportworkflow">CsvImportWorkflow</h2>
+<p>VALIDATING → IMPORTING → (if future rows) PENDING_REVIEW: email
+admins and wait for <code>approve_import</code> /
+<code>reject_import</code> → activate or reject offerings → email the
+NCP. Activities: <code>validate_csv</code>,
+<code>execute_atomic_import</code>, <code>activate_offerings</code>,
+<code>reject_offerings</code>, <code>update_import_job_status</code>,
+<code>notify_admin_for_review</code>,
+<code>notify_provider_result</code>. Workflow max attempts 1; import
+activities 3 attempts.</p>
+<h2 id="provideronboardingworkflow">ProviderOnboardingWorkflow</h2>
+<p><code>validate_provider_csv</code> →
+<code>execute_provider_onboarding</code> (30-minute timeout) →
+<code>notify_onboarding_complete</code> (sent even on failure). 3
+attempts; validation errors are not retried.</p>
+<h2 id="salesforce-workflows">Salesforce workflows</h2>
+<ul>
+<li><code>SfdcCreateBatchWorkflow</code> drains the
+<code>salesforce_create_sync</code> outbox. <strong>Create</strong> mode
+retries 13 times every 5 minutes; <strong>status</strong> mode runs once
+per tick. Gated by <code>SFDC_SYNC_ENABLED</code>; when false, schedules
+are deleted and the workflow is not registered.</li>
+<li><code>SfdcPartnerDomainSyncWorkflow</code> is gated by
+<code>SFDC_PARTNER_DOMAIN_SYNC_ENABLED</code>. It refuses empty or
+suspiciously shrunk snapshots so partners are not mass-demoted.</li>
+</ul>
+<h2 id="retry-policies-sharedworkflowsworkflow_commonretry.py">Retry
+policies (<code>shared/workflows/workflow_common/retry.py</code>)</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Budget</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NOTIFICATION_RETRY_POLICY</code></td>
+<td>5 attempts, ~2.5 min</td>
+<td>Ordinary email</td>
+</tr>
+<tr>
+<td><code>CRITICAL_NOTIFICATION_RETRY_POLICY</code></td>
+<td>10 attempts, ~25 min</td>
+<td>Magic-link email</td>
+</tr>
+<tr>
+<td><code>STATUS_UPDATE_RETRY_POLICY</code></td>
+<td>5 attempts, ~1 min</td>
+<td>Intermediate import status</td>
+</tr>
+<tr>
+<td><code>TERMINAL_STATUS_UPDATE_RETRY_POLICY</code></td>
+<td>8 attempts, ~20 min</td>
+<td>Final import status</td>
+</tr>
+</tbody>
+</table>
+<p>Abandoned steps increment
+<code>clustruffle_workflow_activity_abandoned</code> and can be queried
+with <code>get_abandoned_steps</code>.</p>
+<h2 id="viewing-workflows-locally">Viewing workflows locally</h2>
+<p>Temporal UI: <code>http://localhost:7600</code>. Temporal gRPC:
+<code>localhost:7233</code>. Run the worker on your laptop with
+<code>make worker</code>.</p>
+</body>
+</html>
