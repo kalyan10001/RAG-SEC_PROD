@@ -21,3 +21,6 @@ pdfplumber                  # Fallback PDF parser for scanned/complex layouts
 
 logfire[fastapi,requests]   # Pydantic Logfire — FastAPI + requests instrumentation
 loguru                      # Enhanced logging for Python
+
+flashrank
+langgraph                   # Multi-agent graph orchestrator

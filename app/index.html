@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Agentic RAG UI</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --user-msg: #eff6ff;
+            --ai-msg: #f1f5f9;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #app {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background-color: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+        }
+        .sidebar-header {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+        }
+        .sidebar-section label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background-color: var(--bg);
+            color: var(--text);
+            font-size: 0.875rem;
+            outline: none;
+            margin-bottom: 0.75rem;
+        }
+        .input-field:focus {
+            border-color: var(--primary);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        .btn-secondary {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        .btn-secondary:hover {
+            background-color: var(--border);
+        }
+        
+        /* Chat Area */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: var(--bg);
+        }
+        .chat-header {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background-color: #dcfce7;
+            color: #15803d;
+            padding: 0.25rem 0.6rem;
+            border-radius: 1rem;
+        }
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #22c55e;
+            border-radius: 50%;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .message-wrapper {
+            max-width: 80%;
+            display: flex;
+            flex-direction: column;
+        }
+        .message-wrapper.user {
+            align-self: flex-end;
+        }
+        .message-wrapper.assistant {
+            align-self: flex-start;
+        }
+        .message {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .message-wrapper.user .message {
+            background-color: var(--primary);
+            color: white;
+            border-bottom-right-radius: 0;
+        }
+        .message-wrapper.assistant .message {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 0;
+        }
+        .message-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+            margin-bottom: 0.35rem;
+            padding: 0 0.25rem;
+        }
+        .message-wrapper.user .message-meta {
+            align-self: flex-end;
+        }
+        
+        /* Accordion Sections for details */
+        .details-section {
+            margin-top: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background-color: var(--bg);
+            overflow: hidden;
+        }
+        .details-header {
+            padding: 0.5rem 0.75rem;
+            background-color: var(--surface);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            border-bottom: 1px solid var(--border);
+        }
+        .details-content {
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: #334155;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: var(--bg);
+        }
+        .step-badge {
+            display: inline-block;
+            background-color: var(--border);
+            color: var(--text);
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.25rem;
+            margin-right: 0.35rem;
+            margin-bottom: 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .source-item {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .source-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+        .source-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+            font-size: 0.75rem;
+        }
+        
+        /* Input Area */
+        .chat-input-area {
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+        }
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .chat-input-wrapper textarea {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            outline: none;
+            resize: none;
+            height: 44px;
+            line-height: 20px;
+        }
+        .chat-input-wrapper textarea:focus {
+            border-color: var(--primary);
+        }
+        .chat-input-wrapper button {
+            width: 100px;
+            height: 44px;
+        }
+        
+        /* Typography in message */
+        .message p {
+            margin-bottom: 0.5rem;
+        }
+        .message p:last-child {
+            margin-bottom: 0;
+        }
+        .message ul, .message ol {
+            margin-left: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .message pre {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12a10 10 0 0 1 10-10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                Enterprise RAG
+            </div>
+            
+            <div class="sidebar-section">
+                <label for="thread-id-input">Conversational Memory (Thread ID)</label>
+                <input type="text" id="thread-id-input" class="input-field" value="default_user" placeholder="Enter custom Thread ID">
+                <button class="btn btn-secondary" onclick="generateNewThread()">Reset / New Session</button>
+            </div>
+            
+            <div style="flex: 1;"></div>
+            
+            <div class="sidebar-section" style="border-top: 1px solid var(--border); padding-top: 1rem;">
+                <p style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.4;">
+                    This interface connects directly to your LangGraph-driven RAG Agent. It supports multi-turn memory utilizing Qdrant vector database and Gemini 3.5 LLM.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-title">Interactive AI Assistant</div>
+                <div class="status-badge">
+                    <div class="status-dot"></div>
+                    API Online
+                </div>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chat-messages">
+                <div class="message-wrapper assistant">
+                    <div class="message">
+                        Hello! I am your Enterprise Technical Architect Assistant. I can help answer complex questions about Kubernetes, networking, hardware configurations, and deployment strategies. Go ahead and ask!
+                    </div>
+                    <div class="message-meta">System • Just now</div>
+                </div>
+            </div>
+            
+            <!-- Input Area -->
+            <div class="chat-input-area">
+                <div class="chat-input-wrapper">
+                    <textarea id="chat-input" placeholder="Type your technical question..." onkeydown="handleKeyPress(event)"></textarea>
+                    <button type="button" class="btn btn-primary" id="send-btn" onclick="triggerSend()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const threadIdInput = document.getElementById('thread-id-input');
+        const sendBtn = document.getElementById('send-btn');
+        
+        function handleKeyPress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                triggerSend();
+            }
+        }
+        
+        function generateNewThread() {
+            const randomId = 'session_' + Math.random().toString(36).substring(2, 10);
+            threadIdInput.value = randomId;
+            
+            // Clear chat display
+            chatMessages.innerHTML = `
+                <div class="message-wrapper assistant">
+                    <div class="message">
+                        Session reset. Initiated new thread ID: <strong>${randomId}</strong>. How can I assist you in this new session?
+                    </div>
+                    <div class="message-meta">System • Just now</div>
+                </div>
+            `;
+        }
+        
+        function toggleDetails(id) {
+            const content = document.getElementById(id);
+            if (content.style.display === 'none' || !content.style.display) {
+                content.style.display = 'block';
+            } else {
+                content.style.display = 'none';
+            }
+        }
+        
+        function formatMessageText(text) {
+            // Basic markdown formatting
+            let formatted = text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+            
+            // Code blocks
+            formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            
+            // Inline code
+            formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
+            
+            // Lists
+            formatted = formatted.split('\n').map(line => {
+                if (line.trim().startsWith('* ') || line.trim().startsWith('- ')) {
+                    return `<li>${line.trim().substring(2)}</li>`;
+                }
+                if (line.trim().match(/^\d+\. /)) {
+                    return `<li>${line.trim().substring(line.indexOf('.') + 2)}</li>`;
+                }
+                return line ? `<p>${line}</p>` : '';
+            }).join('');
+            
+            return formatted;
+        }
+        
+        async function triggerSend() {
+            const queryText = chatInput.value.trim();
+            const threadId = threadIdInput.value.trim() || 'default_user';
+            
+            if (!queryText) return;
+            
+            // Add User Message to UI
+            const userMsgWrapper = document.createElement('div');
+            userMsgWrapper.className = 'message-wrapper user';
+            userMsgWrapper.innerHTML = `
+                <div class="message">${queryText}</div>
+                <div class="message-meta">You • Just now</div>
+            `;
+            chatMessages.appendChild(userMsgWrapper);
+            
+            chatInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Add Loading Message from AI
+            const loadingId = 'loading_' + Date.now();
+            const aiMsgWrapper = document.createElement('div');
+            aiMsgWrapper.className = 'message-wrapper assistant';
+            aiMsgWrapper.id = loadingId;
+            aiMsgWrapper.innerHTML = `
+                <div class="message">
+                    <span style="color: var(--text-muted)">Thinking...</span>
+                </div>
+                <div class="message-meta">Assistant • Just now</div>
+            `;
+            chatMessages.appendChild(aiMsgWrapper);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Disable Send
+            chatInput.disabled = true;
+            sendBtn.disabled = true;
+            
+            // Configuration: Change this to match your backend port if different than 8000
+            const BACKEND_URL = 'http://localhost:8000';
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        q: queryText,
+                        thread_id: threadId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Remove loading message
+                chatMessages.removeChild(aiMsgWrapper);
+                
+                // Add real AI Response
+                const realAiMsgWrapper = document.createElement('div');
+                realAiMsgWrapper.className = 'message-wrapper assistant';
+                
+                // Format response sections
+                const answerFormatted = formatMessageText(data.answer || "No response received.");
+                
+                // Format plan/thought process
+                let planHtml = '';
+                if (data.thought_process && data.thought_process.length > 0) {
+                    const steps = data.thought_process.map(step => `<span class="step-badge">${step}</span>`).join('');
+                    planHtml = `
+                        <div class="details-section">
+                            <div class="details-header" onclick="toggleDetails('plan_${loadingId}')">
+                                <span>🧠 Execution Plan & Thought Process</span>
+                                <span>▼</span>
+                            </div>
+                            <div class="details-content" id="plan_${loadingId}" style="display: none;">
+                                <div style="margin-bottom: 0.5rem; font-weight: 600; font-size: 0.75rem;">Pipeline Steps:</div>
+                                ${steps}
+                                <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted)">Status: ${data.status || 'Success'}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Format sources
+                let sourcesHtml = '';
+                if (data.sources && data.sources.length > 0) {
+                    const sources = data.sources.map((src, index) => {
+                        let content = src;
+                        let sourceTitle = 'Document Chunk #' + (index + 1);
+                        
+                        if (typeof src === 'string' && src.startsWith('CONTENT: ')) {
+                            content = src.substring(9);
+                        }
+                        
+                        return `
+                            <div class="source-item">
+                                <div class="source-title">${sourceTitle}</div>
+                                <div style="font-size: 0.75rem; white-space: pre-wrap; font-family: monospace; background: #f8fafc; padding: 0.5rem; border-radius: 0.25rem; border: 1px solid var(--border); max-height: 120px; overflow-y: auto;">${content}</div>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    sourcesHtml = `
+                        <div class="details-section">
+                            <div class="details-header" onclick="toggleDetails('src_${loadingId}')">
+                                <span>📄 Referenced Context Chunks (${data.sources.length})</span>
+                                <span>▼</span>
+                            </div>
+                            <div class="details-content" id="src_${loadingId}" style="display: none;">
+                                ${sources}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                realAiMsgWrapper.innerHTML = `
+                    <div class="message">${answerFormatted}</div>
+                    ${planHtml}
+                    ${sourcesHtml}
+                    <div class="message-meta">Assistant • Just now</div>
+                `;
+                
+                chatMessages.appendChild(realAiMsgWrapper);
+                
+            } catch (err) {
+                console.error(err);
+                chatMessages.removeChild(aiMsgWrapper);
+                
+                const errorMsgWrapper = document.createElement('div');
+                errorMsgWrapper.className = 'message-wrapper assistant';
+                errorMsgWrapper.innerHTML = `
+                    <div class="message" style="border-color: #fca5a5; background-color: #fef2f2; color: #991b1b;">
+                        Error communicating with the backend API. Please make sure the service is running and configured properly.
+                    </div>
+                    <div class="message-meta">System Error • Just now</div>
+                `;
+                chatMessages.appendChild(errorMsgWrapper);
+            } finally {
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                chatInput.focus();
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
