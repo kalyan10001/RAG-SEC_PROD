@@ -1,15 +1,19 @@
 from app.agents.state import AgentState
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from app.config import settings
 
-# Use ChatGoogleGenerativeAI with gemini-3.5-flash
-llm = ChatGoogleGenerativeAI(model="gemini-3.5-flash", google_api_key=settings.GEMINI_API_KEY, temperature=0.1)
+# Use ChatOpenAI targeting Groq to avoid daily free tier rate limits of Gemini
+llm = ChatOpenAI(
+    model="openai/gpt-oss-120b",
+    api_key=settings.GROQ_API_KEY,
+    base_url="https://api.groq.com/openai/v1",
+    temperature=0.1
+)
 
 
 def generate_node(state: AgentState):
     """
     Synthesizes a response using both Documentation Context AND Conversation History.
-    Uses ChatGoogleGenerativeAI with gemini-3.5-flash.
     """
     query = state["current_query"]
 

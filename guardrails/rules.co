@@ -1,0 +1,3 @@
+# Message returned by the built-in "self check input" rail when a query is blocked.
+define bot refuse to respond
+  "I'm the Compute-Match Enterprise AI Assistant, so I can't help with that request. I'm happy to answer questions about the platform, GPU capacity, reservations or other technical topics."

@@ -24,3 +24,11 @@ loguru                      # Enhanced logging for Python
 
 flashrank
 langgraph                   # Multi-agent graph orchestrator
+
+nemoguardrails
+langchain-openai
+langchain-nvidia-ai-endpoints
+langchain-google-vertexai
+
+
+portkey-ai

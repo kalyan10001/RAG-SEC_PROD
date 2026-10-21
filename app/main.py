@@ -11,6 +11,7 @@ logger = logging.getLogger("RAG-Application")
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from app.agents.graph import rag_agent
+from app.guardrails.guard import check_query_with_guardrails
 
 from pydantic import BaseModel
 from typing import Optional
@@ -65,6 +66,18 @@ def query(request: QueryRequest):
     """
     q = request.q
     thread_id = request.thread_id
+
+    # Apply NVIDIA NeMo Guardrails
+    is_allowed, block_response = check_query_with_guardrails(q)
+    if not is_allowed:
+        logger.warning(f"Query was blocked by Guardrails: '{q}'")
+        return {
+            "question": q,
+            "answer": block_response,
+            "thought_process": ["Request blocked by NVIDIA NeMo Guardrails safety policies."],
+            "status": "blocked_by_guardrails",
+            "sources": []
+        }
 
     initial_state = {
         "messages": [{"role": "user", "content": q}],
