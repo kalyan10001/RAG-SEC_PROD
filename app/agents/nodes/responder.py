@@ -1,14 +1,7 @@
 from app.agents.state import AgentState
-from langchain_openai import ChatOpenAI
-from app.config import settings
+from app.gateway import get_chat_llm
 
-# Use ChatOpenAI targeting Groq to avoid daily free tier rate limits of Gemini
-llm = ChatOpenAI(
-    model="openai/gpt-oss-120b",
-    api_key=settings.GROQ_API_KEY,
-    base_url="https://api.groq.com/openai/v1",
-    temperature=0.1
-)
+llm = get_chat_llm("responder", temperature=0.1)
 
 
 def generate_node(state: AgentState):

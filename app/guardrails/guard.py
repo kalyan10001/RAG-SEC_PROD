@@ -4,6 +4,8 @@ from functools import lru_cache
 
 from nemoguardrails import LLMRails, RailsConfig
 
+from app.gateway import get_openai_client_params
+
 logger = logging.getLogger("RAG-Guardrails")
 
 CONFIG_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "guardrails")
@@ -12,7 +14,10 @@ CONFIG_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file
 @lru_cache(maxsize=1)
 def get_guardrails() -> LLMRails:
     logger.info(f"Loading NeMo Guardrails configuration from: {CONFIG_DIR}")
-    return LLMRails(RailsConfig.from_path(CONFIG_DIR))
+    config = RailsConfig.from_path(CONFIG_DIR)
+    for model in config.models:
+        model.parameters = {**(model.parameters or {}), **get_openai_client_params("guardrails")}
+    return LLMRails(config)
 
 
 def check_query_with_guardrails(query_text: str) -> tuple[bool, str | None]:
